@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Proteção Proporcional - 2 Jogos</title>
+    <title>Painel Proteção Proporcional - Recuperação Pura (2 Jogos)</title>
     <style>
         :root {
             --primary: #2e7d32;
@@ -11,7 +11,7 @@
             --bg: #f5f5f5;
             --card: #ffffff;
             --text: #333333;
-            --accent: #0288d1;
+            --accent: #d32f2f;
         }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -124,19 +124,31 @@
         .btn-group { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; margin-bottom: 25px; }
         .btn { width: 100%; padding: 14px; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer; font-weight: bold; text-align: center; box-sizing: border-box; }
         .btn-calc { background: var(--primary); color: white; }
-        .btn-save { background: var(--accent); color: white; }
+        .btn-save { background: #0288d1; color: white; }
         
         .lucro-pos { color: #2e7d32; font-weight: bold; }
         .lucro-neutro { color: #f57c00; font-weight: bold; }
         .divider { margin: 8px 0; border-top: 1px dashed #ccc; }
         .status-msg { text-align: center; font-weight: bold; color: var(--primary); margin: 10px 0; display: none; }
+        
+        .badge-segurança {
+            background-color: #e3f2fd;
+            color: #0d47a1;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+            border: 1px solid #bbdefb;
+        }
     </style>
 </head>
 <body>
 
 <div class="header">
     <button class="menu-btn" onclick="toggleSidebar()">☰</button>
-    <h2>Painel Proteção Proporcional (2 Jogos)</h2>
+    <h2>Painel Proteção - Modo Recuperação Pura</h2>
 </div>
 
 <div class="sidebar" id="sidebar">
@@ -153,7 +165,8 @@
     <div id="status-storage" class="status-msg">Salvo com sucesso!</div>
 
     <div class="card">
-        <h3>1. Configuração da Múltipla Geral</h3>
+        <h3>1. Configuração da Múltipla Principal</h3>
+        <div class="badge-segurança">🛡️ MODO REEMBOLSO: Proteções configuradas para Lucro R$ 0.00 (Evita estouro de banca)</div>
         <div class="row">
             <div class="col">
                 <label>Valor Múltipla (R$)</label>
@@ -161,10 +174,10 @@
             </div>
             <div class="col">
                 <label>Odd Múltipla</label>
-                <input type="number" id="oddMultipla" step="0.01" value="12.50">
+                <input type="number" id="oddMultipla" step="0.01" value="11.64">
             </div>
         </div>
-        <div class="result-box" id="retornoMultipla">Retorno Estimado: R$ 10,38</div>
+        <div class="result-box" id="retornoMultipla">Retorno Estimado: R$ 9.66</div>
     </div>
 
     <div id="jogos-container"></div>
@@ -173,22 +186,22 @@
         <h3>Ações do Projeto</h3>
         <div class="col" style="margin-bottom: 12px;">
             <label>Nome do Projeto para Salvar</label>
-            <input type="text" id="nomeProjeto" placeholder="Ex: Simulação - 2 Jogos">
+            <input type="text" id="nomeProjeto" placeholder="Ex: Rodada 2 Jogos - Modo Reembolso">
         </div>
         <div class="btn-group">
-            <button class="btn btn-calc" onclick="calcularSistema()">Calcular Cenários</button>
+            <button class="btn btn-calc" onclick="calcularSistema()">Calcular Proteções</button>
             <button class="btn btn-save" onclick="salvarDados()">Salvar no Histórico</button>
         </div>
     </div>
 </div>
 
 <script>
-    // Quantidade total de jogos configurada para 2
+    // Quantidade total travada em 2 jogos
     const TOTAL_JOGOS = 2;
     
     const defaultConfrontos = ["Jogo 1", "Jogo 2"];
-    const defaultOddsE = [3.25, 3.70];
-    const defaultOddsV = [3.00, 2.82];
+    const defaultOddsE = [3.30, 3.50];
+    const defaultOddsV = [2.96, 4.10];
 
     const container = document.getElementById('jogos-container');
     for (let i = 1; i <= TOTAL_JOGOS; i++) {
@@ -225,9 +238,11 @@
         let valM = parseFloat(document.getElementById('valMultipla').value) || 0;
         let oddM = parseFloat(document.getElementById('oddMultipla').value) || 0;
         
-        let metaProporcional = valM * 2;
         let retM = valM * oddM;
-        document.getElementById('retornoMultipla').innerText = `Retorno Estimado: R$ ${retM.toFixed(2)} (Meta por Jogo: R$ ${metaProporcional.toFixed(2)})`;
+        document.getElementById('retornoMultipla').innerText = `Retorno Se a Múltipla Bater: R$ ${retM.toFixed(2)}`;
+
+        // SCRIPT ANTERIOR DA OPÇÃO DE APENAS DEVOLVER O MONTANTE INVESTIDO (META = 0)
+        let metaProporcional = 0; 
 
         let prejuizoAcumulado = valM; 
 
@@ -237,7 +252,6 @@
             let oddE = parseFloat(document.getElementById(`oddE_${i}`).value) || 1;
             let oddV = parseFloat(document.getElementById(`oddV_${i}`).value) || 1;
             
-            // Sistema de equações interligado
             let divisor = (oddE * oddV) - oddE - oddV;
             
             let valVisitante = 0;
@@ -256,18 +270,18 @@
             let lucroEmpate = (valEmpate * oddE) - custoTotalAteAqui;
             let lucroVisitante = (valVisitante * oddV) - custoTotalAteAqui;
 
-            if (Math.abs(lucroVisitante) < 0.05) {
-                lucroVisitante = 0.00;
-            }
+            // Zera dízimas estruturais para cravar o 0.00 visual do reembolso total
+            if (Math.abs(lucroVisitante) < 0.05) { lucroVisitante = 0.00; }
+            if (Math.abs(lucroEmpate) < 0.05) { lucroEmpate = 0.00; }
 
             resBox.className = "result-box";
             resBox.innerHTML = `
-                🤝 <b>Aposta no Empate (Lucro):</b> R$ ${valEmpate.toFixed(2)}<br>
-                ✈️ <b>Aposta no Visitante (Reembolso Real):</b> R$ ${valVisitante.toFixed(2)}<br>
-                💰 <b>Custo acumulado total:</b> R$ ${custoTotalAteAqui.toFixed(2)}<br>
+                🤝 <b>Aposta no Empate (Proteção):</b> R$ ${valEmpate.toFixed(2)}<br>
+                ✈️ <b>Aposta no Visitante (Proteção):</b> R$ ${valVisitante.toFixed(2)}<br>
+                💰 <b>Custo Acumulado Total:</b> R$ ${custoTotalAteAqui.toFixed(2)}<br>
                 <div class="divider"></div>
-                📈 <b>Se der Empate hoje:</b> <span class="lucro-pos">R$ ${lucroEmpate.toFixed(2)}</span> líquido<br>
-                📉 <b>Se der Visitante hoje:</b> <span class="lucro-neutro">R$ ${lucroVisitante.toFixed(2)}</span> (0x0 Reembolsado)
+                📈 <b>Se der Empate hoje:</b> <span class="lucro-neutro">R$ ${lucroEmpate.toFixed(2)}</span> (0x0 Devolvido)<br>
+                📉 <b>Se der Visitante hoje:</b> <span class="lucro-neutro">R$ ${lucroVisitante.toFixed(2)}</span> (0x0 Devolvido)
             `;
             
             prejuizoAcumulado = custoTotalAteAqui;
