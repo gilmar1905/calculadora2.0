@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Proteção - 3 Times (Acúmulo Sequencial com Análise)</title>
+    <title>Painel Proteção Sequencial - Completo</title>
     <style>
         :root {
             --primary: #2e7d32;
@@ -146,7 +146,6 @@
         .saved-name:hover { text-decoration: underline; }
         .btn-del { background: #c62828; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
 
-        /* Tabela de cenários */
         table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85rem; }
         th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
         th { background-color: #e8f5e9; font-weight: bold; color: #2e7d32; text-align: center; }
@@ -156,7 +155,7 @@
 <body>
 
 <div class="header">
-    <h2>Painel Proteção Sequencial - Acumulado Real</h2>
+    <h2>Painel Proteção Sequencial - Fixo</h2>
     <button class="theme-toggle" onclick="toggleTheme()">🌒</button>
 </div>
 
@@ -201,7 +200,86 @@
         </div>
     </div>
 
-    <div id="jogos-container"></div>
+    <div class="card card-time-1">
+        <h3>Proteção 1º Time / Jogo:</h3>
+        <div class="col" style="margin-bottom: 10px;">
+            <label>Confronto / Time</label>
+            <input type="text" id="conf_1" class="input-confronto" value="Brasil x Marrocos">
+        </div>
+        <div class="row">
+            <div class="col">
+                <label>Odd Empate (X)</label>
+                <input type="number" id="oddE_1" step="0.01" value="3.85" oninput="calcularSistema()">
+            </div>
+            <div class="col">
+                <label>Odd Visitante (2)</label>
+                <input type="number" id="oddV_1" step="0.01" value="5.80" oninput="calcularSistema()">
+            </div>
+        </div>
+        <div class="checkbox-row">
+            <input type="checkbox" id="lucroE_1" checked onchange="calcularSistema()"> 
+            <label for="lucroE_1" style="cursor:pointer;">Aplicar lucro no Empate</label>
+        </div>
+        <div class="checkbox-row">
+            <input type="checkbox" id="lucroV_1" checked onchange="calcularSistema()"> 
+            <label for="lucroV_1" style="cursor:pointer;">Aplicar lucro no Visitante</label>
+        </div>
+        <div class="result-box" id="res_1">Aguardando cálculo...</div>
+    </div>
+
+    <div class="card card-time-2">
+        <h3>Proteção 2º Time / Jogo:</h3>
+        <div class="col" style="margin-bottom: 10px;">
+            <label>Confronto / Time</label>
+            <input type="text" id="conf_2" class="input-confronto" value="Bélgica x Egito">
+        </div>
+        <div class="row">
+            <div class="col">
+                <label>Odd Empate (X)</label>
+                <input type="number" id="oddE_2" step="0.01" value="4.05" oninput="calcularSistema()">
+            </div>
+            <div class="col">
+                <label>Odd Visitante (2)</label>
+                <input type="number" id="oddV_2" step="0.01" value="6.10" oninput="calcularSistema()">
+            </div>
+        </div>
+        <div class="checkbox-row">
+            <input type="checkbox" id="lucroE_2" checked onchange="calcularSistema()"> 
+            <label for="lucroE_2" style="cursor:pointer;">Aplicar lucro no Empate</label>
+        </div>
+        <div class="checkbox-row">
+            <input type="checkbox" id="lucroV_2" checked onchange="calcularSistema()"> 
+            <label for="lucroV_2" style="cursor:pointer;">Aplicar lucro no Visitante</label>
+        </div>
+        <div class="result-box" id="res_2">Aguardando cálculo...</div>
+    </div>
+
+    <div class="card card-time-3">
+        <h3>Proteção 3º Time / Jogo:</h3>
+        <div class="col" style="margin-bottom: 10px;">
+            <label>Confronto / Time</label>
+            <input type="text" id="conf_3" class="input-confronto" value="França x Senegal">
+        </div>
+        <div class="row">
+            <div class="col">
+                <label>Odd Empate (X)</label>
+                <input type="number" id="oddE_3" step="0.01" value="12.11" oninput="calcularSistema()">
+            </div>
+            <div class="col">
+                <label>Odd Visitante (2)</label>
+                <input type="number" id="oddV_3" step="0.01" value="20.65" oninput="calcularSistema()">
+            </div>
+        </div>
+        <div class="checkbox-row">
+            <input type="checkbox" id="lucroE_3" checked onchange="calcularSistema()"> 
+            <label for="lucroE_3" style="cursor:pointer;">Aplicar lucro no Empate</label>
+        </div>
+        <div class="checkbox-row">
+            <input type="checkbox" id="lucroV_3" checked onchange="calcularSistema()"> 
+            <label for="lucroV_3" style="cursor:pointer;">Aplicar lucro no Visitante</label>
+        </div>
+        <div class="result-box" id="res_3">Aguardando cálculo...</div>
+    </div>
 
     <div class="card">
         <h3>Ação</h3>
@@ -263,45 +341,6 @@
 
 <script>
     const TOTAL_JOGOS = 3;
-
-    const defTimes = ["Brasil x Marrocos", "Bélgica x Egito", "França x Senegal"];
-    const defE = [3.85, 4.05, 12.11];
-    const defV = [5.80, 6.10, 20.65];
-
-    const container = document.getElementById('jogos-container');
-    container.innerHTML = '';
-    for (let i = 1; i <= TOTAL_JOGOS; i++) {
-        container.innerHTML += `
-            <div class="card card-time-${i}">
-                <h3>Proteção ${i}º Time / Jogo:</h3>
-                <div class="col" style="margin-bottom: 10px;">
-                    <label>Confronto / Time</label>
-                    <input type="text" id="conf_${i}" class="input-confronto" value="${defTimes[i-1]}">
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <label>Odd Empate (X)</label>
-                        <input type="number" id="oddE_${i}" step="0.01" value="${defE[i-1]}" oninput="calcularSistema()">
-                    </div>
-                    <div class="col">
-                        <label>Odd Visitante (2)</label>
-                        <input type="number" id="oddV_${i}" step="0.01" value="${defV[i-1]}" oninput="calcularSistema()">
-                    </div>
-                </div>
-                <div class="checkbox-row">
-                    <input type="checkbox" id="lucroE_${i}" checked onchange="calcularSistema()"> 
-                    <label for="lucroE_${i}" style="cursor:pointer;">Aplicar lucro no Empate</label>
-                </div>
-                <div class="checkbox-row">
-                    <input type="checkbox" id="lucroV_${i}" checked onchange="calcularSistema()"> 
-                    <label for="lucroV_${i}" style="cursor:pointer;">Aplicar lucro no Visitante</label>
-                </div>
-                <div class="result-box" id="res_${i}">
-                    Aguardando cálculo...
-                </div>
-            </div>
-        `;
-    }
 
     function toggleTheme() {
         document.body.classList.toggle('dark-mode');
@@ -425,40 +464,4 @@
             let valEmpate = 0;
             let valVis = 0;
 
-            let divisor = (oddEmpate * oddVis) - oddEmpate - oddVis;
-
-            if (divisor > 0) {
-                valEmpate = (custoAcumuladoAnterior + metaLucroE + ((custoAcumuladoAnterior + metaLucroV) / (oddVis - 1))) / (oddEmpate - 1 - (oddEmpate / (oddVis - 1)));
-                valVis = (custoAcumuladoAnterior + valEmpate + metaLucroV) / (oddVis - 1);
-
-                if (!querLucroE && querLucroV) {
-                    valVis = ((custoAcumuladoAnterior + metaLucroV) * oddEmpate) / divisor;
-                    valEmpate = (custoAcumuladoAnterior + valVis) / (oddEmpate - 1);
-                } else if (querLucroE && !querLucroV) {
-                    valEmpate = (custoAcumuladoAnterior * oddVis + metaLucroE) / divisor;
-                    valVis = (custoAcumuladoAnterior + valEmpate) / (oddVis - 1);
-                } else if (!querLucroE && !querLucroV) {
-                    valEmpate = custoAcumuladoAnterior / (oddEmpate - 1);
-                    valVis = custoAcumuladoAnterior / (oddVis - 1);
-                }
-            } else {
-                valEmpate = custoAcumuladoAnterior / (oddEmpate - 1);
-                valVis = custoAcumuladoAnterior / (oddVis - 1);
-            }
-
-            apostasFeitas.push({ valE: valEmpate, valV: valVis });
-        }
-
-        let custoAcumuladoAtual = prejuizoBase;
-        
-        for (let i = 1; i <= TOTAL_JOGOS; i++) {
-            const resBox = document.getElementById(`res_${i}`);
-            let oddEmpate = parseFloat(document.getElementById(`oddE_${i}`).value) || 1;
-            let oddVis = parseFloat(document.getElementById(`oddV_${i}`).value) || 1;
-
-            let valEmpate = apostasFeitas[i-1].valE;
-            let valVis = apostasFeitas[i-1].valV;
-
-            let andamentoCustoTotal = custoAcumuladoAtual + valEmpate + valVis;
-
-            let lucroEmpate = (valEmpat
+            let divisor = (oddEmpate * oddVis) - oddEmpate - odd
