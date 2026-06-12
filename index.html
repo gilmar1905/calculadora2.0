@@ -3,101 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Proteção Proporcional - Recuperação Pura (2 Jogos)</title>
+    <title>Painel Proteção - Orçamento Travado no Prêmio</title>
     <style>
         :root {
             --primary: #2e7d32;
-            --primary-dark: #1b5e20;
             --bg: #f5f5f5;
             --card: #ffffff;
             --text: #333333;
-            --accent: #d32f2f;
+            --accent: #0288d1;
         }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg);
             color: var(--text);
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
+            margin: 0; padding: 0;
         }
-        
-        /* BARRA TOPO */
         .header {
             background: var(--primary);
             color: white;
             padding: 15px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            text-align: center;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .menu-btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-            padding: 0 5px;
-        }
-        .header h2 { margin: 0; font-size: 1.2rem; flex: 1; text-align: center; margin-right: 30px; }
-
-        /* ABA LATERAL (HISTÓRICO) */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: -280px;
-            width: 280px;
-            height: 100%;
-            background: #263238;
-            color: white;
-            z-index: 200;
-            transition: 0.3s ease;
-            box-shadow: 3px 0 10px rgba(0,0,0,0.3);
-            display: flex;
-            flex-direction: column;
-        }
-        .sidebar.open { left: 0; }
-        .sidebar-header {
-            padding: 20px 15px;
-            background: #1c272b;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #37474f;
-        }
-        .sidebar-header h3 { margin: 0; font-size: 1.1rem; }
-        .close-btn { background: none; border: none; color: white; font-size: 1.3rem; cursor: pointer; }
-        .projects-list { padding: 10px; flex: 1; overflow-y: auto; }
-        .project-item {
-            background: #37474f;
-            padding: 12px;
-            border-radius: 4px;
-            margin-bottom: 8px;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: 0.2s;
-        }
-        .project-item:hover { background: #455a64; }
-        .project-name { flex: 1; font-weight: 500; font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .delete-btn { background: none; border: none; color: #ff5252; font-size: 1.1rem; cursor: pointer; padding-left: 10px; }
-
-        /* LAYER DE FUNDO */
-        .overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 150;
-            display: none;
-        }
-        .overlay.show { display: block; }
-
-        /* CONTEÚDO PRINCIPAL */
+        .header h2 { margin: 0; font-size: 1.2rem; }
         .container {
             max-width: 600px;
             margin: 0 auto;
@@ -115,262 +43,144 @@
         .row { display: flex; gap: 10px; margin-bottom: 10px; }
         .col { flex: 1; display: flex; flex-direction: column; }
         label { font-size: 0.85rem; font-weight: bold; margin-bottom: 4px; }
-        input { padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; }
-        .input-confronto { background-color: #fafafa; font-weight: 500; border-color: #b0bec5; }
-        
+        input, select { padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; background: white; }
         .result-box { padding: 12px; border-radius: 4px; margin-top: 5px; font-weight: 500; font-size: 0.95rem; line-height: 1.5; background: #e8f5e9; }
-        .box-wait { background: #fff3e0; }
-        
-        .btn-group { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; margin-bottom: 25px; }
-        .btn { width: 100%; padding: 14px; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer; font-weight: bold; text-align: center; box-sizing: border-box; }
-        .btn-calc { background: var(--primary); color: white; }
-        .btn-save { background: #0288d1; color: white; }
-        
+        .divider { margin: 8px 0; border-top: 1px dashed #ccc; }
+        .btn { width: 100%; padding: 14px; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer; font-weight: bold; background: var(--primary); color: white; margin-top: 10px; }
         .lucro-pos { color: #2e7d32; font-weight: bold; }
         .lucro-neutro { color: #f57c00; font-weight: bold; }
-        .divider { margin: 8px 0; border-top: 1px dashed #ccc; }
-        .status-msg { text-align: center; font-weight: bold; color: var(--primary); margin: 10px 0; display: none; }
-        
-        .badge-segurança {
-            background-color: #e3f2fd;
-            color: #0d47a1;
-            padding: 8px;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-            text-align: center;
-            border: 1px solid #bbdefb;
-        }
+        .lucro-neg { color: #c62828; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <button class="menu-btn" onclick="toggleSidebar()">☰</button>
-    <h2>Painel Proteção - Modo Recuperação Pura</h2>
+    <h2>Painel Proteção Pró - Orçamento Travado no Prêmio</h2>
 </div>
-
-<div class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-        <h3>Projetos Salvos</h3>
-        <button class="close-btn" onclick="toggleSidebar()">✕</button>
-    </div>
-    <div class="projects-list" id="projects-list"></div>
-</div>
-
-<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
 
 <div class="container">
-    <div id="status-storage" class="status-msg">Salvo com sucesso!</div>
-
     <div class="card">
-        <h3>1. Configuração da Múltipla Principal</h3>
-        <div class="badge-segurança">🛡️ MODO REEMBOLSO: Proteções configuradas para Lucro R$ 0.00 (Evita estouro de banca)</div>
+        <h3>1. Entrada da Múltipla Principal (Teto de Gasto)</h3>
         <div class="row">
             <div class="col">
-                <label>Valor Múltipla (R$)</label>
-                <input type="number" id="valMultipla" step="0.01" value="0.83">
+                <label>Valor Investido Múltipla (R$)</label>
+                <input type="number" id="valMultipla" step="0.01" value="8.30">
             </div>
             <div class="col">
                 <label>Odd Múltipla</label>
-                <input type="number" id="oddMultipla" step="0.01" value="11.64">
+                <input type="number" id="oddMultipla" step="0.01" value="5.15">
             </div>
         </div>
-        <div class="result-box" id="retornoMultipla">Retorno Estimado: R$ 9.66</div>
+        <div class="row">
+            <div class="col">
+                <label>Estratégia de Distribuição do Prêmio</label>
+                <select id="estrategia" onchange="calcularSistema()">
+                    <option value="visitante_lucro">Focar Lucro no Visitante (Empate Devolve)</option>
+                    <option value="empate_lucro">Focar Lucro no Empate (Visitante Devolve)</option>
+                    <option value="dividir_lucro">Dividir Lucro Proporcional (Ambos dão Lucro)</option>
+                </select>
+            </div>
+        </div>
+        <div class="result-box" id="retornoMultipla" style="background-color: #e3f2fd; color: #0d47a1;">
+            Retorno Máximo Disponível: R$ 42,75
+        </div>
     </div>
 
-    <div id="jogos-container"></div>
+    <div class="card">
+        <h3>2. Jogo de Cobertura (Dia 2)</h3>
+        <div class="row">
+            <div class="col">
+                <label>Odd Empate</label>
+                <input type="number" id="oddE" step="0.01" value="3.30">
+            </div>
+            <div class="col">
+                <label>Odd Visitante</label>
+                <input type="number" id="oddV" step="0.01" value="2.96">
+            </div>
+        </div>
+        <button class="btn" onclick="calcularSistema()">Calcular Distribuição Exata</button>
+    </div>
 
     <div class="card">
-        <h3>Ações do Projeto</h3>
-        <div class="col" style="margin-bottom: 12px;">
-            <label>Nome do Projeto para Salvar</label>
-            <input type="text" id="nomeProjeto" placeholder="Ex: Rodada 2 Jogos - Modo Reembolso">
-        </div>
-        <div class="btn-group">
-            <button class="btn btn-calc" onclick="calcularSistema()">Calcular Proteções</button>
-            <button class="btn btn-save" onclick="salvarDados()">Salvar no Histórico</button>
+        <h3>3. Cenários de Saída Financeira</h3>
+        <div class="result-box" id="resultadoPainel">
+            Aguardando clique para calcular...
         </div>
     </div>
 </div>
 
 <script>
-    // Quantidade total travada em 2 jogos
-    const TOTAL_JOGOS = 2;
-    
-    const defaultConfrontos = ["Jogo 1", "Jogo 2"];
-    const defaultOddsE = [3.30, 3.50];
-    const defaultOddsV = [2.96, 4.10];
-
-    const container = document.getElementById('jogos-container');
-    for (let i = 1; i <= TOTAL_JOGOS; i++) {
-        container.innerHTML += `
-            <div class="card" id="card_dia_${i}">
-                <h3>Dia ${i}</h3>
-                <div class="col" style="margin-bottom: 10px;">
-                    <label>Confronto / Times</label>
-                    <input type="text" id="conf_${i}" class="input-confronto" placeholder="Ex: Time A x Time B" value="${defaultConfrontos[i-1]}">
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <label>Odd Empate</label>
-                        <input type="number" id="oddE_${i}" step="0.001" value="${defaultOddsE[i-1]}">
-                    </div>
-                    <div class="col">
-                        <label>Odd Visitante</label>
-                        <input type="number" id="oddV_${i}" step="0.001" value="${defaultOddsV[i-1]}">
-                    </div>
-                </div>
-                <div class="result-box box-wait" id="res_${i}">
-                    Aguardando cálculo...
-                </div>
-            </div>
-        `;
-    }
-
-    function toggleSidebar() {
-        document.getElementById('sidebar').classList.toggle('open');
-        document.getElementById('overlay').classList.toggle('show');
-    }
-
     function calcularSistema() {
         let valM = parseFloat(document.getElementById('valMultipla').value) || 0;
         let oddM = parseFloat(document.getElementById('oddMultipla').value) || 0;
+        let oddE = parseFloat(document.getElementById('oddE').value) || 1;
+        let oddV = parseFloat(document.getElementById('oddV').value) || 1;
+        let estrategia = document.getElementById('estrategia').value;
         
-        let retM = valM * oddM;
-        document.getElementById('retornoMultipla').innerText = `Retorno Se a Múltipla Bater: R$ ${retM.toFixed(2)}`;
+        // O prêmio máximo vira o nosso teto engessado de orçamento para as duas proteções
+        let premioMaximo = valM * oddM;
+        document.getElementById('retornoMultipla').innerText = `Retorno Máximo Disponível (Orçamento Total): R$ ${premioMaximo.toFixed(2)}`;
 
-        // SCRIPT ANTERIOR DA OPÇÃO DE APENAS DEVOLVER O MONTANTE INVESTIDO (META = 0)
-        let metaProporcional = 0; 
+        let valEmpate = 0;
+        let valVisitante = 0;
 
-        let prejuizoAcumulado = valM; 
-
-        for (let i = 1; i <= TOTAL_JOGOS; i++) {
-            const resBox = document.getElementById(`res_${i}`);
-            
-            let oddE = parseFloat(document.getElementById(`oddE_${i}`).value) || 1;
-            let oddV = parseFloat(document.getElementById(`oddV_${i}`).value) || 1;
-            
-            let divisor = (oddE * oddV) - oddE - oddV;
-            
-            let valVisitante = 0;
-            let valEmpate = 0;
-
-            if (divisor > 0) {
-                valVisitante = ((prejuizoAcumulado * oddE) + metaProporcional) / divisor;
-                valEmpate = (prejuizoAcumulado + valVisitante + metaProporcional) / (oddE - 1);
-            } else {
-                valVisitante = prejuizoAcumulado / (oddV - 1);
-                valEmpate = (prejuizoAcumulado + valVisitante + metaProporcional) / (oddE - 1);
-            }
-            
-            let custoTotalAteAqui = prejuizoAcumulado + valEmpate + valVisitante;
-
-            let lucroEmpate = (valEmpate * oddE) - custoTotalAteAqui;
-            let lucroVisitante = (valVisitante * oddV) - custoTotalAteAqui;
-
-            // Zera dízimas estruturais para cravar o 0.00 visual do reembolso total
-            if (Math.abs(lucroVisitante) < 0.05) { lucroVisitante = 0.00; }
-            if (Math.abs(lucroEmpate) < 0.05) { lucroEmpate = 0.00; }
-
-            resBox.className = "result-box";
-            resBox.innerHTML = `
-                🤝 <b>Aposta no Empate (Proteção):</b> R$ ${valEmpate.toFixed(2)}<br>
-                ✈️ <b>Aposta no Visitante (Proteção):</b> R$ ${valVisitante.toFixed(2)}<br>
-                💰 <b>Custo Acumulado Total:</b> R$ ${custoTotalAteAqui.toFixed(2)}<br>
-                <div class="divider"></div>
-                📈 <b>Se der Empate hoje:</b> <span class="lucro-neutro">R$ ${lucroEmpate.toFixed(2)}</span> (0x0 Devolvido)<br>
-                📉 <b>Se der Visitante hoje:</b> <span class="lucro-neutro">R$ ${lucroVisitante.toFixed(2)}</span> (0x0 Devolvido)
-            `;
-            
-            prejuizoAcumulado = custoTotalAteAqui;
-        }
-    }
-
-    function salvarDados() {
-        let nome = document.getElementById('nomeProjeto').value.trim();
-        if (!nome) {
-            alert("Por favor, digite um nome para salvar o seu projeto!");
-            return;
+        // MATEMÁTICA DA DISTRIBUIÇÃO ENGESSADA
+        if (estrategia === "visitante_lucro") {
+            // O empate precisa apenas devolver o custo da múltipla + o custo dele mesmo
+            valEmpate = valM / (oddE - 1);
+            // Todo o restante do orçamento do prêmio vai obrigatoriamente para o visitante
+            valVisitante = premioMaximo - valEmpate;
+        } 
+        else if (estrategia === "empate_lucro") {
+            // O visitante precisa apenas devolver o custo da múltipla + o custo dele mesmo
+            valVisitante = valM / (oddV - 1);
+            // Todo o restante do orçamento do prêmio vai obrigatoriamente para o empate
+            valEmpate = premioMaximo - valVisitante;
+        } 
+        else if (estrategia === "dividir_lucro") {
+            // Divide o prêmio proporcionalmente baseado no peso das duas odds combinadas
+            let proporcao = oddV / (oddE + oddV);
+            valEmpate = premioMaximo * proporcao;
+            valVisitante = premioMaximo - valEmpate;
         }
 
-        const dadosProjeto = {
-            id: Date.now(),
-            nome: nome,
-            valMultipla: document.getElementById('valMultipla').value,
-            oddMultipla: document.getElementById('oddMultipla').value,
-            confrontos: [], oddsE: [], oddsV: []
-        };
+        // Validação de segurança de estouro de teto
+        let custoProtecoes = valEmpate + valVisitante;
+        let custoTotalProjeto = valM + custoProtecoes;
 
-        for (let i = 1; i <= TOTAL_JOGOS; i++) {
-            dadosProjeto.confrontos.push(document.getElementById(`conf_${i}`).value);
-            dadosProjeto.oddsE.push(document.getElementById(`oddE_${i}`).value);
-            dadosProjeto.oddsV.push(document.getElementById(`oddV_${i}`).value);
-        }
+        // Cálculos de Retornos Brutos
+        let retornoSeEmpate = valEmpate * oddE;
+        let retornoSeVisitante = valVisitante * oddV;
 
-        let historico = JSON.parse(localStorage.getItem('historicoApostasConfrontos')) || [];
-        let indexExistente = historico.findIndex(p => p.nome === nome);
-        if (indexExistente >= 0) historico[indexExistente] = dadosProjeto;
-        else historico.push(dadosProjeto);
+        // Lucros Líquidos Reais (Retorno menos tudo que gastou no projeto)
+        let lucroLiquidoEmpate = retornoSeEmpate - custoTotalProjeto;
+        let lucroLiquidoVisitante = retornoSeVisitante - custoTotalProjeto;
 
-        localStorage.setItem('historicoApostasConfrontos', JSON.stringify(historico));
-        
-        document.getElementById('status-storage').style.display = 'block';
-        setTimeout(() => { document.getElementById('status-storage').style.display = 'none'; }, 2000);
-        
-        atualizarListaSidebar();
+        // Formatação das mensagens visuais baseadas no lucro real obtido
+        let msgEmpate = lucroLiquidoEmpate >= 0.05 
+            ? `<span class="lucro-pos">LÚCRO de + R$ ${lucroLiquidoEmpate.toFixed(2)}</span> líquido` 
+            : (Math.abs(lucroLiquidoEmpate) < 0.10 ? `<span class="lucro-neutro">R$ 0.00 (Reembolsado Perfeito)</span>` : `<span class="lucro-neg">Prejuízo de R$ ${lucroLiquidoEmpate.toFixed(2)} (Ajuste as Odds)</span>`);
+
+        let msgVisitante = lucroLiquidoVisitante >= 0.05 
+            ? `<span class="lucro-pos">LÚCRO de + R$ ${lucroLiquidoVisitante.toFixed(2)}</span> líquido` 
+            : (Math.abs(lucroLiquidoVisitante) < 0.10 ? `<span class="lucro-neutro">R$ 0.00 (Reembolsado Perfeito)</span>` : `<span class="lucro-neg">Prejuízo de R$ ${lucroLiquidoVisitante.toFixed(2)} (Ajuste as Odds)</span>`);
+
+        const resBox = document.getElementById('resultadoPainel');
+        resBox.innerHTML = `
+            💰 <b>Aposta no Empate:</b> R$ ${valEmpate.toFixed(2)}<br>
+            ✈️ <b>Aposta no Visitante:</b> R$ ${valVisitante.toFixed(2)}<br>
+            💸 <b>Custo Total das Proteções:</b> R$ ${custoProtecoes.toFixed(2)} (Teto Máximo)<br>
+            📋 <b>Custo Total do Projeto (Múltipla + Proteções):</b> R$ ${custoTotalProjeto.toFixed(2)}<br>
+            <div class="divider"></div>
+            🤝 <b>Se a proteção bater no Empate:</b> ${msgEmpate}<br>
+            ✈️ <b>Se a proteção bater no Visitante:</b> ${msgVisitante}<br>
+            <div class="divider"></div>
+            🏆 <b>Se a Múltipla Principal vencer original:</b> <span class="lucro-pos">R$ ${premioMaximo.toFixed(2)}</span> Bruto (Garante o retorno do teto)
+        `;
     }
 
-    function atualizarListaSidebar() {
-        let historico = JSON.parse(localStorage.getItem('historicoApostasConfrontos')) || [];
-        const listContainer = document.getElementById('projects-list');
-        listContainer.innerHTML = '';
-
-        if (historico.length === 0) {
-            listContainer.innerHTML = '<p style="color:#aaa; text-align:center; font-size:0.9rem;">Nenhum projeto salvo.</p>';
-            return;
-        }
-
-        historico.forEach(p => {
-            listContainer.innerHTML += `
-                <div class="project-item">
-                    <span class="project-name" onclick="carregarProjeto(${p.id})">${p.nome}</span>
-                    <button class="delete-btn" onclick="deletarProjeto(${p.id})">🗑️</button>
-                </div>
-            `;
-        });
-    }
-
-    window.carregarProjeto = function(id) {
-        let historico = JSON.parse(localStorage.getItem('historicoApostasConfrontos')) || [];
-        let p = historico.find(proj => proj.id === id);
-        if (p) {
-            document.getElementById('nomeProjeto').value = p.nome;
-            document.getElementById('valMultipla').value = p.valMultipla;
-            document.getElementById('oddMultipla').value = p.oddMultipla;
-
-            for (let i = 1; i <= TOTAL_JOGOS; i++) {
-                document.getElementById(`conf_${i}`).value = p.confrontos && p.confrontos[i-1] ? p.confrontos[i-1] : `Jogo ${i}`;
-                document.getElementById(`oddE_${i}`).value = p.oddsE[i-1];
-                document.getElementById(`oddV_${i}`).value = p.oddsV[i-1];
-            }
-            calcularSistema();
-            toggleSidebar();
-        }
-    }
-
-    window.deletarProjeto = function(id) {
-        let historico = JSON.parse(localStorage.getItem('historicoApostasConfrontos')) || [];
-        historico = historico.filter(proj => proj.id !== id);
-        localStorage.setItem('historicoApostasConfrontos', JSON.stringify(historico));
-        atualizarListaSidebar();
-    }
-
-    window.onload = function() {
-        atualizarListaSidebar();
-        calcularSistema();
-    };
+    // Inicializa o cálculo automático na abertura da página
+    window.onload = calcularSistema;
 </script>
 
 </body>
