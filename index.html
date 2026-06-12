@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Proteção - Orçamento Travado no Prêmio</title>
+    <title>Painel Proteção - Surebet Líquida Blindada</title>
     <style>
         :root {
             --primary: #2e7d32;
@@ -55,34 +55,34 @@
 <body>
 
 <div class="header">
-    <h2>Painel Proteção Pró - Orçamento Travado no Prêmio</h2>
+    <h2>Painel Proteção Pró - Surebet Líquida Blindada</h2>
 </div>
 
 <div class="container">
     <div class="card">
-        <h3>1. Entrada da Múltipla Principal (Teto de Gasto)</h3>
+        <h3>1. Entrada da Múltipla Principal</h3>
         <div class="row">
             <div class="col">
                 <label>Valor Investido Múltipla (R$)</label>
-                <input type="number" id="valMultipla" step="0.01" value="8.30">
+                <input type="number" id="valMultipla" step="0.01" value="10.00" oninput="calcularSistema()">
             </div>
             <div class="col">
                 <label>Odd Múltipla</label>
-                <input type="number" id="oddMultipla" step="0.01" value="5.15">
+                <input type="number" id="oddMúltipla" step="0.01" value="2.37" oninput="calcularSistema()">
             </div>
         </div>
         <div class="row">
             <div class="col">
-                <label>Estratégia de Distribuição do Prêmio</label>
+                <label>Estratégia de Distribuição</label>
                 <select id="estrategia" onchange="calcularSistema()">
+                    <option value="dividir_lucro">Dividir Lucro Proporcional (Ambos Iguais)</option>
                     <option value="visitante_lucro">Focar Lucro no Visitante (Empate Devolve)</option>
                     <option value="empate_lucro">Focar Lucro no Empate (Visitante Devolve)</option>
-                    <option value="dividir_lucro">Dividir Lucro Proporcional (Ambos dão Lucro)</option>
                 </select>
             </div>
         </div>
         <div class="result-box" id="retornoMultipla" style="background-color: #e3f2fd; color: #0d47a1;">
-            Retorno Máximo Disponível: R$ 42,75
+            Retorno Bruto: R$ 23.70 | Lucro Disponível para Proteções: R$ 13.70
         </div>
     </div>
 
@@ -91,20 +91,20 @@
         <div class="row">
             <div class="col">
                 <label>Odd Empate</label>
-                <input type="number" id="oddE" step="0.01" value="3.30">
+                <input type="number" id="oddE" step="0.01" value="3.30" oninput="calcularSistema()">
             </div>
             <div class="col">
                 <label>Odd Visitante</label>
-                <input type="number" id="oddV" step="0.01" value="2.96">
+                <input type="number" id="oddV" step="0.01" value="3.05" oninput="calcularSistema()">
             </div>
         </div>
-        <button class="btn" onclick="calcularSistema()">Calcular Distribuição Exata</button>
+        <button class="btn" onclick="calcularSistema()">Calcular Cenários Reais</button>
     </div>
 
     <div class="card">
-        <h3>3. Cenários de Saída Financeira</h3>
+        <h3>3. Cenários de Saída Financeira Reais</h3>
         <div class="result-box" id="resultadoPainel">
-            Aguardando clique para calcular...
+            Aguardando cálculo...
         </div>
     </div>
 </div>
@@ -112,74 +112,84 @@
 <script>
     function calcularSistema() {
         let valM = parseFloat(document.getElementById('valMultipla').value) || 0;
-        let oddM = parseFloat(document.getElementById('oddMultipla').value) || 0;
+        let oddM = parseFloat(document.getElementById('oddMúltipla').value) || 0;
         let oddE = parseFloat(document.getElementById('oddE').value) || 1;
         let oddV = parseFloat(document.getElementById('oddV').value) || 1;
         let estrategia = document.getElementById('estrategia').value;
         
-        // O prêmio máximo vira o nosso teto engessado de orçamento para as duas proteções
-        let premioMaximo = valM * oddM;
-        document.getElementById('retornoMultipla').innerText = `Retorno Máximo Disponível (Orçamento Total): R$ ${premioMaximo.toFixed(2)}`;
+        let premioBrutoM = valM * oddM;
+        // O lucro real disponível é o prêmio bruto menos o que você tirou do bolso
+        let lucroDisponivelProtecoes = premioBrutoM - valM;
+
+        document.getElementById('retornoMultipla').innerText = `Retorno Bruto: R$ ${premioBrutoM.toFixed(2)} | Lucro Max Disponível para Coberturas: R$ ${lucroDisponivelProtecoes.toFixed(2)}`;
 
         let valEmpate = 0;
         let valVisitante = 0;
 
-        // MATEMÁTICA DA DISTRIBUIÇÃO ENGESSADA
-        if (estrategia === "visitante_lucro") {
-            // O empate precisa apenas devolver o custo da múltipla + o custo dele mesmo
-            valEmpate = valM / (oddE - 1);
-            // Todo o restante do orçamento do prêmio vai obrigatoriamente para o visitante
-            valVisitante = premioMaximo - valEmpate;
+        // MATEMÁTICA CORRIGIDA: O teto de gasto das proteções é estritamente o lucro disponível!
+        if (estrategia === "dividir_lucro") {
+            let invE = 1 / oddE;
+            let invV = 1 / oddV;
+            let somaInv = invE + invV;
+            
+            valEmpate = lucroDisponivelProtecoes * (invE / somaInv);
+            valVisitante = lucroDisponivelProtecoes - valEmpate;
+        } 
+        else if (estrategia === "visitante_lucro") {
+            // Empate apenas cobre o custo do projeto todo para sair no 0x0
+            valEmpate = premioBrutoM / oddE;
+            valVisitante = lucroDisponivelProtecoes - valEmpate;
         } 
         else if (estrategia === "empate_lucro") {
-            // O visitante precisa apenas devolver o custo da múltipla + o custo dele mesmo
-            valVisitante = valM / (oddV - 1);
-            // Todo o restante do orçamento do prêmio vai obrigatoriamente para o empate
-            valEmpate = premioMaximo - valVisitante;
-        } 
-        else if (estrategia === "dividir_lucro") {
-            // Divide o prêmio proporcionalmente baseado no peso das duas odds combinadas
-            let proporcao = oddV / (oddE + oddV);
-            valEmpate = premioMaximo * proporcao;
-            valVisitante = premioMaximo - valEmpate;
+            // Visitante apenas cobre o custo do projeto todo para sair no 0x0
+            valVisitante = premioBrutoM / oddV;
+            valEmpate = lucroDisponivelProtecoes - valVisitante;
         }
 
-        // Validação de segurança de estouro de teto
+        // Validações de custos engessados
         let custoProtecoes = valEmpate + valVisitante;
-        let custoTotalProjeto = valM + custoProtecoes;
+        let custoTotalProjeto = valM + custoProtecoes; // Isso vai cravar exatamente no prêmio bruto da múltipla!
 
-        // Cálculos de Retornos Brutos
+        // Se o valor das proteções calculadas passar do lucro disponível, avisa o usuário do erro de odds
+        if (custoProtecoes > lucroDisponivelProtecoes + 0.02) {
+            valEmpate = 0; valVisitante = 0;
+            document.getElementById('resultadoPainel').innerHTML = `<span class="lucro-neg">⚠️ ERRO MATEMÁTICO: As odds de proteção atuais exigem um custo maior do que o lucro disponível (R$ ${lucroDisponivelProtecoes.toFixed(2)}). Escolha um jogo com odds maiores!</span>`;
+            return;
+        }
+
         let retornoSeEmpate = valEmpate * oddE;
         let retornoSeVisitante = valVisitante * oddV;
 
-        // Lucros Líquidos Reais (Retorno menos tudo que gastou no projeto)
+        let lucroLiquidoMúltipla = premioBrutoM - custoTotalProjeto;
         let lucroLiquidoEmpate = retornoSeEmpate - custoTotalProjeto;
         let lucroLiquidoVisitante = retornoSeVisitante - custoTotalProjeto;
 
-        // Formatação das mensagens visuais baseadas no lucro real obtido
-        let msgEmpate = lucroLiquidoEmpate >= 0.05 
-            ? `<span class="lucro-pos">LÚCRO de + R$ ${lucroLiquidoEmpate.toFixed(2)}</span> líquido` 
-            : (Math.abs(lucroLiquidoEmpate) < 0.10 ? `<span class="lucro-neutro">R$ 0.00 (Reembolsado Perfeito)</span>` : `<span class="lucro-neg">Prejuízo de R$ ${lucroLiquidoEmpate.toFixed(2)} (Ajuste as Odds)</span>`);
+        // Formatação inteligente das saídas de texto
+        let msgMúltipla = lucroLiquidoMúltipla > 0.05 
+            ? `<span class="lucro-pos">LÚCRO de + R$ ${lucroLiquidoMúltipla.toFixed(2)}</span> líquido` 
+            : (Math.abs(lucroLiquidoMúltipla) < 0.10 ? `<span class="lucro-neutro">R$ 0.00 (Reembolsado Perfeito)</span>` : `<span class="lucro-neg">Prejuízo de R$ ${lucroLiquidoMúltipla.toFixed(2)}</span>`);
 
-        let msgVisitante = lucroLiquidoVisitante >= 0.05 
+        let msgEmpate = lucroLiquidoEmpate > 0.05 
+            ? `<span class="lucro-pos">LÚCRO de + R$ ${lucroLiquidoEmpate.toFixed(2)}</span> líquido` 
+            : (Math.abs(lucroLiquidoEmpate) < 0.10 ? `<span class="lucro-neutro">R$ 0.00 (Reembolsado Perfeito)</span>` : `<span class="lucro-neg">Prejuízo de R$ ${lucroLiquidoEmpate.toFixed(2)}</span>`);
+
+        let msgVisitante = lucroLiquidoVisitante > 0.05 
             ? `<span class="lucro-pos">LÚCRO de + R$ ${lucroLiquidoVisitante.toFixed(2)}</span> líquido` 
-            : (Math.abs(lucroLiquidoVisitante) < 0.10 ? `<span class="lucro-neutro">R$ 0.00 (Reembolsado Perfeito)</span>` : `<span class="lucro-neg">Prejuízo de R$ ${lucroLiquidoVisitante.toFixed(2)} (Ajuste as Odds)</span>`);
+            : (Math.abs(lucroLiquidoVisitante) < 0.10 ? `<span class="lucro-neutro">R$ 0.00 (Reembolsado Perfeito)</span>` : `<span class="lucro-neg">Prejuízo de R$ ${lucroLiquidoVisitante.toFixed(2)}</span>`);
 
         const resBox = document.getElementById('resultadoPainel');
         resBox.innerHTML = `
-            💰 <b>Aposta no Empate:</b> R$ ${valEmpate.toFixed(2)}<br>
+            🤝 <b>Aposta no Empate:</b> R$ ${valEmpate.toFixed(2)}<br>
             ✈️ <b>Aposta no Visitante:</b> R$ ${valVisitante.toFixed(2)}<br>
-            💸 <b>Custo Total das Proteções:</b> R$ ${custoProtecoes.toFixed(2)} (Teto Máximo)<br>
+            💸 <b>Custo Real das Proteções:</b> R$ ${custoProtecoes.toFixed(2)}<br>
             📋 <b>Custo Total do Projeto (Múltipla + Proteções):</b> R$ ${custoTotalProjeto.toFixed(2)}<br>
             <div class="divider"></div>
+            🏆 <b>Se a Múltipla Principal vencer original:</b> ${msgMúltipla}<br>
             🤝 <b>Se a proteção bater no Empate:</b> ${msgEmpate}<br>
-            ✈️ <b>Se a proteção bater no Visitante:</b> ${msgVisitante}<br>
-            <div class="divider"></div>
-            🏆 <b>Se a Múltipla Principal vencer original:</b> <span class="lucro-pos">R$ ${premioMaximo.toFixed(2)}</span> Bruto (Garante o retorno do teto)
+            ✈️ <b>Se a proteção bater no Visitante:</b> ${msgVisitante}
         `;
     }
 
-    // Inicializa o cálculo automático na abertura da página
     window.onload = calcularSistema;
 </script>
 
