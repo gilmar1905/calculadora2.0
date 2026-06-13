@@ -2,83 +2,85 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Painel Proteção - Múltipla Inclusa</title>
+    <title>Painel Proteção Sequencial - Acumulado Real</title>
     <style>
-        body { font-family: sans-serif; background: #121212; color: #eee; padding: 15px; }
-        .card { background: #1e1e1e; padding: 15px; border-radius: 8px; border: 1px solid #333; margin-bottom: 15px; }
-        input { padding: 10px; border: 1px solid #444; border-radius: 4px; background: #2a2a2a; color: white; width: 100%; margin-bottom: 10px; }
-        .result-box { padding: 12px; background: #263238; border-left: 4px solid #4caf50; margin-bottom: 10px; border-radius: 4px; }
+        body { font-family: sans-serif; background: #f5f5f5; padding: 15px; }
+        .card { background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 15px; border: 1px solid #ccc; }
+        .row { display: flex; gap: 10px; margin-bottom: 10px; }
+        .col { flex: 1; display: flex; flex-direction: column; }
+        input { padding: 10px; border: 1px solid #ccc; border-radius: 4px; }
+        .res { font-size: 0.9rem; margin-top: 10px; background: #f9f9f9; padding: 10px; border-radius: 4px; border: 1px solid #eee; }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h3>Dados do Ciclo</h3>
-    <label>Valor da Múltipla (R$):</label>
+    <h3>1. Dados da Múltipla / Aposta Principal</h3>
+    <label>Montante Apostado Múltipla (R$):</label>
     <input type="number" id="valMultipla" value="100.00" oninput="calcular()">
-    <label>Margem de Lucro (%):</label>
-    <input type="number" id="margemLucro" value="10" oninput="calcular()">
+    <label>Margem de Lucro Cobertura (%):</label>
+    <input type="number" id="margem" value="10" oninput="calcular()">
 </div>
 
-<div class="card">
-    <h3>Jogo 3 (O último)</h3>
-    <input type="number" id="oddE_3" value="12.11" oninput="calcular()" placeholder="Odd Empate">
-    <input type="number" id="oddV_3" value="20.65" oninput="calcular()" placeholder="Odd Visitante">
+<div class="card" style="border-left: 5px solid #ffeb3b;">
+    <h3>Proteção 3º Time / Jogo:</h3>
+    <input type="text" value="França x Senegal" oninput="calcular()">
+    <div class="row">
+        <div class="col"><label>Odd Empate (X)</label><input type="number" id="oddE3" value="12.11" oninput="calcular()"></div>
+        <div class="col"><label>Odd Visitante (2)</label><input type="number" id="oddV3" value="20.65" oninput="calcular()"></div>
+    </div>
+    <div id="res3" class="res">Aguardando...</div>
 </div>
 
-<div class="card">
-    <h3>Jogo 2</h3>
-    <input type="number" id="oddE_2" value="4.05" oninput="calcular()" placeholder="Odd Empate">
-    <input type="number" id="oddV_2" value="6.10" oninput="calcular()" placeholder="Odd Visitante">
+<div class="card" style="border-left: 5px solid #2196f3;">
+    <h3>Proteção 2º Time / Jogo:</h3>
+    <input type="text" value="Bélgica x Egito" oninput="calcular()">
+    <div class="row">
+        <div class="col"><label>Odd Empate (X)</label><input type="number" id="oddE2" value="4.05" oninput="calcular()"></div>
+        <div class="col"><label>Odd Visitante (2)</label><input type="number" id="oddV2" value="6.10" oninput="calcular()"></div>
+    </div>
+    <div id="res2" class="res">Aguardando...</div>
 </div>
 
-<div class="card">
-    <h3>Jogo 1</h3>
-    <input type="number" id="oddE_1" value="3.85" oninput="calcular()" placeholder="Odd Empate">
-    <input type="number" id="oddV_1" value="5.80" oninput="calcular()" placeholder="Odd Visitante">
+<div class="card" style="border-left: 5px solid #4caf50;">
+    <h3>Proteção 1º Time / Jogo:</h3>
+    <input type="text" value="Brasil x Marrocos" oninput="calcular()">
+    <div class="row">
+        <div class="col"><label>Odd Empate (X)</label><input type="number" id="oddE1" value="3.85" oninput="calcular()"></div>
+        <div class="col"><label>Odd Visitante (2)</label><input type="number" id="oddV1" value="5.80" oninput="calcular()"></div>
+    </div>
+    <div id="res1" class="res">Aguardando...</div>
 </div>
-
-<div id="resultados"></div>
 
 <script>
     function calcular() {
         let valM = parseFloat(document.getElementById('valMultipla').value) || 0;
-        let margem = parseFloat(document.getElementById('margemLucro').value) / 100 || 0;
-
+        let margem = parseFloat(document.getElementById('margem').value) / 100 || 0;
+        
         let odds = [
-            { e: parseFloat(document.getElementById('oddE_1').value), v: parseFloat(document.getElementById('oddV_1').value) },
-            { e: parseFloat(document.getElementById('oddE_2').value), v: parseFloat(document.getElementById('oddV_2').value) },
-            { e: parseFloat(document.getElementById('oddE_3').value), v: parseFloat(document.getElementById('oddV_3').value) }
+            { e: parseFloat(document.getElementById('oddE1').value), v: parseFloat(document.getElementById('oddV1').value) },
+            { e: parseFloat(document.getElementById('oddE2').value), v: parseFloat(document.getElementById('oddV2').value) },
+            { e: parseFloat(document.getElementById('oddE3').value), v: parseFloat(document.getElementById('oddV3').value) }
         ];
 
-        // O segredo está aqui: o custo base começa com o valor da múltipla.
-        // O loop agora trata a múltipla como uma dívida inicial que precisa ser paga.
         let custoAcumulado = valM;
-        let apostas = [];
+        let resultados = [];
 
+        // Cálculo de trás para frente (do Jogo 3 para o 1) para já incluir o custo do Jogo 3 no total acumulado
         for (let i = 2; i >= 0; i--) {
-            // A meta de recuperação agora engloba tudo o que já foi gasto (Múltipla + Proteções anteriores)
             let totalParaRecuperar = custoAcumulado * (1 + margem);
-            
-            // Cálculo da divisão proporcional nas odds
             let valE = (totalParaRecuperar / odds[i].e) / 2;
             let valV = (totalParaRecuperar / odds[i].v) / 2;
-            
-            apostas[i] = { e: valE, v: valV };
-            
-            // O custo acumulado cresce a cada passo, incluindo a Múltipla inicial
+            resultados[i] = { e: valE, v: valV };
             custoAcumulado += (valE + valV);
         }
 
-        let html = "";
-        let custoCorrente = valM;
+        // Exibir resultados
         for (let i = 0; i < 3; i++) {
-            html += `<div class='result-box'><strong>Jogo ${i+1}:</strong><br>
-                     Aposta Empate: R$ ${apostas[i].e.toFixed(2)} | Aposta Visitante: R$ ${apostas[i].v.toFixed(2)}<br>
-                     Custo Acumulado Total no momento: R$ ${custoCorrente.toFixed(2)}</div>`;
-            custoCorrente += (apostas[i].e + apostas[i].v);
+            document.getElementById('res' + (i+1)).innerHTML = 
+                `Aposta Empate: R$ ${resultados[i].e.toFixed(2)} | Aposta Visitante: R$ ${resultados[i].v.toFixed(2)}<br>` +
+                `<b>Custo Acumulado Total:</b> R$ ${custoAcumulado.toFixed(2)}`;
         }
-        document.getElementById('resultados').innerHTML = html;
     }
     window.onload = calcular;
 </script>
