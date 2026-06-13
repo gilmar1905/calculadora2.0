@@ -7,8 +7,8 @@
         body { background-color: #121212; color: white; font-family: sans-serif; padding: 20px; }
         .card { background-color: #1e1e1e; border: 1px solid #333; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
         input { background: #333; color: white; border: 1px solid #555; padding: 8px; width: 100%; margin-top: 5px; margin-bottom: 10px; }
-        .res { font-size: 0.9em; margin-top: 10px; color: #ffeb3b; }
-        h3 { border-bottom: 1px solid #444; padding-bottom: 5px; }
+        .res { font-size: 0.9em; margin-top: 10px; color: #fff; border-left: 4px solid #ffeb3b; padding-left: 10px; }
+        .total-info { font-weight: bold; color: #00ff00; font-size: 1.1em; }
     </style>
 </head>
 <body>
@@ -19,6 +19,12 @@
     <input type="number" id="valM" value="100" oninput="calcular()">
     <label>Odd Total Acumulada:</label>
     <input type="number" id="oddM" value="4.13" oninput="calcular()">
+    
+    <div id="resPrincipal">
+        Retorno Bruto Múltipla: R$ <span id="retBruto">0.00</span><br>
+        <span class="total-info">Custo Total da Operação: R$ <span id="custoTotalOp">0.00</span></span>
+    </div>
+    
     <label>Margem de Lucro Cobertura (%):</label>
     <input type="number" id="margem" value="10" oninput="calcular()">
 </div>
@@ -58,14 +64,17 @@
 <script>
     function calcular() {
         let valM = parseFloat(document.getElementById('valM').value) || 0;
+        let oddM = parseFloat(document.getElementById('oddM').value) || 1;
         let margem = (parseFloat(document.getElementById('margem').value) || 0) / 100;
+        
+        document.getElementById('retBruto').innerText = (valM * oddM).toFixed(2);
         
         let aE = [0, 0, 0], aV = [0, 0, 0];
         
-        // Loop de convergência para o custo acumulado
+        // Loop de cálculo para estabilizar o custo total
         for(let iter = 0; iter < 10; iter++) {
-            let totalInvestido = valM + aE.reduce((a,b)=>a+b,0) + aV.reduce((a,b)=>a+b,0);
-            let meta = totalInvestido * (1 + margem);
+            let totalCiclo = valM + aE.reduce((a,b)=>a+b,0) + aV.reduce((a,b)=>a+b,0);
+            let meta = totalCiclo * (1 + margem);
             
             for(let i = 0; i < 3; i++) {
                 let id = i + 1;
@@ -80,15 +89,20 @@
             }
         }
 
-        // Exibir resultados
+        let custoTotal = valM + aE.reduce((a,b)=>a+b,0) + aV.reduce((a,b)=>a+b,0);
+        document.getElementById('custoTotalOp').innerText = custoTotal.toFixed(2);
+
+        // Exibir resultados com Lucro Líquido
         for(let i = 1; i <= 3; i++) {
-            let totalCiclo = valM + aE.reduce((a,b)=>a+b,0) + aV.reduce((a,b)=>a+b,0);
+            let retE = aE[i-1] * parseFloat(document.getElementById('oddE'+i).value);
+            let retV = aV[i-1] * parseFloat(document.getElementById('oddV'+i).value);
+            
             document.getElementById('res'+i).innerHTML = 
-                `Aposta no EMPATE: R$ ${aE[i-1].toFixed(2)} | Aposta no VISITANTE: R$ ${aV[i-1].toFixed(2)}<br>` +
-                `<b>Custo Acumulado Total: R$ ${totalCiclo.toFixed(2)}</b>`;
+                `Aposta no EMPATE: R$ ${aE[i-1].toFixed(2)} | Lucro Líquido: R$ ${(retE - custoTotal).toFixed(2)}<br>` +
+                `Aposta no VISITANTE: R$ ${aV[i-1].toFixed(2)} | Lucro Líquido: R$ ${(retV - custoTotal).toFixed(2)}<br>` +
+                `<b>Custo Acumulado Total: R$ ${custoTotal.toFixed(2)}</b>`;
         }
     }
-    // Calcular ao carregar
     window.onload = calcular;
 </script>
 </body>
