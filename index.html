@@ -2,466 +2,66 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Proteção Sequencial - Completo</title>
+    <title>Painel Antecipação de Ciclo</title>
     <style>
-        :root {
-            --primary: #2e7d32;
-            --bg: #f5f5f5;
-            --card: #ffffff;
-            --text: #333333;
-            --accent: #0288d1;
-            
-            --card-1: #e8f5e9; 
-            --card-2: #e3f2fd; 
-            --card-3: #fff9c4; 
-            --border-1: #a5d6a7;
-            --border-2: #90caf9;
-            --border-3: #fff59d;
-        }
-
-        body.dark-mode {
-            --primary: #1b5e20;
-            --bg: #121212;
-            --card: #1e1e1e;
-            --text: #e0e0e0;
-            --accent: #0277bd;
-            --card-1: #1b2a1b;
-            --card-2: #0d203a;
-            --card-3: #2a2815;
-            --border-1: #2e7d32;
-            --border-2: #1565c0;
-            --border-3: #fbc02d;
-        }
-        body.dark-mode input, body.dark-mode select {
-            background-color: #2a2a2a;
-            color: #e0e0e0;
-            border-color: #555;
-        }
-        body.dark-mode .input-confronto {
-            background-color: #333;
-        }
-        body.dark-mode .result-box {
-            color: #e0e0e0;
-        }
-        body.dark-mode .badge {
-            background-color: #0d203a;
-            color: #90caf9;
-            border-color: #1565c0;
-        }
-        body.dark-mode .divider {
-            border-top: 1px dashed #555;
-        }
-        body.dark-mode .saved-item {
-            background-color: #2a2a2a;
-            border-color: #444;
-        }
-        body.dark-mode th {
-            background-color: #1b5e20;
-            color: #e0e0e0;
-        }
-        body.dark-mode td {
-            border-color: #444;
-            color: #e0e0e0;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            margin: 0; padding: 0;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        .header {
-            background: var(--primary);
-            color: white;
-            padding: 15px;
-            text-align: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            position: relative;
-        }
-        .header h2 { margin: 0; font-size: 1.2rem; }
-        
-        .theme-toggle {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: 1px solid white;
-            color: white;
-            font-size: 1.2rem;
-            cursor: pointer;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .container {
-            max-width: 600px; margin: 0 auto; padding: 15px; box-sizing: border-box;
-        }
-        .card {
-            background: var(--card); padding: 15px; border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 15px;
-            transition: background-color 0.3s;
-        }
-        .card h3 { margin: 0 0 10px 0; color: var(--primary); border-bottom: 1px solid #eee; padding-bottom: 5px; font-size: 1.05rem; }
-        body.dark-mode .card h3 { border-bottom-color: #333; }
-
-        .card-time-1 { background-color: var(--card-1); border: 1px solid var(--border-1); }
-        .card-time-2 { background-color: var(--card-2); border: 1px solid var(--border-2); }
-        .card-time-3 { background-color: var(--card-3); border: 1px solid var(--border-3); }
-        
-        .row { display: flex; gap: 10px; margin-bottom: 10px; }
-        .col { flex: 1; display: flex; flex-direction: column; }
-        label { font-size: 0.85rem; font-weight: bold; margin-bottom: 4px; }
-        input, select { padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; }
-        .input-confronto { background-color: #fafafa; font-weight: 500; border-color: #b0bec5; }
-        
-        .checkbox-row { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 500; margin-bottom: 6px; }
-        .checkbox-row input { width: 16px; height: 16px; padding: 0; margin: 0; }
-
-        .result-box { padding: 12px; border-radius: 4px; margin-top: 5px; font-weight: 500; font-size: 0.95rem; line-height: 1.5; background: rgba(255,255,255,0.5); }
-        body.dark-mode .result-box { background: rgba(0,0,0,0.2); }
-        
-        .btn { width: 100%; padding: 14px; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer; font-weight: bold; background: var(--primary); color: white; text-align: center; margin-top: 15px; }
-        .btn-sec { background: var(--accent); margin-top: 5px; }
-        
-        .lucro-pos { color: #2e7d32; font-weight: bold; }
-        body.dark-mode .lucro-pos { color: #81c784; }
-        .lucro-neutro { color: #f57c00; font-weight: bold; }
-        body.dark-mode .lucro-neutro { color: #ffb74d; }
-        .lucro-neg { color: #c62828; font-weight: bold; }
-        body.dark-mode .lucro-neg { color: #e57373; }
-        
-        .divider { margin: 8px 0; border-top: 1px dashed #999; }
-        .badge { background: #e3f2fd; color: #0d47a1; padding: 8px; border-radius: 4px; font-size: 0.85rem; font-weight: bold; margin-bottom: 10px; text-align: center; border: 1px solid #bbdefb; }
-        
-        .saved-list { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
-        .saved-item { background: #fafafa; border: 1px solid #ddd; padding: 10px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; }
-        .saved-name { font-weight: bold; cursor: pointer; color: var(--accent); }
-        .saved-name:hover { text-decoration: underline; }
-        .btn-del { background: #c62828; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
-
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85rem; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #e8f5e9; font-weight: bold; color: #2e7d32; text-align: center; }
-        td:nth-child(3), td:nth-child(4), td:nth-child(5) { text-align: center; }
+        body { font-family: sans-serif; background: #f4f4f4; padding: 10px; }
+        .card { background: white; padding: 15px; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .antecipacao-box { background: #fff3e0; border: 2px solid #ff9800; padding: 15px; margin-bottom: 10px; border-radius: 8px; }
+        input { width: 100%; padding: 8px; margin: 5px 0; box-sizing: border-box; }
+        .res { font-weight: bold; color: #2e7d32; }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <h2>Painel Proteção Sequencial - Fixo</h2>
-    <button class="theme-toggle" onclick="toggleTheme()">🌒</button>
+<div class="card">
+    <h3>Dados do Ciclo</h3>
+    <label>Múltipla Base (R$):</label>
+    <input type="number" id="valMultipla" value="100" oninput="calcular()">
+    
+    <div class="antecipacao-box">
+        <h3>💰 Antecipação (Jogo 3)</h3>
+        <label>Aposta Empate Jogo 3 (feito no Dia 1):</label>
+        <input type="number" id="anteE3" value="20" oninput="calcular()">
+        <label>Aposta Visitante Jogo 3 (feito no Dia 1):</label>
+        <input type="number" id="anteV3" value="10" oninput="calcular()">
+    </div>
 </div>
 
-<div class="container">
-    <div class="card">
-        <h3>💾 Gerenciador de Cenários Salvos</h3>
-        <div class="row">
-            <div class="col">
-                <label>Nome do Cenário</label>
-                <input type="text" id="nomeSalvar" placeholder="Ex: Ciclo Final de Semana" style="flex:1;">
-            </div>
-            <div class="col" style="justify-content: flex-end;">
-                <button class="btn btn-sec" onclick="salvarConfiguracao()" style="margin-top:0; padding: 10px;">Salvar Cenário Atual</button>
-            </div>
-        </div>
-        <div class="divider"></div>
-        <label>Seus Cenários Salvos (Clique para carregar):</label>
-        <div class="saved-list" id="listaSalvos">Nenhum cenário salvo.</div>
-    </div>
-
-    <div class="card">
-        <h3>1. Dados da Múltipla / Aposta Principal</h3>
-        <div class="badge">Insira manualmente o valor apostado e a odd total acumulada da sua múltipla.</div>
-        <div class="row">
-            <div class="col">
-                <label>Montante Apostado Múltipla (R$)</label>
-                <input type="number" id="valMultipla" step="0.01" value="100.00" oninput="calcularSistema()">
-            </div>
-            <div class="col">
-                <label>Odd Total Acumulada</label>
-                <input type="number" id="oddMultipla" step="0.01" value="4.13" oninput="calcularSistema()">
-            </div>
-        </div>
-        <div class="result-box" style="background-color: rgba(255,255,255,0.7); color: #0d47a1; border: 1px solid #90caf9;" id="retornoMultiplaInfo">
-            Retorno Bruto Múltipla: R$ 413.00
-        </div>
-        <div class="row" style="margin-top: 15px;">
-            <div class="col">
-                <label>Margem de Lucro Cobertura (%)</label>
-                <input type="number" id="margemLucro" step="1" value="10" oninput="calcularSistema()">
-            </div>
-        </div>
-    </div>
-
-    <div class="card card-time-1">
-        <h3>Proteção 1º Time / Jogo:</h3>
-        <div class="col" style="margin-bottom: 10px;">
-            <label>Confronto / Time</label>
-            <input type="text" id="conf_1" class="input-confronto" value="Brasil x Marrocos">
-        </div>
-        <div class="row">
-            <div class="col">
-                <label>Odd Empate (X)</label>
-                <input type="number" id="oddE_1" step="0.01" value="3.85" oninput="calcularSistema()">
-            </div>
-            <div class="col">
-                <label>Odd Visitante (2)</label>
-                <input type="number" id="oddV_1" step="0.01" value="5.80" oninput="calcularSistema()">
-            </div>
-        </div>
-        <div class="checkbox-row">
-            <input type="checkbox" id="lucroE_1" checked onchange="calcularSistema()"> 
-            <label for="lucroE_1" style="cursor:pointer;">Aplicar lucro no Empate</label>
-        </div>
-        <div class="checkbox-row">
-            <input type="checkbox" id="lucroV_1" checked onchange="calcularSistema()"> 
-            <label for="lucroV_1" style="cursor:pointer;">Aplicar lucro no Visitante</label>
-        </div>
-        <div class="result-box" id="res_1">Aguardando cálculo...</div>
-    </div>
-
-    <div class="card card-time-2">
-        <h3>Proteção 2º Time / Jogo:</h3>
-        <div class="col" style="margin-bottom: 10px;">
-            <label>Confronto / Time</label>
-            <input type="text" id="conf_2" class="input-confronto" value="Bélgica x Egito">
-        </div>
-        <div class="row">
-            <div class="col">
-                <label>Odd Empate (X)</label>
-                <input type="number" id="oddE_2" step="0.01" value="4.05" oninput="calcularSistema()">
-            </div>
-            <div class="col">
-                <label>Odd Visitante (2)</label>
-                <input type="number" id="oddV_2" step="0.01" value="6.10" oninput="calcularSistema()">
-            </div>
-        </div>
-        <div class="checkbox-row">
-            <input type="checkbox" id="lucroE_2" checked onchange="calcularSistema()"> 
-            <label for="lucroE_2" style="cursor:pointer;">Aplicar lucro no Empate</label>
-        </div>
-        <div class="checkbox-row">
-            <input type="checkbox" id="lucroV_2" checked onchange="calcularSistema()"> 
-            <label for="lucroV_2" style="cursor:pointer;">Aplicar lucro no Visitante</label>
-        </div>
-        <div class="result-box" id="res_2">Aguardando cálculo...</div>
-    </div>
-
-    <div class="card card-time-3">
-        <h3>Proteção 3º Time / Jogo:</h3>
-        <div class="col" style="margin-bottom: 10px;">
-            <label>Confronto / Time</label>
-            <input type="text" id="conf_3" class="input-confronto" value="França x Senegal">
-        </div>
-        <div class="row">
-            <div class="col">
-                <label>Odd Empate (X)</label>
-                <input type="number" id="oddE_3" step="0.01" value="12.11" oninput="calcularSistema()">
-            </div>
-            <div class="col">
-                <label>Odd Visitante (2)</label>
-                <input type="number" id="oddV_3" step="0.01" value="20.65" oninput="calcularSistema()">
-            </div>
-        </div>
-        <div class="checkbox-row">
-            <input type="checkbox" id="lucroE_3" checked onchange="calcularSistema()"> 
-            <label for="lucroE_3" style="cursor:pointer;">Aplicar lucro no Empate</label>
-        </div>
-        <div class="checkbox-row">
-            <input type="checkbox" id="lucroV_3" checked onchange="calcularSistema()"> 
-            <label for="lucroV_3" style="cursor:pointer;">Aplicar lucro no Visitante</label>
-        </div>
-        <div class="result-box" id="res_3">Aguardando cálculo...</div>
-    </div>
-
-    <div class="card">
-        <h3>Ação</h3>
-        <button class="btn" onclick="calcularSistema()">Calcular Proteções</button>
-    </div>
-
-    <div class="card" style="border-left: 4px solid var(--primary);">
-        <h3>📊 Resumo de Análise dos Cenários</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Cenário de Desfecho</th>
-                    <th>O que acontece na prática?</th>
-                    <th>Total Investido</th>
-                    <th>Retorno Bruto</th>
-                    <th>Lucro / Prejuízo Líquido</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td style="font-weight: bold;">Múltipla Vence</td>
-                    <td>As seleções da múltipla batem. As coberturas simples perdem.</td>
-                    <td>Acumulado do Ciclo</td>
-                    <td>Conforme múltipla</td>
-                    <td style="color: #2e7d32; font-weight: bold;">Verde (Lucro)</td>
-                </tr>
-                <tr>
-                    <td style="font-weight: bold;">Cobertura Jogo 1</td>
-                    <td>O Jogo 1 empata ou visitante vence (Múltipla morre cedo).</td>
-                    <td>Gasto até Jogo 1</td>
-                    <td>Retorno da Cobertura 1</td>
-                    <td style="color: #2e7d32; font-weight: bold;">Verde (Lucro)</td>
-                </tr>
-                <tr>
-                    <td style="font-weight: bold;">Cobertura Jogo 2</td>
-                    <td>O Jogo 2 empata ou visitante vence (Múltipla morre no jogo 2).</td>
-                    <td>Gasto até Jogo 2</td>
-                    <td>Retorno da Cobertura 2</td>
-                    <td style="color: #2e7d32; font-weight: bold;">Verde (Lucro)</td>
-                </tr>
-                <tr>
-                    <td style="font-weight: bold;">Cobertura Jogo 3</td>
-                    <td>O Jogo 3 empata ou visitante vence (Múltipla morre no último jogo).</td>
-                    <td>Gasto Total (Ciclo 3)</td>
-                    <td>Retorno da Cobertura 3</td>
-                    <td style="color: #2e7d32; font-weight: bold;">Verde (Lucro)</td>
-                </tr>
-                <tr>
-                    <td style="font-weight: bold;">Reembolso</td>
-                    <td>Coberturas específicas calculadas para devolver o capital investido.</td>
-                    <td>Variável</td>
-                    <td>Iguala o custo</td>
-                    <td style="color: #f57c00; font-weight: bold;">R$ 0,00 (Empate/Neutro)</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+<div class="card">
+    <h3>Proteções Dia 1</h3>
+    <label>Odd Empate 1:</label> <input type="number" id="oddE1" value="3.80" oninput="calcular()">
+    <label>Odd Visitante 1:</label> <input type="number" id="oddV1" value="5.80" oninput="calcular()">
+    <div id="res1" class="res">Aguardando...</div>
 </div>
 
 <script>
-    const TOTAL_JOGOS = 3;
-
-    function toggleTheme() {
-        document.body.classList.toggle('dark-mode');
-        const btn = document.querySelector('.theme-toggle');
-        if (document.body.classList.contains('dark-mode')) {
-            btn.innerText = '☀️';
-        } else {
-            btn.innerText = '🌒';
-        }
-    }
-
-    function salvarConfiguracao() {
-        let nome = document.getElementById('nomeSalvar').value.trim();
-        if (!nome) {
-            alert("Digite um nome para o cenário antes de salvar.");
-            return;
-        }
-
-        let config = {
-            valMultipla: document.getElementById('valMultipla').value,
-            oddMultipla: document.getElementById('oddMultipla').value,
-            margemLucro: document.getElementById('margemLucro').value,
-            jogos: []
-        };
-
-        for (let i = 1; i <= TOTAL_JOGOS; i++) {
-            config.jogos.push({
-                conf: document.getElementById(`conf_${i}`).value,
-                oddE: document.getElementById(`oddE_${i}`).value,
-                oddV: document.getElementById(`oddV_${i}`).value,
-                lucroE: document.getElementById(`lucroE_${i}`).checked,
-                lucroV: document.getElementById(`lucroV_${i}`).checked
-            });
-        }
-
-        let salvos = JSON.parse(localStorage.getItem('cenariosAposta3TimesSeq') || '{}');
-        salvos[nome] = config;
-        localStorage.setItem('cenariosAposta3TimesSeq', JSON.stringify(salvos));
+    function calcular() {
+        let valM = parseFloat(document.getElementById('valMultipla').value);
+        let antE3 = parseFloat(document.getElementById('anteE3').value);
+        let antV3 = parseFloat(document.getElementById('anteV3').value);
         
-        alert(`Cenário "${nome}" salvo com sucesso!`);
-        carregarListaSalvos();
-        document.getElementById('nomeSalvar').value = '';
-    }
-
-    function carregarListaSalvos() {
-        let salvos = JSON.parse(localStorage.getItem('cenariosAposta3TimesSeq') || '{}');
-        let listaDiv = document.getElementById('listaSalvos');
-        listaDiv.innerHTML = '';
-
-        let chaves = Object.keys(salvos);
-        if (chaves.length === 0) {
-            listaDiv.innerHTML = 'Nenhum cenário salvo.';
-            return;
-        }
-
-        chaves.forEach(nome => {
-            listaDiv.innerHTML += `
-                <div class="saved-item">
-                    <span class="saved-name" onclick="carregarCenario('${nome}')">📁 ${nome}</span>
-                    <button class="btn-del" onclick="deletarCenario('${nome}'); event.stopPropagation();">Excluir</button>
-                </div>
-            `;
-        });
-    }
-
-    function carregarCenario(nome) {
-        let salvos = JSON.parse(localStorage.getItem('cenariosAposta3TimesSeq') || '{}');
-        if (!salvos[nome]) return;
-
-        let config = salvos[nome];
-        document.getElementById('valMultipla').value = config.valMultipla;
-        document.getElementById('oddMultipla').value = config.oddMultipla;
-        document.getElementById('margemLucro').value = config.margemLucro;
-
-        config.jogos.forEach((j, index) => {
-            let i = index + 1;
-            document.getElementById(`conf_${i}`).value = j.conf;
-            document.getElementById(`oddE_${i}`).value = j.oddE;
-            document.getElementById(`oddV_${i}`).value = j.oddV;
-            document.getElementById(`lucroE_${i}`).checked = j.lucroE !== false;
-            document.getElementById(`lucroV_${i}`).checked = j.lucroV !== false;
-        });
-
-        calcularSistema();
-    }
-
-    function deletarCenario(nome) {
-        let salvos = JSON.parse(localStorage.getItem('cenariosAposta3TimesSeq') || '{}');
-        if (!salvos[nome]) return;
-        delete salvos[nome];
-        localStorage.setItem('cenariosAposta3TimesSeq', JSON.stringify(salvos));
-        carregarListaSalvos();
-    }
-
-    function calcularSistema() {
-        let valM = parseFloat(document.getElementById('valMultipla').value) || 0;
-        let oddM = parseFloat(document.getElementById('oddMultipla').value) || 1;
-        let percLucro = parseFloat(document.getElementById('margemLucro').value) || 0;
+        // Custo que já está comprometido no Dia 1
+        let custoTotalComprometido = valM + antE3 + antV3;
         
-        let retBrutoM = valM * oddM;
-        document.getElementById('retornoMultiplaInfo').innerText = `Retorno Bruto Múltipla: R$ ${retBrutoM.toFixed(2)}`;
+        // Cálculo da Proteção do Jogo 1 para cobrir o custo total + lucro
+        let metaLucro = custoTotalComprometido * 0.10; // 10% margem
+        let totalNecessario = custoTotalComprometido + metaLucro;
+        
+        // Lógica simplificada de distribuição (o painel completo aplicará as fórmulas de Kelly/Distribuição)
+        let oddE1 = parseFloat(document.getElementById('oddE1').value);
+        let oddV1 = parseFloat(document.getElementById('oddV1').value);
+        
+        let apostaE1 = (totalNecessario / oddE1) / 2;
+        let apostaV1 = (totalNecessario / oddV1) / 2;
+        
+        document.getElementById('res1').innerHTML = `
+            Custo Comprometido: R$ ${custoTotalComprometido.toFixed(2)}<br>
+            Apostar no Empate 1: R$ ${apostaE1.toFixed(2)}<br>
+            Apostar no Visitante 1: R$ ${apostaV1.toFixed(2)}
+        `;
+    }
+    window.onload = calcular;
+</script>
 
-        let prejuizoBase = valM;
-        let apostasFeitas = [];
-
-        for (let i = 1; i <= TOTAL_JOGOS; i++) {
-            let oddEmpate = parseFloat(document.getElementById(`oddE_${i}`).value) || 1;
-            let oddVis = parseFloat(document.getElementById(`oddV_${i}`).value) || 1;
-            
-            let querLucroE = document.getElementById(`lucroE_${i}`).checked;
-            let querLucroV = document.getElementById(`lucroV_${i}`).checked;
-
-            let custoAcumuladoAnterior = prejuizoBase;
-            for (let prev of apostasFeitas) {
-                custoAcumuladoAnterior += prev.valE + prev.valV;
-            }
-
-            let metaLucroE = querLucroE ? (custoAcumuladoAnterior * (percLucro / 100)) : 0;
-            let metaLucroV = querLucroV ? (custoAcumuladoAnterior * (percLucro / 100)) : 0;
-
-            let valEmpate = 0;
-            let valVis = 0;
-
-            let divisor = (oddEmpate * oddVis) - oddEmpate - odd
+</body>
+</html>
