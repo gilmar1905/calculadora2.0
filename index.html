@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Painel Proteção Sequencial</title>
+    <title>Painel Proteção Sequencial - Acumulado Real</title>
     <style>
         body { background-color: #121212; color: white; font-family: sans-serif; padding: 20px; }
         .card { background-color: #1e1e1e; border: 1px solid #333; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
@@ -19,46 +19,42 @@
     <input type="number" id="valM" value="100" oninput="calcular()">
     <label>Odd Total Acumulada:</label>
     <input type="number" id="oddM" value="4.13" oninput="calcular()">
-    
-    <div id="resPrincipal">
-        Retorno Bruto Múltipla: R$ <span id="retBruto">0.00</span><br>
-        <span class="total-info">Custo Total da Operação: R$ <span id="custoTotalOp">0.00</span></span>
+    <div class="total-info">
+        Retorno bruto múltipla: R$ <span id="retBruto">0.00</span><br>
+        Custo Total da Operação: R$ <span id="custoTotalOp">0.00</span>
     </div>
-    
-    <label>Margem de Lucro Cobertura (%):</label>
+    <label>Margem de Lucro (%):</label>
     <input type="number" id="margem" value="10" oninput="calcular()">
 </div>
 
-<div id="container-jogos">
-    <div class="card">
-        <h3>Proteção 1º Time / Jogo</h3>
-        <input type="text" value="Brasil x Marrocos">
-        <label>Odd Empate (X)</label><input type="number" id="oddE1" value="3.85" oninput="calcular()">
-        <label>Odd Visitante (2)</label><input type="number" id="oddV1" value="5.80" oninput="calcular()">
-        <input type="checkbox" id="checkE1" checked onchange="calcular()"> <label>Aplicar lucro no Empate</label><br>
-        <input type="checkbox" id="checkV1" checked onchange="calcular()"> <label>Aplicar lucro no Visitante</label>
-        <div id="res1" class="res"></div>
-    </div>
+<div class="card">
+    <h3>Proteção 1º Time / Jogo:</h3>
+    <input type="text" value="Brasil x Marrocos">
+    <label>Odd Empate (X)</label><input type="number" id="oddE1" value="3.85" oninput="calcular()">
+    <label>Odd Visitante (2)</label><input type="number" id="oddV1" value="5.80" oninput="calcular()">
+    <input type="checkbox" id="checkE1" checked onchange="calcular()"> <label>Aplicar lucro no Empate</label><br>
+    <input type="checkbox" id="checkV1" checked onchange="calcular()"> <label>Aplicar lucro no Visitante</label>
+    <div id="res1" class="res"></div>
+</div>
 
-    <div class="card">
-        <h3>Proteção 2º Time / Jogo</h3>
-        <input type="text" value="Bélgica x Egito">
-        <label>Odd Empate (X)</label><input type="number" id="oddE2" value="4.05" oninput="calcular()">
-        <label>Odd Visitante (2)</label><input type="number" id="oddV2" value="6.10" oninput="calcular()">
-        <input type="checkbox" id="checkE2" checked onchange="calcular()"> <label>Aplicar lucro no Empate</label><br>
-        <input type="checkbox" id="checkV2" checked onchange="calcular()"> <label>Aplicar lucro no Visitante</label>
-        <div id="res2" class="res"></div>
-    </div>
+<div class="card">
+    <h3>Proteção 2º Time / Jogo:</h3>
+    <input type="text" value="Bélgica x Egito">
+    <label>Odd Empate (X)</label><input type="number" id="oddE2" value="4.05" oninput="calcular()">
+    <label>Odd Visitante (2)</label><input type="number" id="oddV2" value="6.10" oninput="calcular()">
+    <input type="checkbox" id="checkE2" checked onchange="calcular()"> <label>Aplicar lucro no Empate</label><br>
+    <input type="checkbox" id="checkV2" checked onchange="calcular()"> <label>Aplicar lucro no Visitante</label>
+    <div id="res2" class="res"></div>
+</div>
 
-    <div class="card">
-        <h3>Proteção 3º Time / Jogo</h3>
-        <input type="text" value="França x Senegal">
-        <label>Odd Empate (X)</label><input type="number" id="oddE3" value="12.11" oninput="calcular()">
-        <label>Odd Visitante (2)</label><input type="number" id="oddV3" value="20.65" oninput="calcular()">
-        <input type="checkbox" id="checkE3" checked onchange="calcular()"> <label>Aplicar lucro no Empate</label><br>
-        <input type="checkbox" id="checkV3" checked onchange="calcular()"> <label>Aplicar lucro no Visitante</label>
-        <div id="res3" class="res"></div>
-    </div>
+<div class="card">
+    <h3>Proteção 3º Time / Jogo:</h3>
+    <input type="text" value="França x Senegal">
+    <label>Odd Empate (X)</label><input type="number" id="oddE3" value="12.11" oninput="calcular()">
+    <label>Odd Visitante (2)</label><input type="number" id="oddV3" value="20.65" oninput="calcular()">
+    <input type="checkbox" id="checkE3" checked onchange="calcular()"> <label>Aplicar lucro no Empate</label><br>
+    <input type="checkbox" id="checkV3" checked onchange="calcular()"> <label>Aplicar lucro no Visitante</label>
+    <div id="res3" class="res"></div>
 </div>
 
 <script>
@@ -71,7 +67,7 @@
         
         let aE = [0, 0, 0], aV = [0, 0, 0];
         
-        // Loop de cálculo para estabilizar o custo total
+        // Loop que faz o sistema "aprender" o valor exato necessário para cobrir o custo total
         for(let iter = 0; iter < 10; iter++) {
             let totalCiclo = valM + aE.reduce((a,b)=>a+b,0) + aV.reduce((a,b)=>a+b,0);
             let meta = totalCiclo * (1 + margem);
@@ -92,14 +88,13 @@
         let custoTotal = valM + aE.reduce((a,b)=>a+b,0) + aV.reduce((a,b)=>a+b,0);
         document.getElementById('custoTotalOp').innerText = custoTotal.toFixed(2);
 
-        // Exibir resultados com Lucro Líquido
         for(let i = 1; i <= 3; i++) {
             let retE = aE[i-1] * parseFloat(document.getElementById('oddE'+i).value);
             let retV = aV[i-1] * parseFloat(document.getElementById('oddV'+i).value);
             
             document.getElementById('res'+i).innerHTML = 
-                `Aposta no EMPATE: R$ ${aE[i-1].toFixed(2)} | Lucro Líquido: R$ ${(retE - custoTotal).toFixed(2)}<br>` +
-                `Aposta no VISITANTE: R$ ${aV[i-1].toFixed(2)} | Lucro Líquido: R$ ${(retV - custoTotal).toFixed(2)}<br>` +
+                `Aposta Empate: R$ ${aE[i-1].toFixed(2)} | Lucro Líquido: R$ ${(retE - custoTotal).toFixed(2)}<br>` +
+                `Aposta Visitante: R$ ${aV[i-1].toFixed(2)} | Lucro Líquido: R$ ${(retV - custoTotal).toFixed(2)}<br>` +
                 `<b>Custo Acumulado Total: R$ ${custoTotal.toFixed(2)}</b>`;
         }
     }
