@@ -2,66 +2,146 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Painel Antecipação de Ciclo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Proteção Sequencial - Completo</title>
     <style>
-        body { font-family: sans-serif; background: #f4f4f4; padding: 10px; }
-        .card { background: white; padding: 15px; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .antecipacao-box { background: #fff3e0; border: 2px solid #ff9800; padding: 15px; margin-bottom: 10px; border-radius: 8px; }
-        input { width: 100%; padding: 8px; margin: 5px 0; box-sizing: border-box; }
-        .res { font-weight: bold; color: #2e7d32; }
+        :root {
+            --primary: #2e7d32;
+            --bg: #f5f5f5;
+            --card: #ffffff;
+            --text: #333333;
+            --accent: #0288d1;
+            --card-1: #e8f5e9; 
+            --card-2: #e3f2fd; 
+            --card-3: #fff9c4; 
+            --border-1: #a5d6a7;
+            --border-2: #90caf9;
+            --border-3: #fff59d;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0; padding: 0;
+        }
+        .header {
+            background: var(--primary);
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        .container {
+            max-width: 600px; margin: 0 auto; padding: 15px;
+        }
+        .card {
+            background: var(--card); padding: 15px; border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 15px;
+        }
+        .card-time-1 { background-color: var(--card-1); border: 1px solid var(--border-1); }
+        .row { display: flex; gap: 10px; margin-bottom: 10px; }
+        .col { flex: 1; display: flex; flex-direction: column; }
+        label { font-size: 0.85rem; font-weight: bold; margin-bottom: 4px; }
+        input { padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; }
+        .result-box { padding: 12px; border-radius: 4px; margin-top: 5px; font-weight: 500; font-size: 0.95rem; background: rgba(0,0,0,0.05); }
+        .btn { width: 100%; padding: 14px; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer; font-weight: bold; background: var(--primary); color: white; margin-top: 15px; }
+        .box-antecipacao { background: #fff3e0; border: 1px solid #ffcc80; padding: 10px; border-radius: 4px; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <h3>Dados do Ciclo</h3>
-    <label>Múltipla Base (R$):</label>
-    <input type="number" id="valMultipla" value="100" oninput="calcular()">
-    
-    <div class="antecipacao-box">
-        <h3>💰 Antecipação (Jogo 3)</h3>
-        <label>Aposta Empate Jogo 3 (feito no Dia 1):</label>
-        <input type="number" id="anteE3" value="20" oninput="calcular()">
-        <label>Aposta Visitante Jogo 3 (feito no Dia 1):</label>
-        <input type="number" id="anteV3" value="10" oninput="calcular()">
+<div class="header">
+    <h2>Painel Proteção Sequencial - Fixo</h2>
+</div>
+
+<div class="container">
+    <div class="card">
+        <h3>1. Dados da Múltipla</h3>
+        <div class="row">
+            <div class="col">
+                <label>Montante Múltipla (R$)</label>
+                <input type="number" id="valMultipla" value="100.00" oninput="calcularSistema()">
+            </div>
+            <div class="col">
+                <label>Odd Total</label>
+                <input type="number" id="oddMultipla" value="4.13" oninput="calcularSistema()">
+            </div>
+        </div>
+        <label>Margem de Lucro (%)</label>
+        <input type="number" id="margemLucro" value="10" oninput="calcularSistema()">
+    </div>
+
+    <div class="card card-time-1">
+        <h3>Proteção 1º Time / Jogo:</h3>
+        <input type="text" id="conf_1" value="Brasil x Marrocos" oninput="calcularSistema()">
+        <div class="row">
+            <div class="col"><label>Odd Empate (X)</label><input type="number" id="oddE_1" value="3.85" oninput="calcularSistema()"></div>
+            <div class="col"><label>Odd Visitante (2)</label><input type="number" id="oddV_1" value="5.80" oninput="calcularSistema()"></div>
+        </div>
+        <div class="box-antecipacao">
+            <strong>Antecipação para o 3º Jogo (Feito no Dia 1):</strong><br>
+            <label>Aposta Empate J3 (R$):</label>
+            <input type="number" id="antE_3" value="0.00" oninput="calcularSistema()">
+            <label>Aposta Visitante J3 (R$):</label>
+            <input type="number" id="antV_3" value="0.00" oninput="calcularSistema()">
+        </div>
+        <div class="result-box" id="res_1">Aguardando cálculo...</div>
+    </div>
+
+    <div class="card">
+        <h3>Proteção 2º Time / Jogo:</h3>
+        <input type="text" id="conf_2" value="Bélgica x Egito" oninput="calcularSistema()">
+        <div class="row">
+            <div class="col"><label>Odd Empate (X)</label><input type="number" id="oddE_2" value="4.05" oninput="calcularSistema()"></div>
+            <div class="col"><label>Odd Visitante (2)</label><input type="number" id="oddV_2" value="6.10" oninput="calcularSistema()"></div>
+        </div>
+        <div class="result-box" id="res_2">Aguardando cálculo...</div>
+    </div>
+
+    <div class="card">
+        <h3>Proteção 3º Time / Jogo:</h3>
+        <input type="text" id="conf_3" value="França x Senegal" oninput="calcularSistema()">
+        <div class="row">
+            <div class="col"><label>Odd Empate (X)</label><input type="number" id="oddE_3" value="12.11" oninput="calcularSistema()"></div>
+            <div class="col"><label>Odd Visitante (2)</label><input type="number" id="oddV_3" value="20.65" oninput="calcularSistema()"></div>
+        </div>
+        <div class="result-box" id="res_3">Aguardando cálculo...</div>
     </div>
 </div>
 
-<div class="card">
-    <h3>Proteções Dia 1</h3>
-    <label>Odd Empate 1:</label> <input type="number" id="oddE1" value="3.80" oninput="calcular()">
-    <label>Odd Visitante 1:</label> <input type="number" id="oddV1" value="5.80" oninput="calcular()">
-    <div id="res1" class="res">Aguardando...</div>
-</div>
-
 <script>
-    function calcular() {
-        let valM = parseFloat(document.getElementById('valMultipla').value);
-        let antE3 = parseFloat(document.getElementById('anteE3').value);
-        let antV3 = parseFloat(document.getElementById('anteV3').value);
-        
-        // Custo que já está comprometido no Dia 1
-        let custoTotalComprometido = valM + antE3 + antV3;
-        
-        // Cálculo da Proteção do Jogo 1 para cobrir o custo total + lucro
-        let metaLucro = custoTotalComprometido * 0.10; // 10% margem
-        let totalNecessario = custoTotalComprometido + metaLucro;
-        
-        // Lógica simplificada de distribuição (o painel completo aplicará as fórmulas de Kelly/Distribuição)
-        let oddE1 = parseFloat(document.getElementById('oddE1').value);
-        let oddV1 = parseFloat(document.getElementById('oddV1').value);
-        
-        let apostaE1 = (totalNecessario / oddE1) / 2;
-        let apostaV1 = (totalNecessario / oddV1) / 2;
-        
-        document.getElementById('res1').innerHTML = `
-            Custo Comprometido: R$ ${custoTotalComprometido.toFixed(2)}<br>
-            Apostar no Empate 1: R$ ${apostaE1.toFixed(2)}<br>
-            Apostar no Visitante 1: R$ ${apostaV1.toFixed(2)}
-        `;
-    }
-    window.onload = calcular;
-</script>
+    function calcularSistema() {
+        let valM = parseFloat(document.getElementById('valMultipla').value) || 0;
+        let antE3 = parseFloat(document.getElementById('antE_3').value) || 0;
+        let antV3 = parseFloat(document.getElementById('antV_3').value) || 0;
+        let percLucro = parseFloat(document.getElementById('margemLucro').value) || 0;
 
+        // O custo base inicial já inclui a aposta antecipada do jogo 3
+        let prejuizoBase = valM + antE3 + antV3;
+        let custoAcumulado = prejuizoBase;
+
+        for (let i = 1; i <= 3; i++) {
+            let oddE = parseFloat(document.getElementById('oddE_' + i).value) || 1;
+            let oddV = parseFloat(document.getElementById('oddV_' + i).value) || 1;
+            
+            // Meta de lucro sobre o custo total acumulado
+            let metaLucro = custoAcumulado * (percLucro / 100);
+            let totalNecessario = custoAcumulado + metaLucro;
+
+            // Fórmula de distribuição
+            let divisor = (oddE * oddV) - oddE - oddV;
+            let valE = (totalNecessario * (oddV - 1)) / divisor;
+            let valV = (totalNecessario * (oddE - 1)) / divisor;
+
+            document.getElementById('res_' + i).innerHTML = 
+                `📌 <b>Aposta no EMPATE:</b> R$ ${valE.toFixed(2)}<br>` +
+                `📌 <b>Aposta no VISITANTE:</b> R$ ${valV.toFixed(2)}<br>` +
+                `💰 <b>Custo Acumulado Total:</b> R$ ${custoAcumulado.toFixed(2)}`;
+            
+            custoAcumulado += (valE + valV);
+        }
+    }
+    window.onload = calcularSistema;
+</script>
 </body>
 </html>
