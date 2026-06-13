@@ -1,55 +1,42 @@
-<div class="card">
-    <h3>1. Dados da Múltipla / Aposta Principal</h3>
-    <label>Montante Apostado Múltipla (R$):</label>
-    <input type="number" id="valM" value="100" oninput="calcular()">
-    <label>Odd Total Acumulada:</label>
-    <input type="number" id="oddM" value="4.13" oninput="calcular()">
-    <label>Margem de Lucro Cobertura (%):</label>
-    <input type="number" id="margem" value="10" oninput="calcular()">
-</div>
-
-<div id="container-jogos">
-    <div class="card">
-        <h3>Proteção 1º Time / Jogo:</h3>
-        <input type="text" id="nome1" value="Brasil x Marrocos">
-        <label>Odd Empate (X)</label><input type="number" id="oddE1" value="3.85" oninput="calcular()">
-        <label>Odd Visitante (2)</label><input type="number" id="oddV1" value="5.80" oninput="calcular()">
-        <input type="checkbox" id="checkE1" checked onchange="calcular()"> Lucro no Empate
-        <input type="checkbox" id="checkV1" checked onchange="calcular()"> Lucro no Visitante
-        <div id="res1" class="res"></div>
-    </div>
-    </div>
-
 <script>
 function calcular() {
+    // 1. Captura dos valores iniciais
     let valM = parseFloat(document.getElementById('valM').value) || 0;
     let margem = (parseFloat(document.getElementById('margem').value) || 0) / 100;
     
-    // Cálculo do custo total acumulado (Retroativo)
-    // O Jogo 3 é custo fixo, Jogo 2 e 1 são calculados para cobrir o total
-    let aE = [0,0,0], aV = [0,0,0];
+    // Arrays para guardar as apostas que calcularemos
+    let aE = [0, 0, 0];
+    let aV = [0, 0, 0];
     
+    // 2. Loop de estabilização do cálculo (Garante que a soma de tudo seja considerada)
+    // Usamos um loop simples para que as apostas de um jogo "enxerguem" o gasto do anterior
     for(let iter = 0; iter < 5; iter++) {
-        let totalCiclo = valM + aE.reduce((a,b)=>a+b,0) + aV.reduce((a,b)=>a+b,0);
-        let meta = totalCiclo * (1 + margem);
+        // Custo Total = Múltipla + Soma das apostas feitas em todos os 3 jogos
+        let totalInvestido = valM + aE.reduce((a,b)=>a+b,0) + aV.reduce((a,b)=>a+b,0);
+        let meta = totalInvestido * (1 + margem);
         
-        for(let i=0; i<3; i++) {
-            let oE = parseFloat(document.getElementById('oddE'+(i+1)).value) || 1;
-            let oV = parseFloat(document.getElementById('oddV'+i+1).value) || 1;
-            let cE = document.getElementById('checkE'+(i+1)).checked;
-            let cV = document.getElementById('checkV'+(i+1)).checked;
+        for(let i = 0; i < 3; i++) {
+            let id = i + 1;
+            let oE = parseFloat(document.getElementById('oddE' + id).value) || 1;
+            let oV = parseFloat(document.getElementById('oddV' + id).value) || 1;
+            let cE = document.getElementById('checkE' + id).checked;
+            let cV = document.getElementById('checkV' + id).checked;
             let ativas = (cE ? 1 : 0) + (cV ? 1 : 0);
             
+            // Aposta necessária para atingir a meta naquele cenário
             aE[i] = cE ? (meta / oE / ativas) : 0;
             aV[i] = cV ? (meta / oV / ativas) : 0;
         }
     }
 
-    // Exibição mantendo o padrão visual das suas fotos
-    for(let i=1; i<=3; i++) {
-        document.getElementById('res'+i).innerHTML = 
-            `Aposta Empate: R$ ${aE[i-1].toFixed(2)} | Aposta Visitante: R$ ${aV[i-1].toFixed(2)}<br>` +
-            `Custo Acumulado Total: R$ ${(valM + aE.reduce((a,b)=>a+b,0) + aV.reduce((a,b)=>a+b,0)).toFixed(2)}`;
+    // 3. Exibição dos resultados (Mantendo exatamente seu layout)
+    for(let i = 1; i <= 3; i++) {
+        let totalInvestido = valM + aE.reduce((a,b)=>a+b,0) + aV.reduce((a,b)=>a+b,0);
+        
+        document.getElementById('res' + i).innerHTML = 
+            `Aposta no EMPATE: R$ ${aE[i-1].toFixed(2)} (Odd: ${document.getElementById('oddE'+i).value}) - Retorno: R$ ${(aE[i-1] * document.getElementById('oddE'+i).value).toFixed(2)}<br>` +
+            `Aposta no VISITANTE: R$ ${aV[i-1].toFixed(2)} (Odd: ${document.getElementById('oddV'+i).value}) - Retorno: R$ ${(aV[i-1] * document.getElementById('oddV'+i).value).toFixed(2)}<br>` +
+            `<b>Custo Acumulado Total: R$ ${totalInvestido.toFixed(2)}</b>`;
     }
 }
 </script>
