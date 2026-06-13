@@ -1,100 +1,80 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel Proteção - Modo D (Otimizado)</title>
-<style>
-    :root { --bg:#f5f5f5; --card:#fff; --text:#222; --primary:#2e7d32; --accent:#0288d1; }
-    body { margin:0; font-family: Arial; background:var(--bg); color:var(--text); }
-    .container { max-width:900px; margin:auto; padding:15px; }
-    .card { background:var(--card); padding:15px; margin-bottom:15px; border-radius:8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-    input { width:100%; padding:8px; margin-top:5px; box-sizing: border-box; }
-    button { width:100%; padding:12px; background:var(--primary); color:#fff; border:0; cursor:pointer; font-weight:bold; }
-    .result { margin-top:10px; font-size:14px; white-space:pre-line; color: #333; }
-</style>
+    <meta charset="UTF-8">
+    <title>Painel de Proteção - Modo D (Visual)</title>
+    <style>
+        body { font-family: Arial; background:#121212; color:#eee; padding: 20px; }
+        .card { background:#1e1e1e; padding:15px; margin-bottom:15px; border-radius:8px; border: 1px solid #333; }
+        input { width:100%; padding:8px; margin-top:5px; background:#333; color:white; border:1px solid #555; }
+        .btn { width:100%; padding:15px; background:#2e7d32; color:white; border:none; cursor:pointer; font-weight:bold; }
+        .res-box { margin-top:10px; padding:10px; border-left: 4px solid #444; background:#252525; font-size:13px; }
+        .lucro-verde { color: #81c784; }
+        .lucro-vermelho { color: #e57373; }
+    </style>
 </head>
 <body>
 
-<div class="container">
+<div class="container" style="max-width:600px; margin:auto;">
     <div class="card">
         <h3>Múltipla Principal</h3>
-        <label>Valor Múltipla (Principal)</label>
-        <input id="valor" type="number" value="100">
-        <label>Odd Total Múltipla</label>
-        <input id="odd" type="number" value="4.0">
-        <label>Margem de Lucro (%)</label>
-        <input id="margem" type="number" value="10">
+        <label>Montante</label><input id="valor" type="number" value="100">
+        <label>Odd</label><input id="odd" type="number" value="4.0">
+        <label>Margem Desejada (%)</label><input id="margem" type="number" value="10">
     </div>
 
     <div id="jogos"></div>
-
-    <div class="card">
-        <button onclick="calcular()">CALCULAR MODO D (ALGORITMO)</button>
-        <div id="saida" class="result"></div>
-    </div>
+    <button class="btn" onclick="calcular()">CALCULAR E MOSTRAR RETORNOS</button>
 </div>
 
 <script>
-const TOTAL = 3;
-
-// Monta jogos dinamicamente na estrutura original
-let div = document.getElementById("jogos");
-for (let i=1; i<=TOTAL; i++){
-    div.innerHTML += `
-    <div class="card">
+// Criação dos inputs (Mesma estrutura original)
+const div = document.getElementById("jogos");
+for(let i=1; i<=3; i++){
+    div.innerHTML += `<div class="card">
         <h3>Jogo ${i}</h3>
-        <label>Odd Empate</label><input id="e${i}" type="number" value="3.85">
-        <label>Odd Visitante</label><input id="v${i}" type="number" value="5.80">
+        <label>Odd Empate</label><input id="e${i}" value="3.85">
+        <label>Odd Visitante</label><input id="v${i}" value="5.80">
         <label><input type="checkbox" id="le${i}" checked> Lucro Empate</label>
         <label><input type="checkbox" id="lv${i}" checked> Lucro Visitante</label>
-        <div id="r${i}" class="result"></div>
+        <div id="r${i}" class="res-box">Aguardando cálculo...</div>
     </div>`;
 }
 
 function calcular() {
     let valor = +document.getElementById("valor").value;
-    let odd = +document.getElementById("odd").value;
+    let oddTotal = +document.getElementById("odd").value;
     let margem = +document.getElementById("margem").value / 100;
-
-    // ETAPA 2 e 3: Custo Inicial (Principal + M2 + M3)
-    let m2 = valor * 0.3; 
-    let m3 = valor * 0.3;
-    let custoAcumulado = valor + m2 + m3;
     
-    let saidaLog = `CUSTO INICIAL (Principal + M2 + M3): ${custoAcumulado.toFixed(2)}\n\n`;
-
-    // ===== SIMULAÇÃO HEDGE =====
-    for(let i=1; i<=TOTAL; i++){
+    // Custo Inicial (Base da Etapa 3)
+    let custo = valor + (valor * 0.3) + (valor * 0.3); 
+    
+    for(let i=1; i<=3; i++){
         let e = +document.getElementById("e"+i).value;
         let v = +document.getElementById("v"+i).value;
         let le = document.getElementById("le"+i).checked;
         let lv = document.getElementById("lv"+i).checked;
-
-        // ETAPA 4 e 6: Cálculo de Hedge (Recupera custo + lucro se marcado)
-        let metaEmpate = le ? (custoAcumulado * (1 + margem)) : custoAcumulado;
-        let metaVisitante = lv ? (custoAcumulado * (1 + margem)) : custoAcumulado;
-
-        let ae = metaEmpate / (e - 1);
-        let av = metaVisitante / (v - 1);
-
-        // ETAPA 5: Atualiza o risco/custo para a próxima etapa
-        custoAcumulado += (ae + av);
-
-        document.getElementById("r"+i).innerText = `Aposta Empate: ${ae.toFixed(2)} | Aposta Visitante: ${av.toFixed(2)}\nCusto Acumulado: ${custoAcumulado.toFixed(2)}`;
-        saidaLog += `JOGO ${i}: Aposta E: ${ae.toFixed(2)} | Aposta V: ${av.toFixed(2)}\n`;
+        
+        let metaE = le ? (custo * (1 + margem)) : custo;
+        let metaV = lv ? (custo * (1 + margem)) : custo;
+        
+        let ae = metaE / (e - 1);
+        let av = metaV / (v - 1);
+        
+        // Cálculo do retorno bruto e lucro líquido para exibição
+        let retE = ae * e;
+        let retV = av * v;
+        let lucE = retE - custo - ae - av;
+        let lucV = retV - custo - ae - av;
+        
+        document.getElementById("r"+i).innerHTML = `
+            <b>Empate:</b> Aposta: ${ae.toFixed(2)} | Retorno: ${retE.toFixed(2)} | <span class="${lucE>=0?'lucro-verde':'lucro-vermelho'}">Líquido: ${lucE.toFixed(2)}</span><br>
+            <b>Visitante:</b> Aposta: ${av.toFixed(2)} | Retorno: ${retV.toFixed(2)} | <span class="${lucV>=0?'lucro-verde':'lucro-vermelho'}">Líquido: ${lucV.toFixed(2)}</span>
+        `;
+        
+        // Acumula para o próximo
+        custo += (ae + av);
     }
-
-    // ETAPA 8 e 10: Verificação final
-    let retorno = valor * odd;
-    let lucroFinal = retorno - custoAcumulado;
-    
-    saidaLog += `\n====================
-    RETORNO PRINCIPAL: ${retorno.toFixed(2)}
-    CUSTO TOTAL: ${custoAcumulado.toFixed(2)}
-    STATUS: ${lucroFinal >= 0 ? "🟢 LUCRATIVO" : "🔴 INVIÁVEL"}`;
-
-    document.getElementById("saida").innerText = saidaLog;
 }
 </script>
 </body>
