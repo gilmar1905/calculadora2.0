@@ -2,87 +2,94 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Painel Proteção Sequencial - Acumulado Real</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Proteção - 3 Times (Acúmulo Sequencial)</title>
     <style>
-        body { background-color: #121212; color: white; font-family: sans-serif; padding: 15px; }
-        .card { background-color: #1e1e1e; border: 1px solid #333; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
-        input { background: #333; color: white; border: 1px solid #555; padding: 8px; width: 100%; margin-top: 5px; }
-        .res { font-size: 0.9em; margin-top: 10px; color: #ffeb3b; border-left: 4px solid #ffeb3b; padding-left: 10px; }
+        body { font-family: sans-serif; background-color: #f5f5f5; padding: 15px; }
+        .card { background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 15px; }
+        input { padding: 10px; border: 1px solid #ccc; border-radius: 4px; width: 100%; box-sizing: border-box; margin-top: 5px; }
+        .result-box { padding: 12px; background: #e3f2fd; border-radius: 4px; margin-top: 10px; font-size: 0.95rem; }
+        .lucro-pos { color: green; font-weight: bold; }
+        .btn { width: 100%; padding: 14px; background: #2e7d32; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <h3>1. Dados da Múltipla / Aposta Principal</h3>
-    <label>Montante Apostado Múltipla (R$):</label>
-    <input type="number" id="valM" value="100" oninput="calcular()">
-    <label>Margem de Lucro (%):</label>
-    <input type="number" id="margem" value="10" oninput="calcular()">
-</div>
+<div class="container">
+    <div class="card">
+        <h3>1. Dados da Múltipla / Aposta Principal</h3>
+        <label>Montante Apostado Múltipla (R$)</label>
+        <input type="number" id="valMultipla" value="100.00">
+        <label>Margem de Lucro Cobertura (%)</label>
+        <input type="number" id="margemLucro" value="10">
+    </div>
 
-<div class="card">
-    <h3>Proteção 3º Time (Base)</h3>
-    <label>Odd Empate:</label><input type="number" id="oddE3" value="12.11" oninput="calcular()">
-    <label>Odd Visitante:</label><input type="number" id="oddV3" value="20.65" oninput="calcular()">
-    <div id="res3" class="res"></div>
-</div>
+    <div id="jogos-container">
+        <div class="card">
+            <h3>Proteção 1º Time</h3>
+            <label>Odd Empate (X)</label><input type="number" id="oddE_1" value="3.85">
+            <label>Odd Visitante (2)</label><input type="number" id="oddV_1" value="5.80">
+            <input type="checkbox" id="lucroE_1" checked> Aplicar lucro no Empate
+            <input type="checkbox" id="lucroV_1" checked> Aplicar lucro no Visitante
+            <div class="result-box" id="res_1"></div>
+        </div>
 
-<div class="card">
-    <h3>Proteção 2º Time</h3>
-    <label>Odd Empate:</label><input type="number" id="oddE2" value="4.05" oninput="calcular()">
-    <label>Odd Visitante:</label><input type="number" id="oddV2" value="6.10" oninput="calcular()">
-    <input type="checkbox" id="checkE2" checked onchange="calcular()"> Lucro no Empate
-    <input type="checkbox" id="checkV2" checked onchange="calcular()"> Lucro no Visitante
-    <div id="res2" class="res"></div>
-</div>
+        <div class="card">
+            <h3>Proteção 2º Time</h3>
+            <label>Odd Empate (X)</label><input type="number" id="oddE_2" value="4.05">
+            <label>Odd Visitante (2)</label><input type="number" id="oddV_2" value="6.10">
+            <input type="checkbox" id="lucroE_2" checked> Aplicar lucro no Empate
+            <input type="checkbox" id="lucroV_2" checked> Aplicar lucro no Visitante
+            <div class="result-box" id="res_2"></div>
+        </div>
 
-<div class="card">
-    <h3>Proteção 1º Time</h3>
-    <label>Odd Empate:</label><input type="number" id="oddE1" value="3.85" oninput="calcular()">
-    <label>Odd Visitante:</label><input type="number" id="oddV1" value="5.80" oninput="calcular()">
-    <input type="checkbox" id="checkE1" checked onchange="calcular()"> Lucro no Empate
-    <input type="checkbox" id="checkV1" checked onchange="calcular()"> Lucro no Visitante
-    <div id="res1" class="res"></div>
+        <div class="card">
+            <h3>Proteção 3º Time (Base)</h3>
+            <label>Odd Empate (X)</label><input type="number" id="oddE_3" value="12.11">
+            <label>Odd Visitante (2)</label><input type="number" id="oddV_3" value="20.65">
+            <input type="checkbox" id="lucroE_3" checked> Aplicar lucro no Empate
+            <input type="checkbox" id="lucroV_3" checked> Aplicar lucro no Visitante
+            <div class="result-box" id="res_3"></div>
+        </div>
+    </div>
+
+    <button class="btn" onclick="calcularProtecoes()">Calcular Proteções</button>
 </div>
 
 <script>
-function calcular() {
-    let valM = parseFloat(document.getElementById('valM').value) || 0;
-    let margem = (parseFloat(document.getElementById('margem').value) || 0) / 100;
+function calcularProtecoes() {
+    let valM = parseFloat(document.getElementById('valMultipla').value) || 0;
+    let margem = (parseFloat(document.getElementById('margemLucro').value) || 0) / 100;
+
+    // LÓGICA: O Jogo 3 é a Base. O Jogo 2 recupera 3+Múltipla. O Jogo 1 recupera 2+3+Múltipla.
     
-    // --- JOGO 3 (Base) ---
-    let oE3 = parseFloat(document.getElementById('oddE3').value) || 1;
-    let oV3 = parseFloat(document.getElementById('oddV3').value) || 1;
-    let aE3 = (valM * (1 + margem)) / oE3 / 2;
-    let aV3 = (valM * (1 + margem)) / oV3 / 2;
-    let custoJ3 = aE3 + aV3;
-    document.getElementById('res3').innerHTML = `Aposta Empate: R$ ${aE3.toFixed(2)} | Aposta Visitante: R$ ${aV3.toFixed(2)}<br>Custo Base J3: R$ ${custoJ3.toFixed(2)}`;
+    // Calcular Jogo 3 (Base)
+    let oE3 = parseFloat(document.getElementById('oddE_3').value);
+    let oV3 = parseFloat(document.getElementById('oddV_3').value);
+    let cost3 = valM; 
+    let aE3 = document.getElementById('lucroE_3').checked ? (cost3 * (1 + margem) / oE3) : (cost3 / oE3);
+    let aV3 = document.getElementById('lucroV_3').checked ? (cost3 * (1 + margem) / oV3) : (cost3 / oV3);
+    
+    document.getElementById('res_3').innerHTML = `Aposta E: R$${aE3.toFixed(2)} | Aposta V: R$${aV3.toFixed(2)}<br>Custo Acumulado: R$${(cost3 + aE3 + aV3).toFixed(2)}`;
 
-    // --- JOGO 2 (Recupera Múltipla + J3) ---
-    let base2 = valM + custoJ3;
-    let oE2 = parseFloat(document.getElementById('oddE2').value) || 1;
-    let oV2 = parseFloat(document.getElementById('oddV2').value) || 1;
-    let cE2 = document.getElementById('checkE2').checked ? (1 + margem) : 1;
-    let cV2 = document.getElementById('checkV2').checked ? (1 + margem) : 1;
-    let aE2 = (base2 * cE2) / oE2;
-    let aV2 = (base2 * cV2) / oV2;
-    document.getElementById('res2').innerHTML = 
-        `Aposta Empate: R$ ${aE2.toFixed(2)} | Lucro Líquido: R$ ${(aE2*oE2 - base2 - aE2 - aV2).toFixed(2)}<br>` +
-        `Aposta Visitante: R$ ${aV2.toFixed(2)} | Lucro Líquido: R$ ${(aV2*oV2 - base2 - aE2 - aV2).toFixed(2)}`;
+    // Calcular Jogo 2
+    let cost2 = cost3 + aE3 + aV3;
+    let oE2 = parseFloat(document.getElementById('oddE_2').value);
+    let oV2 = parseFloat(document.getElementById('oddV_2').value);
+    let aE2 = document.getElementById('lucroE_2').checked ? (cost2 * (1 + margem) / oE2) : (cost2 / oE2);
+    let aV2 = document.getElementById('lucroV_2').checked ? (cost2 * (1 + margem) / oV2) : (cost2 / oV2);
 
-    // --- JOGO 1 (Recupera Múltipla + J3 + J2) ---
-    let base1 = base2 + aE2 + aV2;
-    let oE1 = parseFloat(document.getElementById('oddE1').value) || 1;
-    let oV1 = parseFloat(document.getElementById('oddV1').value) || 1;
-    let cE1 = document.getElementById('checkE1').checked ? (1 + margem) : 1;
-    let cV1 = document.getElementById('checkV1').checked ? (1 + margem) : 1;
-    let aE1 = (base1 * cE1) / oE1;
-    let aV1 = (base1 * cV1) / oV1;
-    document.getElementById('res1').innerHTML = 
-        `Aposta Empate: R$ ${aE1.toFixed(2)} | Lucro Líquido: R$ ${(aE1*oE1 - base1 - aE1 - aV1).toFixed(2)}<br>` +
-        `Aposta Visitante: R$ ${aV1.toFixed(2)} | Lucro Líquido: R$ ${(aV1*oV1 - base1 - aE1 - aV1).toFixed(2)}`;
+    document.getElementById('res_2').innerHTML = `Aposta E: R$${aE2.toFixed(2)} | Aposta V: R$${aV2.toFixed(2)}<br>Custo Acumulado: R$${(cost2 + aE2 + aV2).toFixed(2)}`;
+
+    // Calcular Jogo 1
+    let cost1 = cost2 + aE2 + aV2;
+    let oE1 = parseFloat(document.getElementById('oddE_1').value);
+    let oV1 = parseFloat(document.getElementById('oddV_1').value);
+    let aE1 = document.getElementById('lucroE_1').checked ? (cost1 * (1 + margem) / oE1) : (cost1 / oE1);
+    let aV1 = document.getElementById('lucroV_1').checked ? (cost1 * (1 + margem) / oV1) : (cost1 / oV1);
+
+    document.getElementById('res1').innerHTML = `Aposta E: R$${aE1.toFixed(2)} | Aposta V: R$${aV1.toFixed(2)}<br>Custo Acumulado: R$${(cost1 + aE1 + aV1).toFixed(2)}`;
 }
-window.onload = calcular;
 </script>
 </body>
 </html>
