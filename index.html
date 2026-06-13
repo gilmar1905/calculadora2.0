@@ -1,75 +1,55 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <title>Painel Proteção - Estratégia Cascatas</title>
-    <style>
-        body { font-family: sans-serif; background: #000; color: #fff; padding: 20px; }
-        .card { background: #111; padding: 15px; border-radius: 5px; border: 1px solid #333; margin-bottom: 20px; }
-        input { background: #222; border: 1px solid #444; color: #fff; padding: 8px; width: 100%; box-sizing: border-box; }
-        .res { margin-top: 10px; font-size: 0.9em; border-left: 3px solid #ff9800; padding-left: 10px; }
-    </style>
-</head>
-<body>
-
 <div class="card">
-    <h3>Dados do Ciclo</h3>
-    <label>Montante Múltipla (R$):</label><input type="number" id="valM" value="100" oninput="calcular()">
-    <label>Margem de Lucro (%):</label><input type="number" id="margem" value="10" oninput="calcular()">
-    <br><br>
-    <label>Custo Fixo Jogo 3 (Apostado no Dia 1):</label><input type="number" id="custoJ3" value="50" oninput="calcular()">
+    <h3>1. Dados da Múltipla / Aposta Principal</h3>
+    <label>Montante Apostado Múltipla (R$):</label>
+    <input type="number" id="valM" value="100" oninput="calcular()">
+    <label>Odd Total Acumulada:</label>
+    <input type="number" id="oddM" value="4.13" oninput="calcular()">
+    <label>Margem de Lucro Cobertura (%):</label>
+    <input type="number" id="margem" value="10" oninput="calcular()">
 </div>
 
 <div id="container-jogos">
     <div class="card">
-        <h3>Jogo 1 (Brasil x Marrocos)</h3>
-        <label>Odd Empate:</label><input type="number" id="oddE1" value="3.85" oninput="calcular()">
-        <label>Odd Visitante:</label><input type="number" id="oddV1" value="5.80" oninput="calcular()">
-        <div id="res1" class="res">Calculando...</div>
+        <h3>Proteção 1º Time / Jogo:</h3>
+        <input type="text" id="nome1" value="Brasil x Marrocos">
+        <label>Odd Empate (X)</label><input type="number" id="oddE1" value="3.85" oninput="calcular()">
+        <label>Odd Visitante (2)</label><input type="number" id="oddV1" value="5.80" oninput="calcular()">
+        <input type="checkbox" id="checkE1" checked onchange="calcular()"> Lucro no Empate
+        <input type="checkbox" id="checkV1" checked onchange="calcular()"> Lucro no Visitante
+        <div id="res1" class="res"></div>
     </div>
-    <div class="card">
-        <h3>Jogo 2 (Bélgica x Egito) - Proteção Condicional</h3>
-        <label>Odd Empate:</label><input type="number" id="oddE2" value="4.05" oninput="calcular()">
-        <label>Odd Visitante:</label><input type="number" id="oddV2" value="6.10" oninput="calcular()">
-        <div id="res2" class="res">Calculando...</div>
     </div>
-</div>
 
 <script>
-    function calcular() {
-        let valM = parseFloat(document.getElementById('valM').value) || 0;
-        let custoJ3 = parseFloat(document.getElementById('custoJ3').value) || 0;
-        let margem = (parseFloat(document.getElementById('margem').value) || 0) / 100;
-
-        // Custo do Jogo 1: Múltipla + Jogo 3
-        let custoJ1 = valM + custoJ3;
+function calcular() {
+    let valM = parseFloat(document.getElementById('valM').value) || 0;
+    let margem = (parseFloat(document.getElementById('margem').value) || 0) / 100;
+    
+    // Cálculo do custo total acumulado (Retroativo)
+    // O Jogo 3 é custo fixo, Jogo 2 e 1 são calculados para cobrir o total
+    let aE = [0,0,0], aV = [0,0,0];
+    
+    for(let iter = 0; iter < 5; iter++) {
+        let totalCiclo = valM + aE.reduce((a,b)=>a+b,0) + aV.reduce((a,b)=>a+b,0);
+        let meta = totalCiclo * (1 + margem);
         
-        // Calcular Jogo 1
-        let oE1 = parseFloat(document.getElementById('oddE1').value) || 1;
-        let oV1 = parseFloat(document.getElementById('oddV1').value) || 1;
-        let metaJ1 = custoJ1 * (1 + margem);
-        let aE1 = metaJ1 / oE1 / 2;
-        let aV1 = metaJ1 / oV1 / 2;
-
-        document.getElementById('res1').innerHTML = `
-            Aposta Empate: R$ ${aE1.toFixed(2)} | Aposta Visitante: R$ ${aV1.toFixed(2)}<br>
-            <b>Custo Total Jogo 1 (Base): R$ ${custoJ1.toFixed(2)}</b>
-        `;
-
-        // Calcular Jogo 2: Deve cobrir Múltipla + Jogo 3 + Jogo 1
-        let custoJ2 = custoJ1 + aE1 + aV1;
-        let oE2 = parseFloat(document.getElementById('oddE2').value) || 1;
-        let oV2 = parseFloat(document.getElementById('oddV2').value) || 1;
-        let metaJ2 = custoJ2 * (1 + margem);
-        let aE2 = metaJ2 / oE2 / 2;
-        let aV2 = metaJ2 / oV2 / 2;
-
-        document.getElementById('res2').innerHTML = `
-            Aposta Empate: R$ ${aE2.toFixed(2)} | Aposta Visitante: R$ ${aV2.toFixed(2)}<br>
-            <b>Custo Total Jogo 2 (Proteção): R$ ${custoJ2.toFixed(2)}</b>
-        `;
+        for(let i=0; i<3; i++) {
+            let oE = parseFloat(document.getElementById('oddE'+(i+1)).value) || 1;
+            let oV = parseFloat(document.getElementById('oddV'+i+1).value) || 1;
+            let cE = document.getElementById('checkE'+(i+1)).checked;
+            let cV = document.getElementById('checkV'+(i+1)).checked;
+            let ativas = (cE ? 1 : 0) + (cV ? 1 : 0);
+            
+            aE[i] = cE ? (meta / oE / ativas) : 0;
+            aV[i] = cV ? (meta / oV / ativas) : 0;
+        }
     }
-    window.onload = calcular;
+
+    // Exibição mantendo o padrão visual das suas fotos
+    for(let i=1; i<=3; i++) {
+        document.getElementById('res'+i).innerHTML = 
+            `Aposta Empate: R$ ${aE[i-1].toFixed(2)} | Aposta Visitante: R$ ${aV[i-1].toFixed(2)}<br>` +
+            `Custo Acumulado Total: R$ ${(valM + aE.reduce((a,b)=>a+b,0) + aV.reduce((a,b)=>a+b,0)).toFixed(2)}`;
+    }
+}
 </script>
-</body>
-</html>
