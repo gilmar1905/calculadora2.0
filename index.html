@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Painel Proteção Sequencial - Correção Lógica</title>
+    <title>Painel Proteção Sequencial - Correção Dinâmica</title>
     <style>
         body { font-family: sans-serif; background: #000; color: #fff; padding: 20px; }
         .card { background: #111; padding: 15px; border-radius: 5px; border: 1px solid #333; margin-bottom: 20px; }
@@ -15,9 +15,9 @@
 <div class="card">
     <h3>1. Dados da Múltipla / Aposta Principal</h3>
     <label>Montante (R$):</label><input type="number" id="valM" value="100" oninput="calcular()">
-    <label>Odd Total:</label><input type="number" id="oddM" value="4.13" oninput="calcular()">
-    <label>Margem de Lucro (%):</label><input type="number" id="margem" value="10" oninput="calcular()">
-    <p>Retorno bruto múltipla: R$ <span id="retM">413.00</span></p>
+    <label>Odd Total:</label><input type="number" id="oddM" value="3.55" oninput="calcular()">
+    <label>Margem de Lucro (%):</label><input type="number" id="margem" value="0" oninput="calcular()">
+    <p>Retorno bruto múltipla: R$ <span id="retM">0.00</span></p>
 </div>
 
 <script>
@@ -30,8 +30,8 @@
                 <label>Odd Empate (X)</label><input type="number" id="oddE${i}" value="3.85" oninput="calcular()">
                 <label>Odd Visitante (2)</label><input type="number" id="oddV${i}" value="5.80" oninput="calcular()">
                 <br><br>
-                <input type="checkbox" id="checkE${i}" checked onchange="calcular()"> <label>Aplicar Lucro no Empate</label><br>
-                <input type="checkbox" id="checkV${i}" checked onchange="calcular()"> <label>Aplicar Lucro no Visitante</label>
+                <input type="checkbox" id="checkE${i}" checked onchange="calcular()"> <label>Aplicar lucro no Empate</label><br>
+                <input type="checkbox" id="checkV${i}" checked onchange="calcular()"> <label>Aplicar lucro no Visitante</label>
                 <div id="res${i}" class="res">Aguardando...</div>
             </div>
         `);
@@ -45,9 +45,6 @@
         let margem = (parseFloat(document.getElementById('margem').value) || 0) / 100;
         document.getElementById('retM').innerText = (valM * oddM).toFixed(2);
 
-        // A LÓGICA: O custo do Jogo 3 é obrigatório ser somado ao custo inicial.
-        // Simulamos a antecipação como o custo base necessário para o Jogo 3 (baseado na sua necessidade).
-        // Aqui assumimos que o sistema deve forçar a recuperação deste custo.
         let custoAcumulado = valM; 
 
         for(let i=1; i<=3; i++) {
@@ -56,20 +53,31 @@
             let cE = document.getElementById('checkE'+i).checked;
             let cV = document.getElementById('checkV'+i).checked;
 
-            // Meta = Custo acumulado + margem (se checkbox marcado)
-            let metaE = cE ? (custoAcumulado * (1 + margem)) : custoAcumulado;
-            let metaV = cV ? (custoAcumulado * (1 + margem)) : custoAcumulado;
+            // LÓGICA DE RECUPERAÇÃO FORÇADA:
+            // Se cE estiver marcado, a meta é (custo + lucro). Se não, é APENAS o custo.
+            // Dividimos a aposta entre as opções marcadas.
+            let metasAtivas = (cE ? 1 : 0) + (cV ? 1 : 0);
+            
+            if(metasAtivas === 0) {
+                document.getElementById('res'+i).innerText = "Selecione pelo menos uma opção para calcular.";
+                continue;
+            }
 
-            let aE = metaE / oE;
-            let aV = metaV / oV;
+            let custoMeta = custoAcumulado * (1 + margem);
+            
+            // O sistema agora calcula a aposta baseada na odd, ignorando divisões fixas
+            let aE = cE ? (custoMeta / oE / metasAtivas) : 0;
+            let aV = cV ? (custoMeta / oV / metasAtivas) : 0;
+
+            let retE = aE * oE;
+            let retV = aV * oV;
 
             document.getElementById('res'+i).innerHTML = `
-                Aposta Empate: R$ ${aE.toFixed(2)} | Retorno: R$ ${(aE * oE).toFixed(2)} | Lucro: R$ ${(aE * oE - custoAcumulado - aE - aV).toFixed(2)}<br>
-                Aposta Visitante: R$ ${aV.toFixed(2)} | Retorno: R$ ${(aV * oV).toFixed(2)} | Lucro: R$ ${(aV * oV - custoAcumulado - aE - aV).toFixed(2)}<br>
+                Aposta Empate: R$ ${aE.toFixed(2)} | Retorno: R$ ${retE.toFixed(2)} | Lucro: R$ ${(retE - custoAcumulado - aE - aV).toFixed(2)}<br>
+                Aposta Visitante: R$ ${aV.toFixed(2)} | Retorno: R$ ${retV.toFixed(2)} | Lucro: R$ ${(retV - custoAcumulado - aE - aV).toFixed(2)}<br>
                 <b>Custo Acumulado Total: R$ ${custoAcumulado.toFixed(2)}</b>
             `;
             
-            // O custo do próximo jogo soma o que foi apostado neste
             custoAcumulado += (aE + aV);
         }
     }
