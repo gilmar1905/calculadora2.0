@@ -2,92 +2,76 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Painel Proteção Sequencial - Completo</title>
+    <title>Painel Proteção - Cálculo Forçado</title>
     <style>
-        body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; }
-        .card { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; }
-        .row { display: flex; gap: 15px; margin-bottom: 10px; }
-        .col { flex: 1; }
-        input { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
-        .res { margin-top: 10px; padding: 10px; background: #f9f9f9; border-left: 5px solid #2e7d32; font-size: 0.9em; line-height: 1.6; }
-        .lucro-positivo { color: green; font-weight: bold; }
-        .lucro-negativo { color: red; font-weight: bold; }
+        body { font-family: sans-serif; background: #121212; color: #fff; padding: 15px; }
+        .card { background: #1e1e1e; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #333; }
+        input, select { padding: 8px; width: 100%; margin-bottom: 5px; background: #333; color: #fff; border: 1px solid #444; }
+        .res { padding: 10px; background: #004d40; margin-top: 10px; font-size: 0.85rem; border-radius: 4px; }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h3>1. Dados da Múltipla / Aposta Principal</h3>
-    <div class="row">
-        <div class="col"><label>Montante (R$)</label><input type="number" id="valM" value="100" oninput="calcular()"></div>
-        <div class="col"><label>Odd Total</label><input type="number" id="oddM" value="4.13" oninput="calcular()"></div>
-    </div>
-    <label>Margem de Lucro (%)</label>
-    <input type="number" id="margem" value="10" oninput="calcular()">
+    <h3>Dados da Múltipla</h3>
+    <label>Montante (R$):</label><input type="number" id="valM" value="100" oninput="calcular()">
+    <label>Odd Total:</label><input type="number" id="oddM" value="4.13" oninput="calcular()">
+    <label>Margem de Lucro (%):</label><input type="number" id="margem" value="10" oninput="calcular()">
 </div>
 
 <div id="container-jogos">
     <script>
-        const jogos = [
-            { id: 1, nome: "Brasil x Marrocos", oddE: 3.85, oddV: 5.80 },
-            { id: 2, nome: "Bélgica x Egito", oddE: 4.05, oddV: 6.10 },
-            { id: 3, nome: "França x Senegal", oddE: 12.11, oddV: 20.65 }
-        ];
-
-        jogos.forEach(j => {
+        for(let i=1; i<=3; i++) {
             document.write(`
-                <div class="card" id="card${j.id}">
-                    <h3>Proteção ${j.id}º Time / Jogo:</h3>
-                    <input type="text" value="${j.nome}">
-                    <div class="row">
-                        <div class="col"><label>Odd Empate (X)</label><input type="number" id="oddE${j.id}" value="${j.oddE}" oninput="calcular()"></div>
-                        <div class="col"><label>Odd Visitante (2)</label><input type="number" id="oddV${j.id}" value="${j.oddV}" oninput="calcular()"></div>
-                    </div>
-                    <div id="res${j.id}" class="res">Aguardando...</div>
+                <div class="card">
+                    <h3>Proteção ${i}º Time</h3>
+                    <input type="number" id="oddE${i}" value="3.85" oninput="calcular()" placeholder="Odd Empate">
+                    <input type="number" id="oddV${i}" value="5.80" oninput="calcular()" placeholder="Odd Visitante">
+                    <label><input type="checkbox" id="checkE${i}" checked onchange="calcular()"> Aplicar Lucro no Empate</label>
+                    <label><input type="checkbox" id="checkV${i}" checked onchange="calcular()"> Aplicar Lucro no Visitante</label>
+                    <div id="res${i}" class="res">Aguardando...</div>
                 </div>
             `);
-        });
+        }
     </script>
 </div>
 
 <script>
     function calcular() {
         let valM = parseFloat(document.getElementById('valM').value) || 0;
-        let margem = parseFloat(document.getElementById('margem').value) / 100 || 0;
+        let margem = (parseFloat(document.getElementById('margem').value) || 0) / 100;
         
-        let odds = [
-            { e: parseFloat(document.getElementById('oddE1').value), v: parseFloat(document.getElementById('oddV1').value) },
-            { e: parseFloat(document.getElementById('oddE2').value), v: parseFloat(document.getElementById('oddV2').value) },
-            { e: parseFloat(document.getElementById('oddE3').value), v: parseFloat(document.getElementById('oddV3').value) }
-        ];
+        let custoAcumulado = valM; // Começa somando a Múltipla
 
-        let custoAcumulado = valM;
-        let resultados = [];
+        for(let i=1; i<=3; i++) {
+            let oddE = parseFloat(document.getElementById('oddE'+i).value) || 1;
+            let oddV = parseFloat(document.getElementById('oddV'+i).value) || 1;
+            let checkE = document.getElementById('checkE'+i).checked;
+            let checkV = document.getElementById('checkV'+i).checked;
 
-        for (let i = 2; i >= 0; i--) {
-            let totalParaRecuperar = (custoAcumulado * (1 + margem));
-            let valE = (totalParaRecuperar / odds[i].e) / 2;
-            let valV = (totalParaRecuperar / odds[i].v) / 2;
+            // Meta: Recuperar TUDO (incluindo o que foi gasto nos jogos anteriores) + Lucro
+            let meta = custoAcumulado * (1 + margem);
             
-            // Calculando retornos brutos e lucros líquidos
-            let retE = valE * odds[i].e;
-            let retV = valV * odds[i].v;
-            
-            resultados[i] = { 
-                e: valE, v: valV, 
-                retE: retE, retV: retV,
-                lucroE: retE - custoAcumulado - valE - valV, // Exemplo simplificado de lógica de lucro
-                lucroV: retV - custoAcumulado - valE - valV 
-            };
-            custoAcumulado += (valE + valV);
-        }
+            // Lógica de proteção forçada:
+            // Se ambos marcados, divide a meta pelas odds. Se um marcado, joga a meta toda nele.
+            let apostaE = checkE ? (meta / oddE) : 0;
+            let apostaV = checkV ? (meta / oddV) : 0;
 
-        for (let i = 0; i < 3; i++) {
-            let res = resultados[i];
-            document.getElementById('res' + (i+1)).innerHTML = 
-                `⚡ <b>Aposta Empate:</b> R$ ${res.e.toFixed(2)} | <b>Retorno:</b> R$ ${res.retE.toFixed(2)} | <b>Lucro:</b> R$ ${res.lucroE.toFixed(2)}<br>` +
-                `⚡ <b>Aposta Visitante:</b> R$ ${res.v.toFixed(2)} | <b>Retorno:</b> R$ ${res.retV.toFixed(2)} | <b>Lucro:</b> R$ ${res.lucroV.toFixed(2)}<br>` +
-                `💰 <b>Custo Acumulado Total no momento:</b> R$ ${custoAcumulado.toFixed(2)}`;
+            // Se apenas um marcado, ajusta para garantir o retorno da meta
+            if (checkE && !checkV) apostaE = meta / oddE;
+            if (!checkE && checkV) apostaV = meta / oddV;
+
+            let retornoE = apostaE * oddE;
+            let retornoV = apostaV * oddV;
+
+            document.getElementById('res'+i).innerHTML = `
+                Empate: R$ ${apostaE.toFixed(2)} (Retorno: R$ ${retornoE.toFixed(2)})<br>
+                Visitante: R$ ${apostaV.toFixed(2)} (Retorno: R$ ${retornoV.toFixed(2)})<br>
+                <b>Custo Total Acumulado: R$ ${custoAcumulado.toFixed(2)}</b>
+            `;
+            
+            // O custo para o próximo jogo agora inclui o que foi apostado neste
+            custoAcumulado += (apostaE + apostaV);
         }
     }
     window.onload = calcular;
