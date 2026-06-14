@@ -2,78 +2,71 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Painel de Proteção - Modo D (Visual)</title>
+    <title>Painel Proteção - Modo Definitivo (Break-even)</title>
     <style>
-        body { font-family: Arial; background:#121212; color:#eee; padding: 20px; }
-        .card { background:#1e1e1e; padding:15px; margin-bottom:15px; border-radius:8px; border: 1px solid #333; }
-        input { width:100%; padding:8px; margin-top:5px; background:#333; color:white; border:1px solid #555; }
-        .btn { width:100%; padding:15px; background:#2e7d32; color:white; border:none; cursor:pointer; font-weight:bold; }
-        .res-box { margin-top:10px; padding:10px; border-left: 4px solid #444; background:#252525; font-size:13px; }
-        .lucro-verde { color: #81c784; }
-        .lucro-vermelho { color: #e57373; }
+        body { font-family: Arial; background: #121212; color: #eee; padding: 20px; }
+        .card { background: #1e1e1e; padding: 15px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #333; }
+        input { width: 100%; padding: 8px; margin-top: 5px; background: #333; color: white; border: 1px solid #555; }
+        .btn { width: 100%; padding: 15px; background: #2e7d32; color: white; border: none; cursor: pointer; font-weight: bold; }
+        .res-box { margin-top: 10px; padding: 10px; border-left: 4px solid #444; background: #252525; font-size: 13px; }
+        .lucro-neutro { color: #ffb74d; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="container" style="max-width:600px; margin:auto;">
     <div class="card">
-        <h3>Múltipla Principal</h3>
+        <h3>Múltipla Principal (Geradora de Lucro)</h3>
         <label>Montante</label><input id="valor" type="number" value="100">
         <label>Odd</label><input id="odd" type="number" value="4.0">
-        <label>Margem Desejada (%)</label><input id="margem" type="number" value="10">
     </div>
 
     <div id="jogos"></div>
-    <button class="btn" onclick="calcular()">CALCULAR E MOSTRAR RETORNOS</button>
+    <button class="btn" onclick="calcular()">CALCULAR E ZERAR RISCO</button>
 </div>
 
 <script>
-// Criação dos inputs (Mesma estrutura original)
 const div = document.getElementById("jogos");
 for(let i=1; i<=3; i++){
     div.innerHTML += `<div class="card">
-        <h3>Jogo ${i}</h3>
+        <h3>Jogo ${i} (Proteção)</h3>
         <label>Odd Empate</label><input id="e${i}" value="3.85">
         <label>Odd Visitante</label><input id="v${i}" value="5.80">
-        <label><input type="checkbox" id="le${i}" checked> Lucro Empate</label>
-        <label><input type="checkbox" id="lv${i}" checked> Lucro Visitante</label>
         <div id="r${i}" class="res-box">Aguardando cálculo...</div>
     </div>`;
 }
 
 function calcular() {
     let valor = +document.getElementById("valor").value;
-    let oddTotal = +document.getElementById("odd").value;
-    let margem = +document.getElementById("margem").value / 100;
     
-    // Custo Inicial (Base da Etapa 3)
-    let custo = valor + (valor * 0.3) + (valor * 0.3); 
+    // Custo Inicial = Montante + Aposta no Empate J3 + Aposta no Visitante J3
+    // Como J3 também é proteção, ele precisa ser calculado antes para compor a base
+    let e3 = +document.getElementById("e3").value;
+    let v3 = +document.getElementById("v3").value;
     
-    for(let i=1; i<=3; i++){
+    // Inicialmente estimamos o custo das proteções do Jogo 3 para fechar a base
+    let aE3 = valor / (e3 - 1);
+    let aV3 = valor / (v3 - 1);
+    
+    let custoAcumulado = valor + aE3 + aV3;
+
+    // Processamento retroativo: Jogo 3 -> Jogo 2 -> Jogo 1
+    // Ajustamos os valores para que cada um recupere o custo total anterior
+    for(let i=3; i>=1; i--) {
         let e = +document.getElementById("e"+i).value;
         let v = +document.getElementById("v"+i).value;
-        let le = document.getElementById("le"+i).checked;
-        let lv = document.getElementById("lv"+i).checked;
         
-        let metaE = le ? (custo * (1 + margem)) : custo;
-        let metaV = lv ? (custo * (1 + margem)) : custo;
-        
-        let ae = metaE / (e - 1);
-        let av = metaV / (v - 1);
-        
-        // Cálculo do retorno bruto e lucro líquido para exibição
-        let retE = ae * e;
-        let retV = av * v;
-        let lucE = retE - custo - ae - av;
-        let lucV = retV - custo - ae - av;
+        // FÓRMULA DE ZERAGEM: (Custo Total / (Odd - 1))
+        let ae = custoAcumulado / (e - 1);
+        let av = custoAcumulado / (v - 1);
         
         document.getElementById("r"+i).innerHTML = `
-            <b>Empate:</b> Aposta: ${ae.toFixed(2)} | Retorno: ${retE.toFixed(2)} | <span class="${lucE>=0?'lucro-verde':'lucro-vermelho'}">Líquido: ${lucE.toFixed(2)}</span><br>
-            <b>Visitante:</b> Aposta: ${av.toFixed(2)} | Retorno: ${retV.toFixed(2)} | <span class="${lucV>=0?'lucro-verde':'lucro-vermelho'}">Líquido: ${lucV.toFixed(2)}</span>
+            <b>Aposta Empate:</b> ${ae.toFixed(2)} | <b>Aposta Visitante:</b> ${av.toFixed(2)}<br>
+            <span class="lucro-neutro">Meta: Cobrir Custo Acumulado de ${custoAcumulado.toFixed(2)}</span>
         `;
         
-        // Acumula para o próximo
-        custo += (ae + av);
+        // O custo para o jogo anterior inclui o que já foi gasto nos jogos futuros
+        custoAcumulado += (ae + av);
     }
 }
 </script>
