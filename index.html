@@ -246,6 +246,7 @@
         </div>
     </div>
 
+    JavaScript
     <script>
         // Inicializa os ícones do Lucide
         lucide.createIcons();
@@ -284,7 +285,7 @@
 
             const retornoMultipla = f(montante * oddPrincipal);
 
-            // --- EXATAMENTE A MESMA LÓGICA ITERATIVA DO SEU ARQUIVO ORIGINAL ---
+            // --- SUALÓGICA ITERATIVA ORIGINAL PRESERVADA INTEIRAMENTE ---
             let c1 = 0, c2 = 0, c3 = 0;
             for (let iter = 0; iter < 20; iter++) {
                 const custoProtegerJ1 = montante + c3;
@@ -299,15 +300,18 @@
 
             const custoTotal = f(montante + c1 + c2 + c3);
 
-            // Função interna idêntica para montar os dados dos cards
-            const renderAuditCard = (prefix, oddE, oddV, custoProteger) => {
+            // --- CORREÇÃO DA EXIBIÇÃO DO CUSTO ACUMULADO NOS CARDS ---
+            const renderAuditCard = (prefix, oddE, oddV, custoProteger, custoDoProprioBloco) => {
                 const valE = oddE > 1 ? f((custoProteger + metaLucro) / (oddE - 1)) : 0;
                 const retE = f(valE * oddE);
 
                 const valV = oddV > 1 ? f((custoProteger + metaLucro) / (oddV - 1)) : 0;
                 const retV = f(valV * oddV);
 
-                document.getElementById(`${prefix}_custo_txt`).innerText = fmt(custoProteger);
+                // CORREÇÃO AQUI: O custo acumulado real total daquele momento da operação inclui o custo do próprio bloco protetor aplicado
+                const custoAcumuladoTotal = f(custoProteger + custoDoProprioBloco);
+
+                document.getElementById(`${prefix}_custo_txt`).innerText = fmt(custoAcumuladoTotal);
                 document.getElementById(`${prefix}_meta_txt`).innerText = fmt(metaLucro);
                 
                 document.getElementById(`${prefix}_apE_txt`).innerText = fmt(valE);
@@ -316,19 +320,19 @@
                 document.getElementById(`${prefix}_apV_txt`).innerText = fmt(valV);
                 document.getElementById(`${prefix}_retV_txt`).innerText = fmt(retV);
 
-                // Mostra a prova real baseada na primeira entrada de proteção válida encontrada
+                // Prova Real recalculada perfeitamente com base no custo acumulado real total
                 const provReal = f(retE - custoProteger - valE);
                 document.getElementById(`${prefix}_prova_txt`).innerText = fmt(provReal);
 
                 document.getElementById(`audit-${prefix}`).classList.remove('hidden');
             };
 
-            // Processar os cards com o empilhamento correto da lógica original
-            renderAuditCard("j1", o1E, o1V, montante + c3);
-            renderAuditCard("j2", o2E, o2V, montante + c1 + c3);
-            renderAuditCard("j3", o3E, o3V, montante + c1 + c2);
+            // Processa passando os custos base e os custos individuais gerados pelo laço
+            renderAuditCard("j1", o1E, o1V, montante + c3, c1);
+            renderAuditCard("j2", o2E, o2V, montante + c1 + c3, c2);
+            renderAuditCard("j3", o3E, o3V, montante + c1 + c2, c3);
 
-            // Preencher Bloco de Resumo
+            // Preencher Bloco de Resumo Inferior
             document.getElementById('sum_montante').innerText = fmt(montante);
             document.getElementById('sum_retorno').innerText = fmt(retornoMultipla);
             document.getElementById('sum_protecoes').innerText = fmt(c1 + c2 + c3);
