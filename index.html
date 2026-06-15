@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cascata — Controle Manual por Cliques</title>
+    <title>Cascata — Híbrido: Automático + Ajuste Manual</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         body { background-color: #0b0f19; color: #f4f4f5; }
-        /* Remove as setinhas padrão do navegador para usarmos nossos botões bonitos */
         input[type=number]::-webkit-inner-spin-button, 
         input[type=number]::-webkit-outer-spin-button { 
             -webkit-appearance: none; 
@@ -23,15 +22,15 @@
         <!-- Header -->
         <div class="flex items-center justify-between border-b border-zinc-800 pb-5 mb-8">
             <div class="flex items-center gap-3">
-                <div class="bg-lime-500 text-black px-2.5 py-1 rounded text-xs font-black tracking-wider uppercase">Cascata V10</div>
-                <h1 class="text-xl font-bold text-white tracking-tight">Estratégia do João — Controle de Stakes por Botões</h1>
+                <div class="bg-lime-500 text-black px-2.5 py-1 rounded text-xs font-black tracking-wider uppercase">Cascata V11</div>
+                <h1 class="text-xl font-bold text-white tracking-tight">Estratégia do João — Automático com Ajuste de Seta</h1>
             </div>
-            <div class="text-xs text-zinc-500 font-medium">Ajuste de Preço Manual e Instantâneo</div>
+            <div class="text-xs text-zinc-500 font-medium">Cálculo Automático Base + Liberdade Manual</div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             
-            <!-- LATERAL ESQUERDA: CONFIGURAÇÕES DE BASE -->
+            <!-- LATERAL ESQUERDA: ENTRADAS DE DADOS (GATILHO DO AUTOMÁTICO) -->
             <div class="lg:col-span-4 flex flex-col gap-6">
                 <div class="rounded-xl border border-zinc-800 bg-zinc-900/40 p-5 shadow-xl backdrop-blur-md">
                     <h2 class="text-xs font-bold text-zinc-400 uppercase tracking-widest border-b border-zinc-800 pb-3 mb-4">Investimento da Múltipla</h2>
@@ -39,44 +38,44 @@
                     <div class="space-y-4">
                         <div class="flex flex-col gap-1.5">
                             <label class="text-xs font-semibold text-zinc-400">Montante Principal Múltipla (R$)</label>
-                            <input type="number" id="montante" value="100" step="1" class="w-full bg-[#131a2b] border border-zinc-800 rounded-lg px-3 py-2 text-white font-bold text-sm focus:outline-none focus:border-lime-500" oninput="calcularPainel()">
+                            <input type="number" id="montante" value="100" step="1" class="w-full bg-[#131a2b] border border-zinc-800 rounded-lg px-3 py-2 text-white font-bold text-sm focus:outline-none focus:border-lime-500" oninput="rodarAutomatico()">
                         </div>
                         <div class="flex flex-col gap-1.5">
                             <label class="text-xs font-semibold text-zinc-400">Odd da Múltipla (Mandantes)</label>
-                            <input type="number" id="oddPrincipal" value="5.04" step="0.01" class="w-full bg-[#131a2b] border border-zinc-800 rounded-lg px-3 py-2 text-white font-bold text-sm focus:outline-none focus:border-lime-500" oninput="calcularPainel()">
+                            <input type="number" id="oddPrincipal" value="5.04" step="0.01" class="w-full bg-[#131a2b] border border-zinc-800 rounded-lg px-3 py-2 text-white font-bold text-sm focus:outline-none focus:border-lime-500" oninput="rodarAutomatico()">
                         </div>
                     </div>
                 </div>
 
-                <!-- Painel de Odds das Casas para Multiplicação -->
+                <!-- Painel de Odds Referência -->
                 <div class="rounded-xl border border-zinc-800 bg-zinc-900/40 p-5 shadow-xl backdrop-blur-md space-y-4">
                     <h2 class="text-xs font-bold text-zinc-400 uppercase tracking-widest border-b border-zinc-800 pb-2">Odds Referência das Proteções</h2>
                     
                     <div>
                         <span class="text-[11px] font-bold text-zinc-500 uppercase block mb-1">Jogo 1</span>
                         <div class="grid grid-cols-2 gap-2">
-                            <div class="bg-[#131a2b] p-1.5 border border-zinc-800 rounded text-center"><span class="text-[9px] block text-zinc-500 uppercase font-bold">Empate</span><input type="number" id="o1E" value="3.95" step="0.01" class="w-full bg-transparent text-center font-bold text-xs text-white focus:outline-none" oninput="calcularPainel()"></div>
-                            <div class="bg-[#131a2b] p-1.5 border border-zinc-800 rounded text-center"><span class="text-[9px] block text-zinc-500 uppercase font-bold">Visitante</span><input type="number" id="o1V" value="5.50" step="0.01" class="w-full bg-transparent text-center font-bold text-xs text-white focus:outline-none" oninput="calcularPainel()"></div>
+                            <div class="bg-[#131a2b] p-1.5 border border-zinc-800 rounded text-center"><span class="text-[9px] block text-zinc-500 uppercase font-bold">Empate</span><input type="number" id="o1E" value="3.95" step="0.01" class="w-full bg-transparent text-center font-bold text-xs text-white focus:outline-none" oninput="rodarAutomatico()"></div>
+                            <div class="bg-[#131a2b] p-1.5 border border-zinc-800 rounded text-center"><span class="text-[9px] block text-zinc-500 uppercase font-bold">Visitante</span><input type="number" id="o1V" value="5.50" step="0.01" class="w-full bg-transparent text-center font-bold text-xs text-white focus:outline-none" oninput="rodarAutomatico()"></div>
                         </div>
                     </div>
                     <div>
                         <span class="text-[11px] font-bold text-zinc-500 uppercase block mb-1">Jogo 2</span>
                         <div class="grid grid-cols-2 gap-2">
-                            <div class="bg-[#131a2b] p-1.5 border border-zinc-800 rounded text-center"><span class="text-[9px] block text-zinc-500 uppercase font-bold">Empate</span><input type="number" id="o2E" value="3.80" step="0.01" class="w-full bg-transparent text-center font-bold text-xs text-white focus:outline-none" oninput="calcularPainel()"></div>
-                            <div class="bg-[#131a2b] p-1.5 border border-zinc-800 rounded text-center"><span class="text-[9px] block text-zinc-500 uppercase font-bold">Visitante</span><input type="number" id="o2V" value="4.90" step="0.01" class="w-full bg-transparent text-center font-bold text-xs text-white focus:outline-none" oninput="calcularPainel()"></div>
+                            <div class="bg-[#131a2b] p-1.5 border border-zinc-800 rounded text-center"><span class="text-[9px] block text-zinc-500 uppercase font-bold">Empate</span><input type="number" id="o2E" value="3.80" step="0.01" class="w-full bg-transparent text-center font-bold text-xs text-white focus:outline-none" oninput="rodarAutomatico()"></div>
+                            <div class="bg-[#131a2b] p-1.5 border border-zinc-800 rounded text-center"><span class="text-[9px] block text-zinc-500 uppercase font-bold">Visitante</span><input type="number" id="o2V" value="4.90" step="0.01" class="w-full bg-transparent text-center font-bold text-xs text-white focus:outline-none" oninput="rodarAutomatico()"></div>
                         </div>
                     </div>
                     <div>
                         <span class="text-[11px] font-bold text-zinc-500 uppercase block mb-1">Jogo 3</span>
                         <div class="grid grid-cols-2 gap-2">
-                            <div class="bg-[#131a2b] p-1.5 border border-zinc-800 rounded text-center"><span class="text-[9px] block text-zinc-500 uppercase font-bold">Empate</span><input type="number" id="o3E" value="12.24" step="0.01" class="w-full bg-transparent text-center font-bold text-xs text-white focus:outline-none" oninput="calcularPainel()"></div>
-                            <div class="bg-[#131a2b] p-1.5 border border-zinc-800 rounded text-center"><span class="text-[9px] block text-zinc-500 uppercase font-bold">Visitante</span><input type="number" id="o3V" value="15.91" step="0.01" class="w-full bg-transparent text-center font-bold text-xs text-white focus:outline-none" oninput="calcularPainel()"></div>
+                            <div class="bg-[#131a2b] p-1.5 border border-zinc-800 rounded text-center"><span class="text-[9px] block text-zinc-500 uppercase font-bold">Empate</span><input type="number" id="o3E" value="12.24" step="0.01" class="w-full bg-transparent text-center font-bold text-xs text-white focus:outline-none" oninput="rodarAutomatico()"></div>
+                            <div class="bg-[#131a2b] p-1.5 border border-zinc-800 rounded text-center"><span class="text-[9px] block text-zinc-500 uppercase font-bold">Visitante</span><input type="number" id="o3V" value="15.91" step="0.01" class="w-full bg-transparent text-center font-bold text-xs text-white focus:outline-none" oninput="rodarAutomatico()"></div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- DIREITA: CARDS DE CONTROLE DE STAKE COM BOTÕES +/- -->
+            <!-- DIREITA: CARDS DE CONTROLE DE STAKE (AUTOMÁTICOS + BOTÕES +/-) -->
             <div class="lg:col-span-8 flex flex-col gap-5">
                 
                 <!-- CARD JOGO 1 -->
@@ -92,7 +91,7 @@
                                 <label class="text-zinc-400 font-medium block text-[11px] mb-1.5">Stake Empate (R$)</label>
                                 <div class="flex items-center gap-1 max-w-[160px]">
                                     <button onclick="passo('input_j1E', -1)" class="w-8 h-8 bg-zinc-800 hover:bg-zinc-700 text-white rounded font-bold transition-all text-sm cursor-pointer select-none">-</button>
-                                    <input type="number" id="input_j1E" value="25" class="w-16 h-8 bg-zinc-950 border border-zinc-800 rounded text-center text-white font-black text-sm focus:outline-none" oninput="calcularPainel()">
+                                    <input type="number" id="input_j1E" value="0" class="w-16 h-8 bg-zinc-950 border border-zinc-800 rounded text-center text-white font-black text-sm focus:outline-none" oninput="calcularPainel(true)">
                                     <button onclick="passo('input_j1E', 1)" class="w-8 h-8 bg-zinc-800 hover:bg-zinc-700 text-white rounded font-bold transition-all text-sm cursor-pointer select-none">+</button>
                                 </div>
                                 <span class="text-zinc-500 block text-[10px] mt-2">Retorno Bruto: <strong class="text-zinc-300" id="j1_retE_txt">R$ 0,00</strong></span>
@@ -102,7 +101,7 @@
                                 <label class="text-zinc-400 font-medium block text-[11px] mb-1.5">Stake Visitante (R$)</label>
                                 <div class="flex items-center gap-1 max-w-[160px]">
                                     <button onclick="passo('input_j1V', -1)" class="w-8 h-8 bg-zinc-800 hover:bg-zinc-700 text-white rounded font-bold transition-all text-sm cursor-pointer select-none">-</button>
-                                    <input type="number" id="input_j1V" value="18" class="w-16 h-8 bg-zinc-950 border border-zinc-800 rounded text-center text-white font-black text-sm focus:outline-none" oninput="calcularPainel()">
+                                    <input type="number" id="input_j1V" value="0" class="w-16 h-8 bg-zinc-950 border border-zinc-800 rounded text-center text-white font-black text-sm focus:outline-none" oninput="calcularPainel(true)">
                                     <button onclick="passo('input_j1V', 1)" class="w-8 h-8 bg-zinc-800 hover:bg-zinc-700 text-white rounded font-bold transition-all text-sm cursor-pointer select-none">+</button>
                                 </div>
                                 <span class="text-zinc-500 block text-[10px] mt-2">Retorno Bruto: <strong class="text-zinc-300" id="j1_retV_txt">R$ 0,00</strong></span>
@@ -128,7 +127,7 @@
                                 <label class="text-zinc-400 font-medium block text-[11px] mb-1.5">Stake Empate (R$)</label>
                                 <div class="flex items-center gap-1 max-w-[160px]">
                                     <button onclick="passo('input_j2E', -1)" class="w-8 h-8 bg-zinc-800 hover:bg-zinc-700 text-white rounded font-bold transition-all text-sm cursor-pointer select-none">-</button>
-                                    <input type="number" id="input_j2E" value="35" class="w-16 h-8 bg-zinc-950 border border-zinc-800 rounded text-center text-white font-black text-sm focus:outline-none" oninput="calcularPainel()">
+                                    <input type="number" id="input_j2E" value="0" class="w-16 h-8 bg-zinc-950 border border-zinc-800 rounded text-center text-white font-black text-sm focus:outline-none" oninput="calcularPainel(true)">
                                     <button onclick="passo('input_j2E', 1)" class="w-8 h-8 bg-zinc-800 hover:bg-zinc-700 text-white rounded font-bold transition-all text-sm cursor-pointer select-none">+</button>
                                 </div>
                                 <span class="text-zinc-500 block text-[10px] mt-2">Retorno Bruto: <strong class="text-zinc-300" id="j2_retE_txt">R$ 0,00</strong></span>
@@ -138,7 +137,7 @@
                                 <label class="text-zinc-400 font-medium block text-[11px] mb-1.5">Stake Visitante (R$)</label>
                                 <div class="flex items-center gap-1 max-w-[160px]">
                                     <button onclick="passo('input_j2V', -1)" class="w-8 h-8 bg-zinc-800 hover:bg-zinc-700 text-white rounded font-bold transition-all text-sm cursor-pointer select-none">-</button>
-                                    <input type="number" id="input_j2V" value="25" class="w-16 h-8 bg-zinc-950 border border-zinc-800 rounded text-center text-white font-black text-sm focus:outline-none" oninput="calcularPainel()">
+                                    <input type="number" id="input_j2V" value="0" class="w-16 h-8 bg-zinc-950 border border-zinc-800 rounded text-center text-white font-black text-sm focus:outline-none" oninput="calcularPainel(true)">
                                     <button onclick="passo('input_j2V', 1)" class="w-8 h-8 bg-zinc-800 hover:bg-zinc-700 text-white rounded font-bold transition-all text-sm cursor-pointer select-none">+</button>
                                 </div>
                                 <span class="text-zinc-500 block text-[10px] mt-2">Retorno Bruto: <strong class="text-zinc-300" id="j2_retV_txt">R$ 0,00</strong></span>
@@ -164,7 +163,7 @@
                                 <label class="text-zinc-400 font-medium block text-[11px] mb-1.5">Stake Empate (R$)</label>
                                 <div class="flex items-center gap-1 max-w-[160px]">
                                     <button onclick="passo('input_j3E', -1)" class="w-8 h-8 bg-zinc-800 hover:bg-zinc-700 text-white rounded font-bold transition-all text-sm cursor-pointer select-none">-</button>
-                                    <input type="number" id="input_j3E" value="10" class="w-16 h-8 bg-zinc-950 border border-zinc-800 rounded text-center text-white font-black text-sm focus:outline-none" oninput="calcularPainel()">
+                                    <input type="number" id="input_j3E" value="0" class="w-16 h-8 bg-zinc-950 border border-zinc-800 rounded text-center text-white font-black text-sm focus:outline-none" oninput="calcularPainel(true)">
                                     <button onclick="passo('input_j3E', 1)" class="w-8 h-8 bg-zinc-800 hover:bg-zinc-700 text-white rounded font-bold transition-all text-sm cursor-pointer select-none">+</button>
                                 </div>
                                 <span class="text-zinc-500 block text-[10px] mt-2">Retorno Bruto: <strong class="text-zinc-300" id="j3_retE_txt">R$ 0,00</strong></span>
@@ -174,7 +173,7 @@
                                 <label class="text-zinc-400 font-medium block text-[11px] mb-1.5">Stake Visitante (R$)</label>
                                 <div class="flex items-center gap-1 max-w-[160px]">
                                     <button onclick="passo('input_j3V', -1)" class="w-8 h-8 bg-zinc-800 hover:bg-zinc-700 text-white rounded font-bold transition-all text-sm cursor-pointer select-none">-</button>
-                                    <input type="number" id="input_j3V" value="8" class="w-16 h-8 bg-zinc-950 border border-zinc-800 rounded text-center text-white font-black text-sm focus:outline-none" oninput="calcularPainel()">
+                                    <input type="number" id="input_j3V" value="0" class="w-16 h-8 bg-zinc-950 border border-zinc-800 rounded text-center text-white font-black text-sm focus:outline-none" oninput="calcularPainel(true)">
                                     <button onclick="passo('input_j3V', 1)" class="w-8 h-8 bg-zinc-800 hover:bg-zinc-700 text-white rounded font-bold transition-all text-sm cursor-pointer select-none">+</button>
                                 </div>
                                 <span class="text-zinc-500 block text-[10px] mt-2">Retorno Bruto: <strong class="text-zinc-300" id="j3_retV_txt">R$ 0,00</strong></span>
@@ -188,7 +187,7 @@
                 </div>
 
                 <!-- RESUMO GERAL DA BANCA -->
-                <div class="bg-[#0e1322] border border-zinc-800 rounded-xl p-5 shadow-inner" id="series-summary">
+                <div class="bg-[#0e1322] border border-zinc-800 rounded-xl p-5 shadow-inner">
                     <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-4">Painel Unificado de Auditoria</h3>
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
                         <div class="bg-zinc-950/50 p-3 rounded-lg border border-zinc-800/80">
@@ -215,34 +214,13 @@
     </div>
 
     <script>
-        lucide.createIcons();
-
         function f(v) { return parseFloat(v.toFixed(2)) || 0; }
         function fmt(v) { return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); }
 
-        // Função de passo que roda ao clicar nos botões + ou -
-        function passo(idCampo, valorPasso) {
-            let campo = document.getElementById(idCampo);
-            let valorAtual = parseFloat(campo.value) || 0;
-            let novoValor = valorAtual + valorPasso;
-            if (novoValor < 0) novoValor = 0; // Proteção para não ficar stake negativa
-            campo.value = novoValor;
-            calcularPainel();
-        }
-
-        function formatarStatusLíquido(elemento, valor) {
-            elemento.innerText = fmt(valor);
-            if (valor > 0) elemento.className = "text-sm font-black text-lime-400";
-            else if (valor < 0) elemento.className = "text-sm font-black text-red-400";
-            else elemento.className = "text-sm font-black text-zinc-400";
-        }
-
-        function calcularPainel() {
-            // Configurações Principais
+        // Quando o usuário altera Montante ou Odds, o sistema faz o cálculo matemático puro automático
+        function rodarAutomatico() {
             const montante = parseFloat(document.getElementById('montante').value) || 0;
-            const oddPrincipal = parseFloat(document.getElementById('oddPrincipal').value) || 0;
-
-            // Odds Fixas Laterais
+            
             const o1E = parseFloat(document.getElementById('o1E').value) || 1;
             const o1V = parseFloat(document.getElementById('o1V').value) || 1;
             const o2E = parseFloat(document.getElementById('o2E').value) || 1;
@@ -250,7 +228,63 @@
             const o3E = parseFloat(document.getElementById('o3E').value) || 1;
             const o3V = parseFloat(document.getElementById('o3V').value) || 1;
 
-            // Coleta direta das Stakes Editáveis dos Cards
+            // Fórmulas matemáticas de arbitragem originais para o zero a zero (Prova Real estável)
+            // Jogo 3 (Calculado primeiro para compor a base do Dia 1)
+            let auto_j3E = f(montante / (o3E - 1));
+            let auto_j3V = f(montante / (o3V - 1));
+            let c3_provvisorio = f(auto_j3E + auto_j3V);
+
+            // Jogo 1 (Usa montante + custo do jogo 3)
+            let baseJ1 = f(montante + c3_provvisorio);
+            let auto_j1E = f(baseJ1 / (o1E - 1));
+            let auto_j1V = f(baseJ1 / (o1V - 1));
+            let c1_provvisorio = f(auto_j1E + auto_j1V);
+
+            // Jogo 2 (Usa o custo acumulado de tudo para garantir a proteção condicional)
+            let baseJ2 = f(montante + c1_provvisorio + c3_provvisorio);
+            let auto_j2E = f(baseJ2 / (o2E - 1));
+            let auto_j2V = f(baseJ2 / (o2V - 1));
+
+            // Aplica os valores sugeridos direto nas caixas na tela
+            document.getElementById('input_j1E').value = Math.round(auto_j1E);
+            document.getElementById('input_j1V').value = Math.round(auto_j1V);
+            document.getElementById('input_j2E').value = Math.round(auto_j2E);
+            document.getElementById('input_j2V').value = Math.round(auto_j2V);
+            document.getElementById('input_j3E').value = Math.round(auto_j3E);
+            document.getElementById('input_j3V').value = Math.round(auto_j3V);
+
+            calcularPainel(false);
+        }
+
+        // Função do botão + e - (Muda o valor da caixa e força o recálculo dos totais mantendo a liberdade do usuário)
+        function passo(idCampo, valorPasso) {
+            let campo = document.getElementById(idCampo);
+            let valorAtual = parseFloat(campo.value) || 0;
+            let novoValor = valorAtual + valorPasso;
+            if (novoValor < 0) novoValor = 0;
+            campo.value = novoValor;
+            calcularPainel(true); // true indica que é alteração manual do usuário
+        }
+
+        function formatarStatusLíquido(elemento, valor) {
+            elemento.innerText = fmt(valor);
+            if (valor >= -0.99 && valor <= 0.99) elemento.className = "text-sm font-black text-zinc-400"; // Próximo de zero
+            else if (valor > 0) elemento.className = "text-sm font-black text-lime-400";
+            else elemento.className = "text-sm font-black text-red-400";
+        }
+
+        // Faz a leitura do que está na tela e atualiza a auditoria em tempo real
+        function calcularPainel(porInputManual) {
+            const montante = parseFloat(document.getElementById('montante').value) || 0;
+            const oddPrincipal = parseFloat(document.getElementById('oddPrincipal').value) || 0;
+
+            const o1E = parseFloat(document.getElementById('o1E').value) || 1;
+            const o1V = parseFloat(document.getElementById('o1V').value) || 1;
+            const o2E = parseFloat(document.getElementById('o2E').value) || 1;
+            const o2V = parseFloat(document.getElementById('o2V').value) || 1;
+            const o3E = parseFloat(document.getElementById('o3E').value) || 1;
+            const o3V = parseFloat(document.getElementById('o3V').value) || 1;
+
             const j1e = parseFloat(document.getElementById('input_j1E').value) || 0;
             const j1v = parseFloat(document.getElementById('input_j1V').value) || 0;
             const j2e = parseFloat(document.getElementById('input_j2E').value) || 0;
@@ -258,7 +292,6 @@
             const j3e = parseFloat(document.getElementById('input_j3E').value) || 0;
             const j3v = parseFloat(document.getElementById('input_j3V').value) || 0;
 
-            // Custos de cada bloco baseado no que está escrito
             const c1 = f(j1e + j1v);
             const c2 = f(j2e + j2v);
             const c3 = f(j3e + j3v);
@@ -266,51 +299,40 @@
             const totalProtecoes = f(c1 + c2 + c3);
             const custoTotalGlobal = f(montante + totalProtecoes);
 
-            // Atualiza tags de cabeçalho nos cards
             document.getElementById('j1_cost_tag').innerText = fmt(c1);
             document.getElementById('j2_cost_tag').innerText = fmt(c2);
             document.getElementById('j3_cost_tag').innerText = fmt(c3);
 
-            // --- JOGO 1 ---
-            let r1E = f(j1e * o1E);
-            let r1V = f(j1v * o1V);
+            // JOGO 1 
+            let r1E = f(j1e * o1E); let r1V = f(j1v * o1V);
             document.getElementById('j1_retE_txt').innerText = fmt(r1E);
             document.getElementById('j1_retV_txt').innerText = fmt(r1V);
-            
-            // Regra João do Dia 1: Se bater a proteção do J1, você perde o Montante e o J3 (já jogados no Dia 1).
-            let balancoJ1 = f(r1E - (montante + c1 + c3));
+            let balancoJ1 = f(r1E - (montante + c1 + c3)); // Regra original do relatório de segurança
             formatarStatusLíquido(document.getElementById('j1_p_txt'), balancoJ1);
 
-            // --- JOGO 2 ---
-            let r2E = f(j2e * o2E);
-            let r2V = f(j2v * o2V);
+            // JOGO 2
+            let r2E = f(j2e * o2E); let r2V = f(j2v * o2V);
             document.getElementById('j2_retE_txt').innerText = fmt(r2E);
             document.getElementById('j2_retV_txt').innerText = fmt(r2V);
-            
-            // Regra do J2: Se bater a proteção do J2, gastou a grade inteira.
             let balancoJ2 = f(r2E - custoTotalGlobal);
             formatarStatusLíquido(document.getElementById('j2_p_txt'), balancoJ2);
 
-            // --- JOGO 3 ---
-            let r3E = f(j3e * o3E);
-            let r3V = f(j3v * o3V);
+            // JOGO 3
+            let r3E = f(j3e * o3E); let r3V = f(j3v * o3V);
             document.getElementById('j3_retE_txt').innerText = fmt(r3E);
             document.getElementById('j3_retV_txt').innerText = fmt(r3V);
-            
-            // Regra do J3: Consumiu a banca completa da operação.
             let balancoJ3 = f(r3E - custoTotalGlobal);
             formatarStatusLíquido(document.getElementById('j3_p_txt'), balancoJ3);
 
-            // --- PAINEL GERAL DE AUDITORIA ---
+            // PAINEL DE AUDITORIA GERAL
             document.getElementById('s_ap').innerText = fmt(montante);
             document.getElementById('s_ret').innerText = fmt(montante * oddPrincipal);
             document.getElementById('s_prot').innerText = fmt(totalProtecoes);
             document.getElementById('s_custo').innerText = fmt(custoTotalGlobal);
         }
 
-        // Executa na carga inicial
         window.onload = function() {
-            calcularPainel();
+            rodarAutomatico();
         };
     </script>
 </body>
