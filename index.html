@@ -232,7 +232,7 @@
         </div>
 
         <div class="text-center mt-8 text-xs text-zinc-600">
-            Proteção em Cascata v1.1 — Core Matemático Corrigido
+            Proteção em Cascata v1.2 — Estável e Corrigido
         </div>
     </div>
 
@@ -271,7 +271,6 @@
             // --- NOVO MOTOR MATEMÁTICO ALGEBRÁICO EM CASCATA ---
             let c1 = 0, c2 = 0, c3 = 0;
             
-            // Laço iterativo calibrando a interdependência real das coberturas duplas
             for (let iter = 0; iter < 20; iter++) {
                 // Jogo 3 (Base)
                 const baseJ3 = montante + c1 + c2;
@@ -287,17 +286,17 @@
                 
                 // Jogo 2 (Acumula Tudo)
                 const baseJ2 = montante + c1 + c3;
-                const fontorJ2 = 1 - (1 / o2E) - (1 / o2V);
-                const alvoJ2 = (baseJ2 + metaLucro) / (fontorJ2 > 0 ? fontorJ2 : 1);
+                const fatorJ2 = 1 - (1 / o2E) - (1 / o2V);
+                const alvoJ2 = (baseJ2 + metaLucro) / (fatorJ2 > 0 ? fatorJ2 : 1);
                 c2 = f((alvoJ2 / o2E) + (alvoJ2 / o2V));
             }
 
             const custoTotal = f(montante + c1 + c2 + c3);
 
-            // Renderizador com a fórmula de arbitragem corrigida por card
+            // Renderizador por card
             const renderAuditCard = (prefix, oddE, oddV, custoProteger, custoBloco) => {
                 const fatorReal = 1 - (1 / oddE) - (1 / oddV);
-                const totalAlvo Bruto = (custoProteger + metaLucro) / (fatorReal > 0 ? fatorReal : 1);
+                const totalAlvoBruto = (custoProteger + metaLucro) / (fatorReal > 0 ? fatorReal : 1);
 
                 const valE = f(totalAlvoBruto / oddE);
                 const retE = f(valE * oddE);
@@ -305,7 +304,6 @@
                 const valV = f(totalAlvoBruto / oddV);
                 const retV = f(valV * oddV);
 
-                // Exibe o custo total englobando o passado + as stakes que entraram agora
                 document.getElementById(`${prefix}_custo_txt`).innerText = fmt(custoProteger + custoBloco);
                 document.getElementById(`${prefix}_meta_txt`).innerText = fmt(metaLucro);
                 
@@ -315,9 +313,9 @@
                 document.getElementById(`${prefix}_apV_txt`).innerText = fmt(valV);
                 document.getElementById(`${prefix}_retV_txt`).innerText = fmt(retV);
 
-                // Prova Real: Retorno Bruto - Custos Anteriores - Ambas as novas Apostas do Bloco
-                const provReal = f(retE - custoProteger - valE - valV);
-                document.getElementById(`${prefix}_prova_txt`).innerText = fmt(provReal + valE + valV); // Alinha com a exibição líquida desejada
+                // Prova real mostrando o líquido correto
+                const provReal = f(retE - (custoProteger + custoBloco));
+                document.getElementById(`${prefix}_prova_txt`).innerText = fmt(provReal);
 
                 document.getElementById(`audit-${prefix}`).classList.remove('hidden');
             };
