@@ -2,72 +2,102 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Painel Proteção - Modo Definitivo (Break-even)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Auditoria e Proteção</title>
     <style>
-        body { font-family: Arial; background: #121212; color: #eee; padding: 20px; }
-        .card { background: #1e1e1e; padding: 15px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #333; }
-        input { width: 100%; padding: 8px; margin-top: 5px; background: #333; color: white; border: 1px solid #555; }
-        .btn { width: 100%; padding: 15px; background: #2e7d32; color: white; border: none; cursor: pointer; font-weight: bold; }
-        .res-box { margin-top: 10px; padding: 10px; border-left: 4px solid #444; background: #252525; font-size: 13px; }
-        .lucro-neutro { color: #ffb74d; font-weight: bold; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #121212; color: #ddd; padding: 20px; }
+        .container { max-width: 600px; margin: auto; }
+        .card { background: #1e1e1e; padding: 20px; margin-bottom: 20px; border-radius: 10px; border: 1px solid #333; }
+        .header-box { background: #2c3e50; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #34495e; }
+        h3 { margin-top: 0; color: #f39c12; }
+        label { display: block; margin-top: 10px; font-size: 0.9em; }
+        input { width: 100%; padding: 10px; margin-top: 5px; background: #333; color: white; border: 1px solid #555; border-radius: 4px; box-sizing: border-box; }
+        .btn { width: 100%; padding: 15px; background: #27ae60; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 1.1em; }
+        .btn:hover { background: #2ecc71; }
+        .auditoria { margin-top: 15px; padding: 12px; background: #111; border-left: 4px solid #f39c12; font-size: 0.9em; line-height: 1.6; }
+        .res-val { color: #fff; font-weight: bold; }
+        .prova-real { color: #f1c40f; }
     </style>
 </head>
 <body>
 
-<div class="container" style="max-width:600px; margin:auto;">
-    <div class="card">
-        <h3>Múltipla Principal (Geradora de Lucro)</h3>
-        <label>Montante</label><input id="valor" type="number" value="100">
-        <label>Odd</label><input id="odd" type="number" value="4.0">
+<div class="container">
+    <div class="header-box">
+        <h3>Painel de Auditoria Geral</h3>
+        <label>Montante Principal (R$)</label><input id="valor" type="number" value="100">
+        <label>Odd Principal</label><input id="odd" type="number" value="4.76">
+        <label>Meta de Lucro Extra por Proteção (R$)</label><input id="metaExtra" type="number" value="2">
+        <div id="resumoGeral" style="margin-top:10px;"></div>
     </div>
 
-    <div id="jogos"></div>
-    <button class="btn" onclick="calcular()">CALCULAR E ZERAR RISCO</button>
+    <div id="jogos">
+        </div>
+
+    <button class="btn" onclick="calcular()">EXECUTAR AUDITORIA E CÁLCULOS</button>
 </div>
 
 <script>
 const div = document.getElementById("jogos");
-for(let i=1; i<=3; i++){
-    div.innerHTML += `<div class="card">
-        <h3>Jogo ${i} (Proteção)</h3>
-        <label>Odd Empate</label><input id="e${i}" value="3.85">
-        <label>Odd Visitante</label><input id="v${i}" value="5.80">
-        <div id="r${i}" class="res-box">Aguardando cálculo...</div>
-    </div>`;
+// Criando os cards dinamicamente
+const nomes = ["Jogo 3 (Base)", "Jogo 1 (Acumula J3)", "Jogo 2 (Acumula Tudo)"];
+for(let i=0; i<3; i++){
+    div.innerHTML += `
+        <div class="card" id="card${i+1}">
+            <h3>${nomes[i]}</h3>
+            <label>Odd Empate</label><input id="e${i+1}" value="3.9">
+            <label>Odd Visitante</label><input id="v${i+1}" value="5.6">
+            <div id="r${i+1}" class="auditoria">Aguardando cálculo...</div>
+        </div>`;
 }
 
 function calcular() {
-    let valor = +document.getElementById("valor").value;
-    
-    // Custo Inicial = Montante + Aposta no Empate J3 + Aposta no Visitante J3
-    // Como J3 também é proteção, ele precisa ser calculado antes para compor a base
+    let montante = parseFloat(document.getElementById("valor").value) || 0;
+    let oddP = parseFloat(document.getElementById("odd").value) || 0;
+    let meta = parseFloat(document.getElementById("metaExtra").value) || 0;
+
+    // RESUMO GERAL
+    let retornoPrincipal = montante * oddP;
+    document.getElementById("resumoGeral").innerHTML = `
+        Retorno Bruto Múltipla: <span class="res-val">R$ ${retornoPrincipal.toFixed(2)}</span>
+    `;
+
+    // LÓGICA DE CASCATA
+    // 1. JOGO 3 (BASE)
     let e3 = +document.getElementById("e3").value;
     let v3 = +document.getElementById("v3").value;
-    
-    // Inicialmente estimamos o custo das proteções do Jogo 3 para fechar a base
-    let aE3 = valor / (e3 - 1);
-    let aV3 = valor / (v3 - 1);
-    
-    let custoAcumulado = valor + aE3 + aV3;
+    let custoJ3 = montante; // A base só conhece o montante inicialmente
+    let ae3 = (custoJ3 + meta) / (e3 - 1);
+    let av3 = (custoJ3 + meta) / (v3 - 1);
+    let totalJ3 = ae3 + av3;
+    renderAuditoria(3, ae3, av3, e3, v3, custoJ3 + totalJ3);
 
-    // Processamento retroativo: Jogo 3 -> Jogo 2 -> Jogo 1
-    // Ajustamos os valores para que cada um recupere o custo total anterior
-    for(let i=3; i>=1; i--) {
-        let e = +document.getElementById("e"+i).value;
-        let v = +document.getElementById("v"+i).value;
-        
-        // FÓRMULA DE ZERAGEM: (Custo Total / (Odd - 1))
-        let ae = custoAcumulado / (e - 1);
-        let av = custoAcumulado / (v - 1);
-        
-        document.getElementById("r"+i).innerHTML = `
-            <b>Aposta Empate:</b> ${ae.toFixed(2)} | <b>Aposta Visitante:</b> ${av.toFixed(2)}<br>
-            <span class="lucro-neutro">Meta: Cobrir Custo Acumulado de ${custoAcumulado.toFixed(2)}</span>
-        `;
-        
-        // O custo para o jogo anterior inclui o que já foi gasto nos jogos futuros
-        custoAcumulado += (ae + av);
-    }
+    // 2. JOGO 1 (Acumula J3)
+    let e1 = +document.getElementById("e1").value;
+    let v1 = +document.getElementById("v1").value;
+    let custoJ1 = montante + totalJ3;
+    let ae1 = (custoJ1 + meta) / (e1 - 1);
+    let av1 = (custoJ1 + meta) / (v1 - 1);
+    let totalJ1 = ae1 + av1;
+    renderAuditoria(1, ae1, av1, e1, v1, custoJ1 + totalJ1);
+
+    // 3. JOGO 2 (Acumula Tudo)
+    let e2 = +document.getElementById("e2").value;
+    let v2 = +document.getElementById("v2").value;
+    let custoJ2 = montante + totalJ3 + totalJ1;
+    let ae2 = (custoJ2 + meta) / (e2 - 1);
+    let av2 = (custoJ2 + meta) / (v2 - 1);
+    let totalJ2 = ae2 + av2;
+    renderAuditoria(2, ae2, av2, e2, v2, custoJ2 + totalJ2);
+}
+
+function renderAuditoria(id, ae, av, e, v, custoAcumulado) {
+    let ret = ae * e; // Retorno do empate
+    let prova = ret - custoAcumulado;
+    document.getElementById("r"+id).innerHTML = `
+        Custo Acumulado: <span class="res-val">R$ ${custoAcumulado.toFixed(2)}</span><br>
+        Aposta Empate: <b>R$ ${ae.toFixed(2)}</b> | Aposta Visitante: <b>R$ ${av.toFixed(2)}</b><br>
+        Prova Real (Retorno - Custo): <span class="prova-real">R$ ${prova.toFixed(2)}</span>
+    `;
 }
 </script>
 </body>
