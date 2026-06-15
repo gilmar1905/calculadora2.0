@@ -3,20 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de Auditoria e Proteção</title>
+    <title>Painel de Gestão de Proteção em Cascata</title>
     <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #121212; color: #ddd; padding: 20px; }
+        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: #eee; padding: 20px; }
         .container { max-width: 600px; margin: auto; }
-        .card { background: #1e1e1e; padding: 20px; margin-bottom: 20px; border-radius: 10px; border: 1px solid #333; }
-        .header-box { background: #2c3e50; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #34495e; }
-        h3 { margin-top: 0; color: #f39c12; }
-        label { display: block; margin-top: 10px; font-size: 0.9em; }
-        input { width: 100%; padding: 10px; margin-top: 5px; background: #333; color: white; border: 1px solid #555; border-radius: 4px; box-sizing: border-box; }
-        .btn { width: 100%; padding: 15px; background: #27ae60; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 1.1em; }
-        .btn:hover { background: #2ecc71; }
-        .auditoria { margin-top: 15px; padding: 12px; background: #111; border-left: 4px solid #f39c12; font-size: 0.9em; line-height: 1.6; }
-        .res-val { color: #fff; font-weight: bold; }
-        .prova-real { color: #f1c40f; }
+        .card { background: #1e1e1e; padding: 20px; margin-bottom: 20px; border-radius: 12px; border: 1px solid #333; }
+        .header-box { background: #1a1a1a; padding: 20px; border-radius: 12px; border: 1px solid #444; margin-bottom: 20px; }
+        label { display: block; margin: 10px 0 5px; font-size: 0.9em; color: #aaa; }
+        input { width: 100%; padding: 12px; background: #2a2a2a; color: white; border: 1px solid #444; border-radius: 6px; box-sizing: border-box; }
+        .btn { width: 100%; padding: 18px; background: #27ae60; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 1.1em; cursor: pointer; }
+        .auditoria { margin-top: 15px; padding: 15px; background: #000; border-radius: 8px; border-left: 4px solid #f39c12; font-size: 0.9em; }
+        .val { color: #f39c12; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -26,71 +23,72 @@
         <h3>Painel de Auditoria Geral</h3>
         <label>Montante Principal (R$)</label><input id="valor" type="number" value="100">
         <label>Odd Principal</label><input id="odd" type="number" value="4.76">
-        <label>Meta de Lucro Extra por Proteção (R$)</label><input id="metaExtra" type="number" value="2">
-        <div id="resumoGeral" style="margin-top:10px;"></div>
+        <label>Meta de Lucro Extra (R$)</label><input id="meta" type="number" value="2">
+        <div id="infoGlobal" style="margin-top:15px; font-size: 0.9em;"></div>
     </div>
 
-    <div id="jogos">
-        </div>
-
-    <button class="btn" onclick="calcular()">EXECUTAR AUDITORIA E CÁLCULOS</button>
+    <div id="cardsJogos"></div>
+    <button class="btn" onclick="processar()">EXECUTAR AUDITORIA</button>
 </div>
 
 <script>
-// Criação dos cards dinamicamente
-const div = document.getElementById("jogos");
-const nomes = ["Jogo 3 (Base)", "Jogo 1 (Acumula J3)", "Jogo 2 (Acumula Tudo)"];
-for(let i=0; i<3; i++){
-    div.innerHTML += `
-        <div class="card" id="card${i+1}">
-            <h3>${nomes[i]}</h3>
-            <label>Odd Empate</label><input id="e${i+1}" value="3.9">
-            <label>Odd Visitante</label><input id="v${i+1}" value="5.6">
-            <div id="r${i+1}" class="auditoria">Aguardando cálculo...</div>
+const jogos = [
+    { id: 3, nome: "Jogo 3 (Base)" },
+    { id: 1, nome: "Jogo 1 (Acumula J3)" },
+    { id: 2, nome: "Jogo 2 (Acumula Tudo)" }
+];
+
+const container = document.getElementById("cardsJogos");
+jogos.forEach(j => {
+    container.innerHTML += `
+        <div class="card">
+            <h3>${j.nome}</h3>
+            <label>Odd Empate</label><input id="e${j.id}" value="3.9">
+            <label>Odd Visitante</label><input id="v${j.id}" value="5.6">
+            <div id="res${j.id}" class="auditoria">Aguardando cálculo...</div>
         </div>`;
-}
+});
 
-// A FUNÇÃO DO BOTÃO
-function calcular() {
-    let montante = parseFloat(document.getElementById("valor").value) || 0;
-    let meta = parseFloat(document.getElementById("metaExtra").value) || 0;
-
-    // 1. JOGO 3 (BASE)
+function processar() {
+    let m = parseFloat(document.getElementById("valor").value);
+    let meta = parseFloat(document.getElementById("meta").value);
+    
+    // Cálculo do Jogo 3
     let e3 = +document.getElementById("e3").value;
     let v3 = +document.getElementById("v3").value;
-    let aE3 = (montante + meta) / (e3 - 1);
-    let aV3 = (montante + meta) / (v3 - 1);
-    let custoJ3 = montante + aE3 + aV3;
-    renderAuditoria(3, aE3, aV3, e3, v3, custoJ3);
+    let aE3 = (m + meta) / (e3 - 1);
+    let aV3 = (m + meta) / (v3 - 1);
+    let custoJ3 = m + aE3 + aV3;
+    exibir(3, aE3, aV3, e3, v3, custoJ3, meta);
 
-    // 2. JOGO 1 (ACUMULA J3)
+    // Cálculo do Jogo 1 (Montante + J3)
     let e1 = +document.getElementById("e1").value;
     let v1 = +document.getElementById("v1").value;
-    let aE1 = (custoJ3 + meta) / (e1 - 1);
-    let aV1 = (custoJ3 + meta) / (v1 - 1);
-    let custoJ1 = custoJ3 + aE1 + aV1;
-    renderAuditoria(1, aE1, aV1, e1, v1, custoJ1);
+    let aE1 = (m + custoJ3 + meta) / (e1 - 1);
+    let aV1 = (m + custoJ3 + meta) / (v1 - 1);
+    let custoJ1 = m + custoJ3 + aE1 + aV1;
+    exibir(1, aE1, aV1, e1, v1, custoJ1, meta);
 
-    // 3. JOGO 2 (ACUMULA TUDO)
+    // Cálculo do Jogo 2 (Montante + J3 + J1)
     let e2 = +document.getElementById("e2").value;
     let v2 = +document.getElementById("v2").value;
-    let aE2 = (custoJ1 + meta) / (e2 - 1);
-    let aV2 = (custoJ1 + meta) / (v2 - 1);
-    let custoJ2 = custoJ1 + aE2 + aV2;
-    renderAuditoria(2, aE2, aV2, e2, v2, custoJ2);
+    let aE2 = (m + custoJ3 + custoJ1 + meta) / (e2 - 1);
+    let aV2 = (m + custoJ3 + custoJ1 + meta) / (v2 - 1);
+    let custoJ2 = m + custoJ3 + custoJ1 + aE2 + aV2;
+    exibir(2, aE2, aV2, e2, v2, custoJ2, meta);
+
+    document.getElementById("infoGlobal").innerHTML = `Retorno Principal: <span class="val">R$ ${(m * document.getElementById("odd").value).toFixed(2)}</span>`;
 }
 
-// FUNÇÃO DE AUDITORIA
-function renderAuditoria(id, ae, av, e, v, custoAcumulado) {
-    let ret = ae * e; 
-    let prova = ret - custoAcumulado;
-    document.getElementById("r"+id).innerHTML = `
-        Custo Acumulado: <span class="res-val">R$ ${custoAcumulado.toFixed(2)}</span><br>
-        Aposta Empate: <b>R$ ${ae.toFixed(2)}</b> | Aposta Visitante: <b>R$ ${av.toFixed(2)}</b><br>
-        Prova Real: <span class="prova-real">R$ ${prova.toFixed(2)}</span>
+function exibir(id, ae, av, e, v, total, meta) {
+    document.getElementById("res"+id).innerHTML = `
+        Custo Acumulado: <span class="val">R$ ${total.toFixed(2)}</span><br>
+        Aposta Empate: <b>R$ ${ae.toFixed(2)}</b> (Retorno: R$ ${(ae*e).toFixed(2)})<br>
+        Aposta Visitante: <b>R$ ${av.toFixed(2)}</b> (Retorno: R$ ${(av*v).toFixed(2)})<br>
+        Meta de Lucro: R$ ${meta.toFixed(2)}<br>
+        Prova Real: <span class="val">R$ ${((ae*e) - total).toFixed(2)}</span>
     `;
 }
 </script>
-
 </body>
 </html>
