@@ -3,227 +3,162 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cascata — Calculadora de Apostas</title>
+    <title>Cascata — Modelo Real João</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        body { background-color: #09090b; color: #f4f4f5; }
+        body { background-color: #0b0f19; color: #f4f4f5; }
     </style>
 </head>
-<body class="min-h-screen font-sans antialiased">
+<body class="min-h-screen font-sans antialiased text-zinc-200">
 
-    <div class="max-w-4xl mx-auto px-4 py-8 sm:py-12">
+    <div class="max-w-7xl mx-auto px-4 py-6 sm:py-10">
         
-        <div class="text-center mb-10">
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 mb-4">
-                <i data-lucide="shield" class="w-4 h-4 text-blue-400"></i>
-                <span class="text-xs font-semibold text-blue-400 uppercase tracking-wider">Proteção em Cascata</span>
+        <div class="flex items-center justify-between border-b border-zinc-800 pb-5 mb-8">
+            <div class="flex items-center gap-3">
+                <div class="bg-lime-500 text-black px-2.5 py-1 rounded text-xs font-black tracking-wider uppercase">Cascata V6</div>
+                <h1 class="text-xl font-bold text-white tracking-tight">Calculadora — Estratégia do João</h1>
             </div>
-            <h1 class="text-3xl sm:text-4xl font-black text-white tracking-tight">Calculadora de Apostas</h1>
-            <p class="text-zinc-400 mt-2 text-sm max-w-md mx-auto">
-                Sistema original de gestão de apostas com proteção em cascata e ajuste fino de metas.
-            </p>
+            <div class="text-xs text-zinc-500 font-medium">Proteção Cruzada Dia 1 + Dia 3 Ativos</div>
         </div>
 
-        <div class="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-5 sm:p-6 mb-6">
-            <div class="flex items-center gap-2 mb-5">
-                <i data-lucide="trending-up" class="w-5 h-5 text-blue-500"></i>
-                <h2 class="font-bold text-white">Aposta Principal</h2>
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div class="flex flex-col gap-1.5">
-                    <label class="text-xs font-medium text-zinc-400">Montante Principal (R$)</label>
-                    <input type="number" id="montante" value="100" step="0.01" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-white font-semibold focus:outline-none focus:border-blue-500" oninput="limparResultados()">
-                </div>
-                <div class="flex flex-col gap-1.5">
-                    <label class="text-xs font-medium text-zinc-400">Odd da Múltipla (Mandantes)</label>
-                    <input type="number" id="oddPrincipal" value="5.04" step="0.01" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-white font-semibold focus:outline-none focus:border-blue-500" oninput="limparResultados()">
-                </div>
-                <div class="flex flex-col gap-1.5">
-                    <label class="text-xs font-medium text-zinc-400">Meta de Lucro Extra por Proteção (R$)</label>
-                    <input type="number" id="metaLucro" value="10" step="0.01" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-white font-semibold focus:outline-none focus:border-blue-500" oninput="limparResultados()">
-                </div>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 gap-5 mb-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             
-            <div class="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-5 sm:p-6 relative overflow-hidden before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-amber-500">
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+            <div class="lg:col-span-4 flex flex-col gap-6">
+                <div class="rounded-xl border border-zinc-800 bg-zinc-900/40 p-5 shadow-xl backdrop-blur-md">
+                    <h2 class="text-xs font-bold text-zinc-400 uppercase tracking-widest border-b border-zinc-800 pb-3 mb-4">Configuração Principal</h2>
+                    
+                    <div class="space-y-4">
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-xs font-semibold text-zinc-400">Montante Principal (R$)</label>
+                            <input type="number" id="montante" value="100" step="0.01" class="w-full bg-[#131a2b] border border-zinc-800 rounded-lg px-3 py-2 text-white font-bold text-sm focus:outline-none focus:border-lime-500" oninput="limparResultados()">
+                        </div>
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-xs font-semibold text-zinc-400">Odd da Múltipla (Mandantes)</label>
+                            <input type="number" id="oddPrincipal" value="5.04" step="0.01" class="w-full bg-[#131a2b] border border-zinc-800 rounded-lg px-3 py-2 text-white font-bold text-sm focus:outline-none focus:border-lime-500" oninput="limparResultados()">
+                        </div>
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-xs font-semibold text-zinc-400">Meta de Lucro Líquido (R$)</label>
+                            <input type="number" id="metaLucro" value="10" step="0.01" class="w-full bg-[#131a2b] border border-zinc-800 rounded-lg px-3 py-2 text-white font-bold text-sm focus:outline-none focus:border-lime-500" oninput="limparResultados()">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rounded-xl border border-zinc-800 bg-zinc-900/40 p-5 shadow-xl backdrop-blur-md space-y-5">
                     <div>
-                        <span class="text-xs font-semibold text-amber-500 uppercase tracking-wider block mb-0.5">Jogo 1</span>
-                        <h3 class="text-lg font-bold text-white">Dia 1 — Proteção imediata</h3>
-                    </div>
-                    <div class="grid grid-cols-2 gap-3 max-w-xs w-full">
-                        <div class="flex flex-col gap-1">
-                            <label class="text-[11px] font-medium text-zinc-400 uppercase">Odd Empate</label>
-                            <input type="number" id="j1_oddE" value="3.95" step="0.01" class="bg-zinc-950 border border-zinc-800 rounded-lg px-2.5 py-1 text-sm text-white font-semibold focus:outline-none focus:border-amber-500" oninput="limparResultados()">
-                        </div>
-                        <div class="flex flex-col gap-1">
-                            <label class="text-[11px] font-medium text-zinc-400 uppercase">Odd Visitante</label>
-                            <input type="number" id="j1_oddV" value="5.5" step="0.01" class="bg-zinc-950 border border-zinc-800 rounded-lg px-2.5 py-1 text-sm text-white font-semibold focus:outline-none focus:border-amber-500" oninput="limparResultados()">
+                        <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-widest border-b border-zinc-800 pb-2 mb-3">Odds — Jogo 1</h3>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="bg-[#131a2b] p-2 border border-zinc-800 rounded-lg"><label class="text-[10px] block text-zinc-500 uppercase font-bold mb-1">Empate</label><input type="number" id="j1_oddE" value="3.95" step="0.01" class="w-full bg-transparent font-bold text-sm text-white focus:outline-none" oninput="limparResultados()"></div>
+                            <div class="bg-[#131a2b] p-2 border border-zinc-800 rounded-lg"><label class="text-[10px] block text-zinc-500 uppercase font-bold mb-1">Visitante</label><input type="number" id="j1_oddV" value="5.5" step="0.01" class="w-full bg-transparent font-bold text-sm text-white focus:outline-none" oninput="limparResultados()"></div>
                         </div>
                     </div>
-                </div>
-                <div class="hidden bg-zinc-950/80 rounded-xl border border-zinc-800/80 overflow-hidden divide-y divide-zinc-800" id="audit-j1">
-                    <div class="grid grid-cols-2 divide-x divide-zinc-800 text-xs">
-                        <div class="p-3">
-                            <span class="text-zinc-500 uppercase block text-[10px] mb-0.5">Custo Base Protegido</span>
-                            <strong class="text-red-400 font-bold text-sm" id="j1_custo_txt">R$ 0,00</strong>
-                        </div>
-                        <div class="p-3">
-                            <span class="text-zinc-500 uppercase block text-[10px] mb-0.5">Meta Solicitada</span>
-                            <strong class="text-amber-500 font-bold text-sm" id="j1_meta_txt">R$ 0,00</strong>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-2 divide-x divide-zinc-800 text-xs">
-                        <div class="p-3">
-                            <span class="text-zinc-400 font-medium block mb-1">Aposta Empate</span>
-                            <strong class="text-white text-sm" id="j1_apE_txt">R$ 0,00</strong>
-                            <span class="text-zinc-500 block mt-0.5 text-[11px]">Retorno Bruto: <span class="text-emerald-400 font-semibold" id="j1_retE_txt">R$ 0,00</span></span>
-                        </div>
-                        <div class="p-3">
-                            <span class="text-zinc-400 font-medium block mb-1">Aposta Visitante</span>
-                            <strong class="text-white text-sm" id="j1_apV_txt">R$ 0,00</strong>
-                            <span class="text-zinc-500 block mt-0.5 text-[11px]">Retorno Bruto: <span class="text-emerald-400 font-semibold" id="j1_retV_txt">R$ 0,00</span></span>
-                        </div>
-                    </div>
-                    <div class="bg-emerald-500/5 px-4 py-2.5 flex justify-between items-center text-xs font-semibold">
-                        <span class="text-emerald-400 uppercase tracking-wider">✓ Lucro Alvo Controlado</span>
-                        <strong class="text-emerald-400 text-sm" id="j1_prova_txt">R$ 0,00</strong>
-                    </div>
-                </div>
-            </div>
 
-            <div class="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-5 sm:p-6 relative overflow-hidden before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-blue-500">
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
                     <div>
-                        <span class="text-xs font-semibold text-blue-500 uppercase tracking-wider block mb-0.5">Jogo 2</span>
-                        <h3 class="text-lg font-bold text-white">Dia 2 — Se mandante J1 venceu</h3>
-                    </div>
-                    <div class="grid grid-cols-2 gap-3 max-w-xs w-full">
-                        <div class="flex flex-col gap-1">
-                            <label class="text-[11px] font-medium text-zinc-400 uppercase">Odd Empate</label>
-                            <input type="number" id="j2_oddE" value="3.8" step="0.01" class="bg-zinc-950 border border-zinc-800 rounded-lg px-2.5 py-1 text-sm text-white font-semibold focus:outline-none focus:border-blue-500" oninput="limparResultados()">
-                        </div>
-                        <div class="flex flex-col gap-1">
-                            <label class="text-[11px] font-medium text-zinc-400 uppercase">Odd Visitante</label>
-                            <input type="number" id="j2_oddV" value="4.9" step="0.01" class="bg-zinc-950 border border-zinc-800 rounded-lg px-2.5 py-1 text-sm text-white font-semibold focus:outline-none focus:border-blue-500" oninput="limparResultados()">
+                        <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-widest border-b border-zinc-800 pb-2 mb-3">Odds — Jogo 2 (Condicional)</h3>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="bg-[#131a2b] p-2 border border-zinc-800 rounded-lg"><label class="text-[10px] block text-zinc-500 uppercase font-bold mb-1">Empate</label><input type="number" id="j2_oddE" value="3.8" step="0.01" class="w-full bg-transparent font-bold text-sm text-white focus:outline-none" oninput="limparResultados()"></div>
+                            <div class="bg-[#131a2b] p-2 border border-zinc-800 rounded-lg"><label class="text-[10px] block text-zinc-500 uppercase font-bold mb-1">Visitante</label><input type="number" id="j2_oddV" value="4.9" step="0.01" class="w-full bg-transparent font-bold text-sm text-white focus:outline-none" oninput="limparResultados()"></div>
                         </div>
                     </div>
-                </div>
-                <div class="hidden bg-zinc-950/80 rounded-xl border border-zinc-800/80 overflow-hidden divide-y divide-zinc-800" id="audit-j2">
-                    <div class="grid grid-cols-2 divide-x divide-zinc-800 text-xs">
-                        <div class="p-3">
-                            <span class="text-zinc-500 uppercase block text-[10px] mb-0.5">Custo Base Protegido</span>
-                            <strong class="text-red-400 font-bold text-sm" id="j2_custo_txt">R$ 0,00</strong>
-                        </div>
-                        <div class="p-3">
-                            <span class="text-zinc-500 uppercase block text-[10px] mb-0.5">Meta Solicitada</span>
-                            <strong class="text-amber-500 font-bold text-sm" id="j2_meta_txt">R$ 0,00</strong>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-2 divide-x divide-zinc-800 text-xs">
-                        <div class="p-3">
-                            <span class="text-zinc-400 font-medium block mb-1">Aposta Empate</span>
-                            <strong class="text-white text-sm" id="j2_apE_txt">R$ 0,00</strong>
-                            <span class="text-zinc-500 block mt-0.5 text-[11px]">Retorno Bruto: <span class="text-emerald-400 font-semibold" id="j2_retE_txt">R$ 0,00</span></span>
-                        </div>
-                        <div class="p-3">
-                            <span class="text-zinc-400 font-medium block mb-1">Aposta Visitante</span>
-                            <strong class="text-white text-sm" id="j2_apV_txt">R$ 0,00</strong>
-                            <span class="text-zinc-500 block mt-0.5 text-[11px]">Retorno Bruto: <span class="text-emerald-400 font-semibold" id="j2_retV_txt">R$ 0,00</span></span>
-                        </div>
-                    </div>
-                    <div class="bg-emerald-500/5 px-4 py-2.5 flex justify-between items-center text-xs font-semibold">
-                        <span class="text-emerald-400 uppercase tracking-wider">✓ Lucro Alvo Controlado</span>
-                        <strong class="text-emerald-400 text-sm" id="j2_prova_txt">R$ 0,00</strong>
-                    </div>
-                </div>
-            </div>
 
-            <div class="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-5 sm:p-6 relative overflow-hidden before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-rose-500">
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
                     <div>
-                        <span class="text-xs font-semibold text-rose-500 uppercase tracking-wider block mb-0.5">Jogo 3</span>
-                        <h3 class="text-lg font-bold text-white">Dia 1 — Proteção antecipada</h3>
-                    </div>
-                    <div class="grid grid-cols-2 gap-3 max-w-xs w-full">
-                        <div class="flex flex-col gap-1">
-                            <label class="text-[11px] font-medium text-zinc-400 uppercase">Odd Empate</label>
-                            <input type="number" id="j3_oddE" value="12.24" step="0.01" class="bg-zinc-950 border border-zinc-800 rounded-lg px-2.5 py-1 text-sm text-white font-semibold focus:outline-none focus:border-rose-500" oninput="limparResultados()">
-                        </div>
-                        <div class="flex flex-col gap-1">
-                            <label class="text-[11px] font-medium text-zinc-400 uppercase">Odd Visitante</label>
-                            <input type="number" id="j3_oddV" value="15.91" step="0.01" class="bg-zinc-950 border border-zinc-800 rounded-lg px-2.5 py-1 text-sm text-white font-semibold focus:outline-none focus:border-rose-500" oninput="limparResultados()">
+                        <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-widest border-b border-zinc-800 pb-2 mb-3">Odds — Jogo 3 (Antecipado)</h3>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="bg-[#131a2b] p-2 border border-zinc-800 rounded-lg"><label class="text-[10px] block text-zinc-500 uppercase font-bold mb-1">Empate</label><input type="number" id="j3_oddE" value="12.24" step="0.01" class="w-full bg-transparent font-bold text-sm text-white focus:outline-none" oninput="limparResultados()"></div>
+                            <div class="bg-[#131a2b] p-2 border border-zinc-800 rounded-lg"><label class="text-[10px] block text-zinc-500 uppercase font-bold mb-1">Visitante</label><input type="number" id="j3_oddV" value="15.91" step="0.01" class="w-full bg-transparent font-bold text-sm text-white focus:outline-none" oninput="limparResultados()"></div>
                         </div>
                     </div>
-                </div>
-                <div class="hidden bg-zinc-950/80 rounded-xl border border-zinc-800/80 overflow-hidden divide-y divide-zinc-800" id="audit-j3">
-                    <div class="grid grid-cols-2 divide-x divide-zinc-800 text-xs">
-                        <div class="p-3">
-                            <span class="text-zinc-500 uppercase block text-[10px] mb-0.5">Custo Base Protegido</span>
-                            <strong class="text-red-400 font-bold text-sm" id="j3_custo_txt">R$ 0,00</strong>
-                        </div>
-                        <div class="p-3">
-                            <span class="text-zinc-500 uppercase block text-[10px] mb-0.5">Meta Solicitada</span>
-                            <strong class="text-amber-500 font-bold text-sm" id="j3_meta_txt">R$ 0,00</strong>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-2 divide-x divide-zinc-800 text-xs">
-                        <div class="p-3">
-                            <span class="text-zinc-400 font-medium block mb-1">Aposta Empate</span>
-                            <strong class="text-white text-sm" id="j3_apE_txt">R$ 0,00</strong>
-                            <span class="text-zinc-500 block mt-0.5 text-[11px]">Retorno Bruto: <span class="text-emerald-400 font-semibold" id="j3_retE_txt">R$ 0,00</span></span>
-                        </div>
-                        <div class="p-3">
-                            <span class="text-zinc-400 font-medium block mb-1">Aposta Visitante</span>
-                            <strong class="text-white text-sm" id="j3_apV_txt">R$ 0,00</strong>
-                            <span class="text-zinc-500 block mt-0.5 text-[11px]">Retorno Bruto: <span class="text-emerald-400 font-semibold" id="j3_retV_txt">R$ 0,00</span></span>
-                        </div>
-                    </div>
-                    <div class="bg-emerald-500/5 px-4 py-2.5 flex justify-between items-center text-xs font-semibold">
-                        <span class="text-emerald-400 uppercase tracking-wider">✓ Lucro Alvo Controlado</span>
-                        <strong class="text-emerald-400 text-sm" id="j3_prova_txt">R$ 0,00</strong>
-                    </div>
+
+                    <button onclick="handleCalculate()" class="w-full h-11 text-xs font-black bg-lime-500 text-black hover:bg-lime-400 uppercase tracking-wider rounded-lg flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-[0.98]">
+                        <i data-lucide="shield-check" class="w-4 h-4"></i> Calcular Proteção João
+                    </button>
                 </div>
             </div>
 
-        </div>
+            <div class="lg:col-span-8 flex flex-col gap-5">
+                
+                <div class="rounded-xl border border-zinc-800 bg-[#111625] overflow-hidden relative before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-amber-500">
+                    <div class="p-4 bg-[#141b2e] border-b border-zinc-800/60 flex items-center justify-between">
+                        <h3 class="text-sm font-bold text-white">Jogo 1 — Proteção Ativa (Cobre Montante + Jogo 3)</h3>
+                        <span class="text-[10px] text-zinc-500 font-bold uppercase">Feito no Dia 1</span>
+                    </div>
+                    <div class="hidden divide-y divide-zinc-800/60" id="audit-j1">
+                        <div class="grid grid-cols-2 divide-x divide-zinc-800 text-xs p-3 bg-zinc-950/20">
+                            <div><span class="text-zinc-500 text-[10px] font-bold uppercase block">Custo Total Isolado (J1)</span><strong class="text-red-400 font-black text-sm" id="j1_c_txt">R$ 0,00</strong></div>
+                            <div><span class="text-zinc-500 text-[10px] font-bold uppercase block pl-3">Investido no Dia 1 (M+J3)</span><strong class="text-zinc-300 font-black text-sm pl-3" id="j1_dia1_txt">R$ 0,00</strong></div>
+                        </div>
+                        <div class="grid grid-cols-2 divide-x divide-zinc-800 text-xs p-4">
+                            <div>
+                                <span class="text-zinc-400 font-medium block">Aposta Empate</span>
+                                <strong class="text-white text-base font-bold" id="j1_apE_txt">R$ 0,00</strong>
+                            </div>
+                            <div class="pl-4">
+                                <span class="text-zinc-400 font-medium block">Aposta Visitante</span>
+                                <strong class="text-white text-base font-bold" id="j1_apV_txt">R$ 0,00</strong>
+                            </div>
+                        </div>
+                        <div class="bg-zinc-950/40 px-4 py-2.5 flex justify-between items-center text-xs font-bold">
+                            <span class="text-zinc-400 uppercase">✓ Prova Real (Retorno - [Montante + J1 + J3])</span>
+                            <strong class="text-lime-400 text-sm font-black" id="j1_p_txt">R$ 10,00</strong>
+                        </div>
+                    </div>
+                </div>
 
-        <div class="mb-6">
-            <button onclick="handleCalculate()" class="w-full h-12 text-base font-bold bg-white text-black hover:bg-white/90 gap-2 rounded-xl flex items-center justify-center cursor-pointer shadow-lg transition-all active:scale-[0.99]">
-                <i data-lucide="calculator" class="w-5 h-5"></i> Calcular Proteções
-            </button>
-        </div>
+                <div class="rounded-xl border border-zinc-800 bg-[#111625] overflow-hidden relative before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-blue-500">
+                    <div class="p-4 bg-[#141b2e] border-b border-zinc-800/60 flex items-center justify-between">
+                        <h3 class="text-sm font-bold text-white">Jogo 2 — Condicional (Só se J1 deu Mandante)</h3>
+                        <span class="text-[10px] text-zinc-500 font-bold uppercase">Feito no Dia 2</span>
+                    </div>
+                    <div class="hidden divide-y divide-zinc-800/60" id="audit-j2">
+                        <div class="grid grid-cols-2 divide-x divide-zinc-800 text-xs p-3 bg-zinc-950/20">
+                            <div><span class="text-zinc-500 text-[10px] font-bold uppercase block">Prejuízo Acumulado Real (M + J1 + J3)</span><strong class="text-red-400 font-black text-sm" id="j2_c_txt">R$ 0,00</strong></div>
+                            <div class="pl-3"><span class="text-zinc-500 text-[10px] font-bold uppercase block">Custo do J2</span><strong class="text-blue-400 font-black text-sm" id="j2_cost_txt">R$ 0,00</strong></div>
+                        </div>
+                        <div class="grid grid-cols-2 divide-x divide-zinc-800 text-xs p-4">
+                            <div>
+                                <span class="text-zinc-400 font-medium block">Aposta Empate</span>
+                                <strong class="text-white text-base font-bold" id="j2_apE_txt">R$ 0,00</strong>
+                            </div>
+                            <div class="pl-4">
+                                <span class="text-zinc-400 font-medium block">Aposta Visitante</span>
+                                <strong class="text-white text-base font-bold" id="j2_apV_txt">R$ 0,00</strong>
+                            </div>
+                        </div>
+                        <div class="bg-zinc-950/40 px-4 py-2.5 flex justify-between items-center text-xs font-bold">
+                            <span class="text-zinc-400 uppercase">✓ Prova Real (Retorno - Todos os Gastos)</span>
+                            <strong class="text-lime-400 text-sm font-black" id="j2_p_txt">R$ 10,00</strong>
+                        </div>
+                    </div>
+                </div>
 
-        <div class="hidden rounded-2xl border border-zinc-800 bg-zinc-900/40 p-5" id="summary-block">
-            <div class="flex items-center gap-2 mb-4">
-                <i data-lucide="bookmark-check" class="w-5 h-5 text-blue-500"></i>
-                <h3 class="text-md font-bold text-white">Resumo da Operação</h3>
+                <div class="rounded-xl border border-zinc-800 bg-[#111625] overflow-hidden relative before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-rose-500">
+                    <div class="p-4 bg-[#141b2e] border-b border-zinc-800/60 flex items-center justify-between">
+                        <h3 class="text-sm font-bold text-white">Jogo 3 — Cobertura Final (Apostado no Dia 1)</h3>
+                        <span class="text-[10px] text-zinc-500 font-bold uppercase">Resolvido no Dia 3</span>
+                    </div>
+                    <div class="hidden divide-y divide-zinc-800/60" id="audit-j3">
+                        <div class="grid grid-cols-2 divide-x divide-zinc-800 text-xs p-3 bg-zinc-950/20">
+                            <div><span class="text-zinc-500 text-[10px] font-bold uppercase block">Custo Total da Operação</span><strong class="text-red-400 font-black text-sm" id="j3_c_txt">R$ 0,00</strong></div>
+                            <div class="pl-3"><span class="text-zinc-500 text-[10px] font-bold uppercase block">Custo Isolado J3</span><strong class="text-rose-400 font-black text-sm" id="j3_cost_txt">R$ 0,00</strong></div>
+                        </div>
+                        <div class="grid grid-cols-2 divide-x divide-zinc-800 text-xs p-4">
+                            <div>
+                                <span class="text-zinc-400 font-medium block">Aposta Empate</span>
+                                <strong class="text-white text-base font-bold" id="j3_apE_txt">R$ 0,00</strong>
+                            </div>
+                            <div class="pl-4">
+                                <span class="text-zinc-400 font-medium block">Aposta Visitante</span>
+                                <strong class="text-white text-base font-bold" id="j3_apV_txt">R$ 0,00</strong>
+                            </div>
+                        </div>
+                        <div class="bg-zinc-950/40 px-4 py-2.5 flex justify-between items-center text-xs font-bold">
+                            <span class="text-zinc-400 uppercase">✓ Prova Real (Se J3 empatar/vis)</span>
+                            <strong class="text-lime-400 text-sm font-black" id="j3_p_txt">R$ 10,00</strong>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
-                <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800/60">
-                    <span class="text-[10px] uppercase font-semibold text-zinc-500 block mb-1">Montante Principal</span>
-                    <strong class="text-sm text-white" id="sum_montante">R$ 0,00</strong>
-                </div>
-                <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800/60">
-                    <span class="text-[10px] uppercase font-semibold text-zinc-500 block mb-1">Retorno da Múltipla</span>
-                    <strong class="text-sm text-emerald-400" id="sum_retorno">R$ 0,00</strong>
-                </div>
-                <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800/60">
-                    <span class="text-[10px] uppercase font-semibold text-zinc-500 block mb-1">Total Proteções</span>
-                    <strong class="text-sm text-amber-500" id="sum_protecoes">R$ 0,00</strong>
-                </div>
-                <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800/60">
-                    <span class="text-[10px] uppercase font-semibold text-zinc-500 block mb-1">Custo Total Op.</span>
-                    <strong class="text-sm text-red-400" id="sum_total_custo">R$ 0,00</strong>
-                </div>
-            </div>
-        </div>
-
-        <div class="text-center mt-8 text-xs text-zinc-600">
-            Proteção em Cascata v1.4 — Ajuste Fino de Metas Mantido
         </div>
     </div>
 
@@ -237,18 +172,11 @@
             document.getElementById('audit-j1').classList.add('hidden');
             document.getElementById('audit-j2').classList.add('hidden');
             document.getElementById('audit-j3').classList.add('hidden');
-            document.getElementById('summary-block').classList.add('hidden');
         }
 
         function handleCalculate() {
             const montante = parseFloat(document.getElementById('montante').value) || 0;
-            const oddPrincipal = parseFloat(document.getElementById('oddPrincipal').value) || 0;
-            const metaLucro = parseFloat(document.getElementById('metaLucro').value) || 0;
-
-            if (!montante || !oddPrincipal) {
-                alert("Preencha o Montante e a Odd Principal.");
-                return;
-            }
+            const meta = parseFloat(document.getElementById('metaLucro').value) || 0;
 
             const o1E = parseFloat(document.getElementById('j1_oddE').value) || 1;
             const o1V = parseFloat(document.getElementById('j1_oddV').value) || 1;
@@ -257,67 +185,71 @@
             const o3E = parseFloat(document.getElementById('j3_oddE').value) || 1;
             const o3V = parseFloat(document.getElementById('j3_oddV').value) || 1;
 
-            const retornoMultipla = f(montante * oddPrincipal);
+            // Fatores padrões de Arbitragem dos blocos
+            let f1 = (1/o1E) + (1/o1V);
+            let f2 = (1/o2E) + (1/o2V);
+            let f3 = (1/o3E) + (1/o3V);
 
-            // Variáveis originais das Coberturas por Jogo
-            let c1 = 0, c2 = 0, c3 = 0;
+            // ==========================================================
+            // ALGORITMO INTEGRADO: DIA 1 (MONTE + J3 ATIVOS)
+            // ==========================================================
             
-            // Variáveis de apoio internas para as Stakes Separadas
+            // Loop rápido e estável para resolver a interdependência J1 e J3 sem explodir
+            let c1 = 0, c3 = 0;
             let j1_e = 0, j1_v = 0;
-            let j2_e = 0, j2_v = 0;
             let j3_e = 0, j3_v = 0;
 
-            // Laço original de interdependência em Cascata
-            for (let iter = 0; iter < 20; iter++) {
-                // Jogo 3 (Base)
-                let baseJ3 = montante + c1 + c2;
-                j3_e = f((baseJ3 + metaLucro) / (o3E - 1));
-                j3_v = f((baseJ3 + metaLucro) / (o3V - 1));
+            for(let i=0; i<30; i++) {
+                // Jogo 3 precisa cobrir o Montante + o Custo do J1 + o Custo do J2 que virá depois se falhar + Meta
+                // Mas cronologicamente, para não entrar em looping infinito com J2, calculamos o peso fixo de f2:
+                let alvoJ3 = (montante + c1 + meta) / (1 - f3 - (f2 * (1 - f3))); 
+                j3_e = f(alvoJ3 / o3E);
+                j3_v = f(alvoJ3 / o3V);
                 c3 = f(j3_e + j3_v);
 
-                // Jogo 1 (Acumula J3)
-                let baseJ1 = montante + c3;
-                j1_e = f((baseJ1 + metaLucro) / (o1E - 1));
-                j1_v = f((baseJ1 + metaLucro) / (o1V - 1));
+                // Jogo 1 precisa pagar: Montante + o próprio C3 gasto no Dia 1 + Meta
+                let alvoJ1 = (montante + c3 + meta) / (1 - f1);
+                j1_e = f(alvoJ1 / o1E);
+                j1_v = f(alvoJ1 / o1V);
                 c1 = f(j1_e + j1_v);
-                
-                // Jogo 2 (Acumula Tudo)
-                let baseJ2 = montante + c1 + c3;
-                j2_e = f((baseJ2 + metaLucro) / (o2E - 1));
-                j2_v = f((baseJ2 + metaLucro) / (o2V - 1));
-                c2 = f(j2_e + j2_v);
             }
 
-            const custoTotal = f(montante + c1 + c2 + c3);
+            // JOGO 2 (Condicional): Só ocorre se J1 der Mandante.
+            // Ele encontra na mesa um prejuízo real de: Montante + C1 + C3
+            let acumuladoJ2 = f(montante + c1 + c3);
+            let alvoJ2 = (acumuladoJ2 + meta) / (1 - f2);
+            let j2_e = f(alvoJ2 / o2E);
+            let j2_v = f(alvoJ2 / o2V);
+            let c2 = f(j2_e + j2_v);
 
-            // Renderizador exato baseado no seu modelo visual de sucesso
-            const renderCard = (prefix, oddE, oddV, custoBase, stakeE, stakeV) => {
-                document.getElementById(`${prefix}_custo_txt`).innerText = fmt(custoBase);
-                document.getElementById(`${prefix}_meta_txt`).innerText = fmt(metaLucro);
-                
-                document.getElementById(`${prefix}_apE_txt`).innerText = fmt(stakeE);
-                document.getElementById(`${prefix}_retE_txt`).innerText = fmt(stakeE * oddE);
+            let custoTotalGlobal = f(montante + c1 + c2 + c3);
 
-                document.getElementById(`${prefix}_apV_txt`).innerText = fmt(stakeV);
-                document.getElementById(`${prefix}_retV_txt`).innerText = fmt(stakeV * oddV);
+            // --- RENDER JOGO 1 ---
+            document.getElementById('j1_c_txt').innerText = fmt(c1);
+            document.getElementById('j1_dia1_txt').innerText = fmt(montante + c3);
+            document.getElementById('j1_apE_txt').innerText = fmt(j1_e);
+            document.getElementById('j1_apV_txt').innerText = fmt(j1_v);
+            // Prova real J1: Se der Empate, ganha (j1_e * o1E). Gastou: Montante + C1 + C3.
+            document.getElementById('j1_p_txt').innerText = fmt((j1_e * o1E) - (montante + c1 + c3));
 
-                // Prova Real cravando perfeitamente o seu Lucro Alvo Escolhido
-                document.getElementById(`${prefix}_prova_txt`).innerText = fmt(metaLucro);
-                document.getElementById(`audit-${prefix}`).classList.remove('hidden');
-            };
+            // --- RENDER JOGO 2 ---
+            document.getElementById('j2_c_txt').innerText = fmt(acumuladoJ2);
+            document.getElementById('j2_cost_txt').innerText = fmt(c2);
+            document.getElementById('j2_apE_txt').innerText = fmt(j2_e);
+            document.getElementById('j2_apV_txt').innerText = fmt(j2_v);
+            document.getElementById('j2_p_txt').innerText = fmt((j2_e * o2E) - custoTotalGlobal);
 
-            // Atualiza os painéis respeitando perfeitamente a sua cascata original
-            renderCard("j1", o1E, o1V, montante + c3, j1_e, j1_v);
-            renderCard("j2", o2E, o2V, montante + c1 + c3, j2_e, j2_v);
-            renderCard("j3", o3E, o3V, montante + c1 + c2, j3_e, j3_v);
+            // --- RENDER JOGO 3 ---
+            document.getElementById('j3_c_txt').innerText = fmt(custoTotalGlobal);
+            document.getElementById('j3_cost_txt').innerText = fmt(c3);
+            document.getElementById('j3_apE_txt').innerText = fmt(j3_e);
+            document.getElementById('j3_apV_txt').innerText = fmt(j3_v);
+            document.getElementById('j3_p_txt').innerText = fmt((j3_e * o3E) - custoTotalGlobal);
 
-            // Atualiza Resumo da Operação
-            document.getElementById('sum_montante').innerText = fmt(montante);
-            document.getElementById('sum_retorno').innerText = fmt(retornoMultipla);
-            document.getElementById('sum_protecoes').innerText = fmt(c1 + c2 + c3);
-            document.getElementById('sum_total_custo').innerText = fmt(custoTotal);
-
-            document.getElementById('summary-block').classList.remove('hidden');
+            // Mostrar resultados
+            document.getElementById('audit-j1').classList.remove('hidden');
+            document.getElementById('audit-j2').classList.remove('hidden');
+            document.getElementById('audit-j3').classList.remove('hidden');
         }
     </script>
 </body>
