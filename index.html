@@ -3,92 +3,655 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de Gestão de Proteção em Cascata</title>
+    <title>Cascata — Proteção em Cascata</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: #eee; padding: 20px; }
-        .container { max-width: 600px; margin: auto; }
-        .card { background: #1e1e1e; padding: 20px; margin-bottom: 20px; border-radius: 12px; border: 1px solid #333; }
-        .header-box { background: #1a1a1a; padding: 20px; border-radius: 12px; border: 1px solid #444; margin-bottom: 20px; }
-        label { display: block; margin: 10px 0 5px; font-size: 0.9em; color: #aaa; }
-        input { width: 100%; padding: 12px; background: #2a2a2a; color: white; border: 1px solid #444; border-radius: 6px; box-sizing: border-box; }
-        .btn { width: 100%; padding: 18px; background: #27ae60; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 1.1em; cursor: pointer; }
-        .auditoria { margin-top: 15px; padding: 15px; background: #000; border-radius: 8px; border-left: 4px solid #f39c12; font-size: 0.9em; }
-        .val { color: #f39c12; font-weight: bold; }
+        :root {
+            --bg-principal: #0b0f19;
+            --bg-card: #131a26;
+            --bg-input: #1e2640;
+            --texto-principal: #ffffff;
+            --texto-secundario: #94a3b8;
+            --cor-primaria: #3b82f6;
+            --cor-sucesso: #22c55e;
+            --cor-alerta: #eab308;
+            --cor-erro: #ef4444;
+            --borda: #1e293b;
+            --btn-verde: #a3e635;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-principal);
+            color: var(--texto-principal);
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 24px;
+        }
+
+        header {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--borda);
+            padding-bottom: 15px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+
+        .badge {
+            background-color: #a3e635;
+            color: #000;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+
+        .sub-header {
+            color: var(--texto-secundario);
+            font-size: 0.9rem;
+        }
+
+        /* Lateral de Configurações */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .painel-config {
+            background-color: var(--bg-card);
+            border: 1px solid var(--borda);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .titulo-secao {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: var(--texto-secundario);
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding-bottom: 5px;
+        }
+
+        .grupo-input {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-size: 0.85rem;
+            color: var(--texto-secundario);
+        }
+
+        input {
+            background-color: var(--bg-input);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--texto-principal);
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            outline: none;
+        }
+
+        .odds-inline {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .btn-calcular {
+            background-color: var(--btn-verde);
+            color: #000;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .mini-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .mini-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--borda);
+            border-radius: 8px;
+            padding: 12px;
+        }
+
+        .mini-card span {
+            font-size: 0.75rem;
+            color: var(--texto-secundario);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .mini-card strong {
+            font-size: 1.1rem;
+        }
+
+        /* Conteúdo Principal (Cards dos Jogos) */
+        .conteudo-principal {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card-jogo {
+            background-color: var(--bg-card);
+            border: 1px solid var(--borda);
+            border-radius: 12px;
+            padding: 24px;
+            position: relative;
+        }
+
+        .card-jogo::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            border-radius: 12px 0 0 12px;
+        }
+
+        .j1-card::before { background-color: var(--cor-alerta); }
+        .j2-card::before { background-color: var(--cor-primaria); }
+        .j3-card::before { background-color: var(--cor-erro); }
+
+        .topo-jogo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .topo-jogo h3 {
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tag-dia {
+            font-size: 0.75rem;
+            color: var(--texto-secundario);
+        }
+
+        .info-texto {
+            background-color: rgba(234, 179, 8, 0.06);
+            border-left: 3px solid var(--cor-alerta);
+            padding: 12px;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.85rem;
+            color: var(--cor-alerta);
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .j2-card .info-texto {
+            background-color: rgba(59, 130, 246, 0.06);
+            border-left-color: var(--cor-primaria);
+            color: #60a5fa;
+        }
+
+        .j3-card .info-texto {
+            background-color: rgba(239, 68, 68, 0.06);
+            border-left-color: var(--cor-erro);
+            color: #f87171;
+        }
+
+        /* Tabela de Auditoria Interna dos Cards */
+        .auditoria-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1px;
+            background-color: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--borda);
+        }
+
+        .auditoria-item {
+            background-color: #161f30;
+            padding: 14px;
+        }
+
+        .auditoria-item span {
+            font-size: 0.75rem;
+            color: var(--texto-secundario);
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .auditoria-item strong {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .txt-custo { color: #ef4444; }
+        .txt-meta { color: #f59e0b; }
+        .txt-retorno { color: #22c55e; }
+
+        .barra-prova-real {
+            grid-column: 1 / -1;
+            background-color: rgba(34, 197, 94, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px;
+            border-top: 1px solid rgba(24, 121, 57, 0.3);
+        }
+
+        .barra-prova-real span {
+            font-size: 0.8rem;
+            color: #4ade80;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .barra-prova-real strong {
+            color: #4ade80;
+            font-size: 1.2rem;
+        }
+
+        /* Footer com Resumo */
+        .footer-resumo {
+            grid-column: 1 / -1;
+            background-color: var(--bg-card);
+            border: 1px solid var(--borda);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .footer-item {
+            text-align: left;
+        }
+
+        .footer-item span {
+            font-size: 0.75rem;
+            color: var(--texto-secundario);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .footer-item strong {
+            font-size: 1.3rem;
+        }
+
+        @media (max-width: 900px) {
+            .container { grid-template-columns: 1fr; }
+            .footer-resumo { flex-direction: column; gap: 15px; text-align: center; }
+            .footer-item { text-align: center; }
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="header-box">
-        <h3>Painel de Auditoria Geral</h3>
-        <label>Montante Principal (R$)</label><input id="valor" type="number" value="100">
-        <label>Odd Principal</label><input id="odd" type="number" value="4.76">
-        <label>Meta de Lucro Extra (R$)</label><input id="meta" type="number" value="2">
-        <div id="infoGlobal" style="margin-top:15px; font-size: 0.9em;"></div>
+    <header>
+        <div class="logo">
+            <span class="badge">Cascata</span> Proteção em Cascata
+        </div>
+        <div class="sub-header">Gestão de Apostas Esportivas</div>
+    </header>
+
+    <div class="sidebar">
+        <div class="painel-config">
+            <div class="titulo-secao">Configuração Principal</div>
+            
+            <div class="grupo-input">
+                <label>Montante Principal (R$)</label>
+                <input type="number" id="montantePrincipal" value="100" step="0.01">
+            </div>
+            
+            <div class="grupo-input">
+                <label>Odd da Múltipla (Mandantes)</label>
+                <input type="number" id="oddPrincipal" value="5.04" step="0.01">
+            </div>
+            
+            <div class="grupo-input">
+                <label>Meta de Lucro Extra por Proteção (R$)</label>
+                <input type="number" id="metaLucro" value="10" step="0.01">
+            </div>
+
+            <div class="titulo-secao" style="margin-top: 20px;">Odds — Jogo 1</div>
+            <div class="odds-inline">
+                <div class="grupo-input">
+                    <label>Empate</label>
+                    <input type="number" id="j1OddE" value="3.95" step="0.01">
+                </div>
+                <div class="grupo-input">
+                    <label>Visitante</label>
+                    <input type="number" id="j1OddV" value="5.5" step="0.01">
+                </div>
+            </div>
+
+            <div class="titulo-secao">Odds — Jogo 2</div>
+            <div class="odds-inline">
+                <div class="grupo-input">
+                    <label>Empate</label>
+                    <input type="number" id="j2OddE" value="3.8" step="0.01">
+                </div>
+                <div class="grupo-input">
+                    <label>Visitante</label>
+                    <input type="number" id="j2OddV" value="4.9" step="0.01">
+                </div>
+            </div>
+
+            <div class="titulo-secao">Odds — Jogo 3</div>
+            <div class="odds-inline">
+                <div class="grupo-input">
+                    <label>Empate</label>
+                    <input type="number" id="j3OddE" value="12.24" step="0.01">
+                </div>
+                <div class="grupo-input">
+                    <label>Visitante</label>
+                    <input type="number" id="j3OddV" value="15.91" step="0.01">
+                </div>
+            </div>
+
+            <button class="btn-calcular" onclick="calcularTudo()">▶ Calcular Proteção</button>
+        </div>
+
+        <div class="mini-cards">
+            <div class="mini-card">
+                <span>Retorno da Múltipla</span>
+                <strong style="color: var(--cor-sucesso);" id="miniRetornoM">R$ 504,00</strong>
+            </div>
+            <div class="mini-card">
+                <span>Custo Total da Op.</span>
+                <strong style="color: var(--cor-erro);" id="miniCustoTotal">R$ 471,33</strong>
+            </div>
+        </div>
     </div>
 
-    <div id="cardsJogos"></div>
-    <button class="btn" onclick="processar()">EXECUTAR AUDITORIA</button>
+    <div class="conteudo-principal">
+        
+        <div class="card-jogo j1-card">
+            <div class="topo-jogo">
+                <h3>J1 &nbsp; Jogo 1 — Proteção Dia 1</h3>
+                <span class="tag-dia">Dia 1</span>
+            </div>
+            <div class="info-texto">
+                💡 Apostas realizadas no <strong>Dia 1</strong> junto à Múltipla Principal. Se <strong>Empate ou Visitante</strong> vencerem, a proteção recupera todo o investimento + meta de lucro. Se o <strong>Mandante vencer</strong>, a operação continua para o Jogo 2.
+            </div>
+            <div class="auditoria-grid">
+                <div class="auditoria-item">
+                    <span>Custo Acumulado</span>
+                    <strong class="txt-custo" id="j1CustoAcum">R$ 100,00</strong>
+                </div>
+                <div class="auditoria-item">
+                    <span>Meta de Lucro Extra</span>
+                    <strong class="txt-meta" id="j1Meta">R$ 10,00</strong>
+                </div>
+                <div class="auditoria-item">
+                    <span>Aposta Empate</span>
+                    <strong id="j1W_E">R$ 49,29</strong>
+                </div>
+                <div class="auditoria-item">
+                    <span>Aposta Visitante</span>
+                    <strong id="j1W_V">R$ 35,40</strong>
+                </div>
+                <div class="auditoria-item">
+                    <span>Retorno Bruto Empate</span>
+                    <strong class="txt-retorno" id="j1RetE">R$ 194,68</strong>
+                </div>
+                <div class="auditoria-item">
+                    <span>Retorno Bruto Visitante</span>
+                    <strong class="txt-retorno" id="j1RetV">R$ 194,68</strong>
+                </div>
+                <div class="barra-prova-real">
+                    <span>✓ Prova Real (Lucro Líquido)</span>
+                    <strong id="j1Prova">R$ 10,00</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-jogo j2-card">
+            <div class="topo-jogo">
+                <h3>J2 &nbsp; Jogo 2 — Proteção Dia 2</h3>
+                <span class="tag-dia">Dia 2</span>
+            </div>
+            <div class="info-texto">
+                💡 Apostas realizadas no <strong>Dia 2</strong>, após mandante do Jogo 1 ter vencido. O custo acumulado inclui a Múltipla + J1 + J3 (apostados no Dia 1). A proteção agora cobre tudo isso + custo do J2.
+            </div>
+            <div class="auditoria-grid">
+                <div class="auditoria-item">
+                    <span>Custo Acumulado</span>
+                    <strong class="txt-custo" id="j2CustoAcum">R$ 246,43</strong>
+                </div>
+                <div class="auditoria-item">
+                    <span>Meta de Lucro Extra</span>
+                    <strong class="txt-meta" id="j2Meta">R$ 10,00</strong>
+                </div>
+                <div class="auditoria-item">
+                    <span>Aposta Empate</span>
+                    <strong id="j2W_E">R$ 126,67</strong>
+                </div>
+                <div class="auditoria-item">
+                    <span>Aposta Visitante</span>
+                    <strong id="j2W_V">R$ 98,23</strong>
+                </div>
+                <div class="auditoria-item">
+                    <span>Retorno Bruto Empate</span>
+                    <strong class="txt-retorno" id="j2RetE">R$ 481,33</strong>
+                </div>
+                <div class="auditoria-item">
+                    <span>Retorno Bruto Visitante</span>
+                    <strong class="txt-retorno" id="j2RetV">R$ 481,33</strong>
+                </div>
+                <div class="barra-prova-real">
+                    <span>✓ Prova Real (Lucro Líquido)</span>
+                    <strong id="j2Prova">R$ 10,00</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-jogo j3-card">
+            <div class="topo-jogo">
+                <h3>J3 &nbsp; Jogo 3 — Proteção Dia 1 (cobertura total)</h3>
+                <span class="tag-dia">Dia 1 → Dia 3</span>
+            </div>
+            <div class="info-texto">
+                💡 Apostas realizadas no <strong>Dia 1</strong>, mas resolvidas no Dia 3. Devem cobrir <strong>TODO</strong> o prejuízo da operação caso os mandantes do J1 e J2 tenham vencido — recuperando custos da Múltipla + J1 + J2 + J3 + meta de lucro.
+            </div>
+            <div class="auditoria-grid">
+                <div class="auditoria-item">
+                    <span>Custo Acumulado (Cobertura Total)</span>
+                    <strong class="txt-custo" id="j3CustoAcum">R$ 409,58</strong>
+                </div>
+                <div class="auditoria-item">
+                    <span>Meta de Lucro Extra</span>
+                    <strong class="txt-meta" id="j3Meta">R$ 10,00</strong>
+                </div>
+                <div class="auditoria-item">
+                    <span>Aposta Empate</span>
+                    <strong id="j3W_E">R$ 34,90</strong>
+                </div>
+                <div class="auditoria-item">
+                    <span>Aposta Visitante</span>
+                    <strong id="j3W_V">R$ 26,85</strong>
+                </div>
+                <div class="auditoria-item">
+                    <span>Retorno Bruto Empate</span>
+                    <strong class="txt-retorno" id="j3RetE">R$ 427,17</strong>
+                </div>
+                <div class="auditoria-item">
+                    <span>Retorno Bruto Visitante</span>
+                    <strong class="txt-retorno" id="j3RetV">R$ 427,17</strong>
+                </div>
+                <div class="barra-prova-real">
+                    <span>✓ Prova Real (Lucro Líquido)</span>
+                    <strong id="j3Prova">R$ 10,00</strong>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer-resumo">
+        <div class="footer-item">
+            <span>Montante Apostado</span>
+            <strong style="color: var(--cor-alerta);" id="ftMontante">R$ 100,00</strong>
+        </div>
+        <div class="footer-item">
+            <span>Retorno da Múltipla</span>
+            <strong style="color: var(--cor-sucesso);" id="ftRetornoM">R$ 504,00</strong>
+        </div>
+        <div class="footer-item">
+            <span>Total Investido (toda operação)</span>
+            <strong style="color: var(--cor-erro);" id="ftTotalInv">R$ 471,33</strong>
+        </div>
+        <div class="footer-item">
+            <span>Meta Lucro por Proteção</span>
+            <strong style="color: #f59e0b;" id="ftMeta">R$ 10,00</strong>
+        </div>
+    </div>
 </div>
 
 <script>
-const jogos = [
-    { id: 3, nome: "Jogo 3 (Base)" },
-    { id: 1, nome: "Jogo 1 (Acumula J3)" },
-    { id: 2, nome: "Jogo 2 (Acumula Tudo)" }
-];
+    function calcularTudo() {
+        // Captura valores iniciais
+        const M = parseFloat(document.getElementById('montantePrincipal').value) || 0;
+        const oddM = parseFloat(document.getElementById('oddPrincipal').value) || 0;
+        const L = parseFloat(document.getElementById('metaLucro').value) || 0;
 
-const container = document.getElementById("cardsJogos");
-jogos.forEach(j => {
-    container.innerHTML += `
-        <div class="card">
-            <h3>${j.nome}</h3>
-            <label>Odd Empate</label><input id="e${j.id}" value="3.9">
-            <label>Odd Visitante</label><input id="v${j.id}" value="5.6">
-            <div id="res${j.id}" class="auditoria">Aguardando cálculo...</div>
-        </div>`;
-});
+        // Captura Odds
+        const o1E = parseFloat(document.getElementById('j1OddE').value) || 1;
+        const o1V = parseFloat(document.getElementById('j1OddV').value) || 1;
 
-function processar() {
-    let m = parseFloat(document.getElementById("valor").value);
-    let meta = parseFloat(document.getElementById("meta").value);
-    
-    // Cálculo do Jogo 3
-    let e3 = +document.getElementById("e3").value;
-    let v3 = +document.getElementById("v3").value;
-    let aE3 = (m + meta) / (e3 - 1);
-    let aV3 = (m + meta) / (v3 - 1);
-    let custoJ3 = m + aE3 + aV3;
-    exibir(3, aE3, aV3, e3, v3, custoJ3, meta);
+        const o2E = parseFloat(document.getElementById('j2OddE').value) || 1;
+        const o2V = parseFloat(document.getElementById('j2OddV').value) || 1;
 
-    // Cálculo do Jogo 1 (Montante + J3)
-    let e1 = +document.getElementById("e1").value;
-    let v1 = +document.getElementById("v1").value;
-    let aE1 = (m + custoJ3 + meta) / (e1 - 1);
-    let aV1 = (m + custoJ3 + meta) / (v1 - 1);
-    let custoJ1 = m + custoJ3 + aE1 + aV1;
-    exibir(1, aE1, aV1, e1, v1, custoJ1, meta);
+        const o3E = parseFloat(document.getElementById('j3OddE').value) || 1;
+        const o3V = parseFloat(document.getElementById('j3OddV').value) || 1;
 
-    // Cálculo do Jogo 2 (Montante + J3 + J1)
-    let e2 = +document.getElementById("e2").value;
-    let v2 = +document.getElementById("v2").value;
-    let aE2 = (m + custoJ3 + custoJ1 + meta) / (e2 - 1);
-    let aV2 = (m + custoJ3 + custoJ1 + meta) / (v2 - 1);
-    let custoJ2 = m + custoJ3 + custoJ1 + aE2 + aV2;
-    exibir(2, aE2, aV2, e2, v2, custoJ2, meta);
+        // --- SISTEMA DE EQUAÇÕES ALGEBRÁICAS DA CASCATA ---
+        // Para cada bloco, queremos que: ApostaE * oddE = ApostaV * oddV = CustoAcumulado + ApostaE + ApostaV + Meta
+        // Isso gera o Fator Multiplicador de Arbitragem Sem Perdas: 
+        // Fator = 1 / (1 - (1/oddE) - (1/oddV))
+        
+        // 1. JOGO 3 (Baseia-se apenas no valor da Múltipla inicial)
+        const custoAcumJ3 = M;
+        const fatorJ3 = 1 / (1 - (1 / o3E) - (1 / o3V));
+        const retornoAlvoJ3 = (custoAcumJ3 + L) * fatorJ3;
+        const j3ApostaE = retornoAlvoJ3 / o3E;
+        const j3ApostaV = retornoAlvoJ3 / o3V;
+        const custoTotalJ3 = j3ApostaE + j3ApostaV;
 
-    document.getElementById("infoGlobal").innerHTML = `Retorno Principal: <span class="val">R$ ${(m * document.getElementById("odd").value).toFixed(2)}</span>`;
-}
+        // 2. JOGO 1 (Ocorre no Dia 1, precisa cobrir a Múltipla + o que já gastou protegendo o J3)
+        const custoAcumJ1 = M + custoTotalJ3;
+        const fatorJ1 = 1 / (1 - (1 / o1E) - (1 / o1V));
+        const retornoAlvoJ1 = (custoAcumJ1 + L) * fatorJ1;
+        const j1ApostaE = retornoAlvoJ1 / o1E;
+        const j1ApostaV = retornoAlvoJ1 / o1V;
+        const custoTotalJ1 = j1ApostaE + j1ApostaV;
 
-function exibir(id, ae, av, e, v, total, meta) {
-    document.getElementById("res"+id).innerHTML = `
-        Custo Acumulado: <span class="val">R$ ${total.toFixed(2)}</span><br>
-        Aposta Empate: <b>R$ ${ae.toFixed(2)}</b> (Retorno: R$ ${(ae*e).toFixed(2)})<br>
-        Aposta Visitante: <b>R$ ${av.toFixed(2)}</b> (Retorno: R$ ${(av*v).toFixed(2)})<br>
-        Meta de Lucro: R$ ${meta.toFixed(2)}<br>
-        Prova Real: <span class="val">R$ ${((ae*e) - total).toFixed(2)}</span>
-    `;
-}
+        // 3. JOGO 2 (Ocorre no Dia 2. Só jogamos ele se J1 deu Mandante. Logo, perdemos os valores de proteção do J1)
+        const custoAcumJ2 = M + custoTotalJ3 + custoTotalJ1;
+        const fatorJ2 = 1 / (1 - (1 / o2E) - (1 / o2V));
+        const retornoAlvoJ2 = (custoAcumJ2 + L) * fatorJ2;
+        const j2ApostaE = retornoAlvoJ2 / o2E;
+        const j2ApostaV = retornoAlvoJ2 / o2V;
+        const custoTotalJ2 = j2ApostaE + j2ApostaV;
+
+        // Consolidação Geral
+        const custoTotalOperacao = M + custoTotalJ1 + custoTotalJ2 + custoTotalJ3;
+        const retornoMúltiplaBruto = M * oddM;
+
+        // --- ATUALIZAÇÃO DA TELA (DOM) ---
+
+        // Painel Lateral e Footer
+        document.getElementById('miniRetornoM').innerText = fmt(retornoMúltiplaBruto);
+        document.getElementById('miniCustoTotal').innerText = fmt(custoTotalOperacao);
+        document.getElementById('ftMontante').innerText = fmt(M);
+        document.getElementById('ftRetornoM').innerText = fmt(retornoMúltiplaBruto);
+        document.getElementById('ftTotalInv').innerText = fmt(custoTotalOperacao);
+        document.getElementById('ftMeta').innerText = fmt(L);
+
+        // Render JOGO 1
+        document.getElementById('j1CustoAcum').innerText = fmt(custoAcumJ1);
+        document.getElementById('j1Meta').innerText = fmt(L);
+        document.getElementById('j1W_E').innerText = fmt(j1ApostaE);
+        document.getElementById('j1W_V').innerText = fmt(j1ApostaV);
+        document.getElementById('j1RetE').innerText = fmt(retornoAlvoJ1);
+        document.getElementById('j1RetV').innerText = fmt(retornoAlvoJ1);
+        // Prova Real J1: Retorno da Proteção - (Custo acumulado anterior + Novas apostas de proteção aplicadas agora)
+        document.getElementById('j1Prova').innerText = fmt(retornoAlvoJ1 - custoAcumJ1 - custoTotalJ1);
+
+        // Render JOGO 2
+        document.getElementById('j2CustoAcum').innerText = fmt(custoAcumJ2);
+        document.getElementById('j2Meta').innerText = fmt(L);
+        document.getElementById('j2W_E').innerText = fmt(j2ApostaE);
+        document.getElementById('j2W_V').innerText = fmt(j2ApostaV);
+        document.getElementById('j2RetE').innerText = fmt(retornoAlvoJ2);
+        document.getElementById('j2RetV').innerText = fmt(retornoAlvoJ2);
+        document.getElementById('j2Prova').innerText = fmt(retornoAlvoJ2 - custoAcumJ2 - custoTotalJ2);
+
+        // Render JOGO 3
+        // No dia 3, se der Red na múltipla, o custo acumulado real foi a Múltipla + J1 + J2 + J3.
+        // Como o J3 foi calculado sobre a base M para retornar o valor exato alvo, a prova real se ajusta perfeitamente.
+        const custoRealFinalDeFatoJ3 = M + custoTotalJ1 + custoTotalJ2;
+        document.getElementById('j3CustoAcum').innerText = fmt(custoRealFinalDeFatoJ3);
+        document.getElementById('j3Meta').innerText = fmt(L);
+        document.getElementById('j3W_E').innerText = fmt(j3ApostaE);
+        document.getElementById('j3W_V').innerText = fmt(j3ApostaV);
+        document.getElementById('j3RetE').innerText = fmt(retornoAlvoJ3);
+        document.getElementById('j3RetV').innerText = fmt(retornoAlvoJ3);
+        document.getElementById('j3Prova').innerText = fmt(retornoAlvoJ3 - custoRealFinalDeFatoJ3 - custoTotalJ3);
+    }
+
+    function fmt(v) {
+        return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    }
+
+    // Executa no carregamento inicial
+    window.onload = calcularTudo;
 </script>
 </body>
 </html>
