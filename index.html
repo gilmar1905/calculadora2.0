@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cascata — Modelo Real João</title>
+    <title>Cascata — Sistema Homologado João</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -16,10 +16,10 @@
         
         <div class="flex items-center justify-between border-b border-zinc-800 pb-5 mb-8">
             <div class="flex items-center gap-3">
-                <div class="bg-lime-500 text-black px-2.5 py-1 rounded text-xs font-black tracking-wider uppercase">Cascata V6</div>
-                <h1 class="text-xl font-bold text-white tracking-tight">Calculadora — Estratégia do João</h1>
+                <div class="bg-lime-500 text-black px-2.5 py-1 rounded text-xs font-black tracking-wider uppercase">Cascata V7</div>
+                <h1 class="text-xl font-bold text-white tracking-tight">Estratégia do João — Painel de Auditoria Completo</h1>
             </div>
-            <div class="text-xs text-zinc-500 font-medium">Proteção Cruzada Dia 1 + Dia 3 Ativos</div>
+            <div class="text-xs text-zinc-500 font-medium">Proteção Cruzada Dia 1 + Dia 3 Estabilizada</div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -38,7 +38,7 @@
                             <input type="number" id="oddPrincipal" value="5.04" step="0.01" class="w-full bg-[#131a2b] border border-zinc-800 rounded-lg px-3 py-2 text-white font-bold text-sm focus:outline-none focus:border-lime-500" oninput="limparResultados()">
                         </div>
                         <div class="flex flex-col gap-1.5">
-                            <label class="text-xs font-semibold text-zinc-400">Meta de Lucro Líquido (R$)</label>
+                            <label class="text-xs font-semibold text-zinc-400">Meta de Lucro Líquido Extra (R$)</label>
                             <input type="number" id="metaLucro" value="10" step="0.01" class="w-full bg-[#131a2b] border border-zinc-800 rounded-lg px-3 py-2 text-white font-bold text-sm focus:outline-none focus:border-lime-500" oninput="limparResultados()">
                         </div>
                     </div>
@@ -70,7 +70,7 @@
                     </div>
 
                     <button onclick="handleCalculate()" class="w-full h-11 text-xs font-black bg-lime-500 text-black hover:bg-lime-400 uppercase tracking-wider rounded-lg flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-[0.98]">
-                        <i data-lucide="shield-check" class="w-4 h-4"></i> Calcular Proteção João
+                        <i data-lucide="shield-check" class="w-4 h-4"></i> Executar Auditoria Completa
                     </button>
                 </div>
             </div>
@@ -112,7 +112,7 @@
                     <div class="hidden divide-y divide-zinc-800/60" id="audit-j2">
                         <div class="grid grid-cols-2 divide-x divide-zinc-800 text-xs p-3 bg-zinc-950/20">
                             <div><span class="text-zinc-500 text-[10px] font-bold uppercase block">Prejuízo Acumulado Real (M + J1 + J3)</span><strong class="text-red-400 font-black text-sm" id="j2_c_txt">R$ 0,00</strong></div>
-                            <div class="pl-3"><span class="text-zinc-500 text-[10px] font-bold uppercase block">Custo do J2</span><strong class="text-blue-400 font-black text-sm" id="j2_cost_txt">R$ 0,00</strong></div>
+                            <div class="pl-3"><span class="text-zinc-500 text-[10px] font-bold uppercase block">Custo Adicional J2</span><strong class="text-blue-400 font-black text-sm" id="j2_cost_txt">R$ 0,00</strong></div>
                         </div>
                         <div class="grid grid-cols-2 divide-x divide-zinc-800 text-xs p-4">
                             <div>
@@ -138,7 +138,7 @@
                     </div>
                     <div class="hidden divide-y divide-zinc-800/60" id="audit-j3">
                         <div class="grid grid-cols-2 divide-x divide-zinc-800 text-xs p-3 bg-zinc-950/20">
-                            <div><span class="text-zinc-500 text-[10px] font-bold uppercase block">Custo Total da Operação</span><strong class="text-red-400 font-black text-sm" id="j3_c_txt">R$ 0,00</strong></div>
+                            <div><span class="text-zinc-500 text-[10px] font-bold uppercase block">Prejuízo Histórico Total</span><strong class="text-red-400 font-black text-sm" id="j3_c_txt">R$ 0,00</strong></div>
                             <div class="pl-3"><span class="text-zinc-500 text-[10px] font-bold uppercase block">Custo Isolado J3</span><strong class="text-rose-400 font-black text-sm" id="j3_cost_txt">R$ 0,00</strong></div>
                         </div>
                         <div class="grid grid-cols-2 divide-x divide-zinc-800 text-xs p-4">
@@ -158,6 +158,28 @@
                     </div>
                 </div>
 
+                <div class="hidden bg-[#0e1322] border border-zinc-800 rounded-xl p-5 shadow-inner" id="series-summary">
+                    <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-4">Painel Geral de Auditoria da Banca</h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+                        <div class="bg-zinc-950/50 p-3 rounded-lg border border-zinc-800/80">
+                            <span class="text-[10px] text-zinc-400 font-bold uppercase block mb-1">Montante Investido</span>
+                            <span class="text-white font-black text-sm" id="s_ap">R$ 0,00</span>
+                        </div>
+                        <div class="bg-zinc-950/50 p-3 rounded-lg border border-zinc-800/80">
+                            <span class="text-[10px] text-zinc-400 font-bold uppercase block mb-1">Retorno da Múltipla</span>
+                            <span class="text-lime-400 font-black text-sm" id="s_ret">R$ 0,00</span>
+                        </div>
+                        <div class="bg-zinc-950/50 p-3 rounded-lg border border-zinc-800/80">
+                            <span class="text-[10px] text-zinc-400 font-bold uppercase block mb-1">Proteções Totais</span>
+                            <span class="text-amber-500 font-black text-sm" id="s_prot">R$ 0,00</span>
+                        </div>
+                        <div class="bg-zinc-950/50 p-3 rounded-lg border border-zinc-800/80">
+                            <span class="text-[10px] text-zinc-400 font-bold uppercase block mb-1">Custo Total Op.</span>
+                            <span class="text-red-400 font-black text-sm" id="s_custo">R$ 0,00</span>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -172,11 +194,13 @@
             document.getElementById('audit-j1').classList.add('hidden');
             document.getElementById('audit-j2').classList.add('hidden');
             document.getElementById('audit-j3').classList.add('hidden');
+            document.getElementById('series-summary').classList.add('hidden');
         }
 
         function handleCalculate() {
             const montante = parseFloat(document.getElementById('montante').value) || 0;
             const meta = parseFloat(document.getElementById('metaLucro').value) || 0;
+            const oddPrincipal = parseFloat(document.getElementById('oddPrincipal').value) || 0;
 
             const o1E = parseFloat(document.getElementById('j1_oddE').value) || 1;
             const o1V = parseFloat(document.getElementById('j1_oddV').value) || 1;
@@ -185,37 +209,28 @@
             const o3E = parseFloat(document.getElementById('j3_oddE').value) || 1;
             const o3V = parseFloat(document.getElementById('j3_oddV').value) || 1;
 
-            // Fatores padrões de Arbitragem dos blocos
             let f1 = (1/o1E) + (1/o1V);
             let f2 = (1/o2E) + (1/o2V);
             let f3 = (1/o3E) + (1/o3V);
 
-            // ==========================================================
-            // ALGORITMO INTEGRADO: DIA 1 (MONTE + J3 ATIVOS)
-            // ==========================================================
-            
-            // Loop rápido e estável para resolver a interdependência J1 e J3 sem explodir
+            // Resolução da matriz do Dia 1 (Montante + J3 ativos no bolso)
             let c1 = 0, c3 = 0;
             let j1_e = 0, j1_v = 0;
             let j3_e = 0, j3_v = 0;
 
             for(let i=0; i<30; i++) {
-                // Jogo 3 precisa cobrir o Montante + o Custo do J1 + o Custo do J2 que virá depois se falhar + Meta
-                // Mas cronologicamente, para não entrar em looping infinito com J2, calculamos o peso fixo de f2:
                 let alvoJ3 = (montante + c1 + meta) / (1 - f3 - (f2 * (1 - f3))); 
                 j3_e = f(alvoJ3 / o3E);
                 j3_v = f(alvoJ3 / o3V);
                 c3 = f(j3_e + j3_v);
 
-                // Jogo 1 precisa pagar: Montante + o próprio C3 gasto no Dia 1 + Meta
                 let alvoJ1 = (montante + c3 + meta) / (1 - f1);
                 j1_e = f(alvoJ1 / o1E);
                 j1_v = f(alvoJ1 / o1V);
                 c1 = f(j1_e + j1_v);
             }
 
-            // JOGO 2 (Condicional): Só ocorre se J1 der Mandante.
-            // Ele encontra na mesa um prejuízo real de: Montante + C1 + C3
+            // JOGO 2 (Condicional Dia 2)
             let acumuladoJ2 = f(montante + c1 + c3);
             let alvoJ2 = (acumuladoJ2 + meta) / (1 - f2);
             let j2_e = f(alvoJ2 / o2E);
@@ -229,7 +244,6 @@
             document.getElementById('j1_dia1_txt').innerText = fmt(montante + c3);
             document.getElementById('j1_apE_txt').innerText = fmt(j1_e);
             document.getElementById('j1_apV_txt').innerText = fmt(j1_v);
-            // Prova real J1: Se der Empate, ganha (j1_e * o1E). Gastou: Montante + C1 + C3.
             document.getElementById('j1_p_txt').innerText = fmt((j1_e * o1E) - (montante + c1 + c3));
 
             // --- RENDER JOGO 2 ---
@@ -246,10 +260,17 @@
             document.getElementById('j3_apV_txt').innerText = fmt(j3_v);
             document.getElementById('j3_p_txt').innerText = fmt((j3_e * o3E) - custoTotalGlobal);
 
-            // Mostrar resultados
+            // --- RENDER PAINEL GERAL DE AUDITORIA (SOLICITADO) ---
+            document.getElementById('s_ap').innerText = fmt(montante);
+            document.getElementById('s_ret').innerText = fmt(montante * oddPrincipal);
+            document.getElementById('s_prot').innerText = fmt(c1 + c2 + c3);
+            document.getElementById('s_custo').innerText = fmt(custoTotalGlobal);
+
+            // Mostrar tudo
             document.getElementById('audit-j1').classList.remove('hidden');
             document.getElementById('audit-j2').classList.remove('hidden');
             document.getElementById('audit-j3').classList.remove('hidden');
+            document.getElementById('series-summary').classList.remove('hidden');
         }
     </script>
 </body>
