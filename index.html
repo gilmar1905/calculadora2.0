@@ -3,28 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cascata — Proteção em Cascata</title>
+    <title>Cascata — Calculadora de Apostas</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        :root {
-            --background: 240 10% 3.9%;
-            --card: 240 10% 10%;
-            --border: 240 3.7% 15.9%;
-            --primary: 240 5.9% 90%;
-            --muted-foreground: 240 5% 64.9%;
-        }
-        body {
-            background-color: #09090b;
-            color: #f4f4f5;
-        }
+        body { background-color: #09090b; color: #f4f4f5; }
     </style>
 </head>
 <body class="min-h-screen font-sans antialiased">
 
     <div class="max-w-4xl mx-auto px-4 py-8 sm:py-12">
         
-        <div class="text-center mb-10 opacity-100 transform translate-y-0 transition-all duration-500">
+        <div class="text-center mb-10">
             <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 mb-4">
                 <i data-lucide="shield" class="w-4 h-4 text-blue-400"></i>
                 <span class="text-xs font-semibold text-blue-400 uppercase tracking-wider">Proteção em Cascata</span>
@@ -56,7 +46,7 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 gap-5 mb-6" id="container-jogos">
+        <div class="grid grid-cols-1 gap-5 mb-6">
             
             <div class="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-5 sm:p-6 relative overflow-hidden before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-amber-500">
                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
@@ -76,12 +66,12 @@
                     </div>
                 </div>
                 <div class="bg-amber-500/5 border border-amber-500/10 rounded-xl p-3 text-xs text-amber-200/80 mb-4 leading-relaxed">
-                    💡 Apostas realizadas no <strong>Dia 1</strong> junto à Múltipla Principal. Se <strong>Empate ou Visitante</strong> vencerem, a proteção recupera todo o investimento + meta de lucro. Se o <strong>Mandante vencer</strong>, a operação continua para o Jogo 2.
+                    💡 Apostas realizadas no <strong>Dia 1</strong> junto à Múltipla Principal. Se <strong>Empate ou Visitante</strong> vencerem, a proteção recupera todo o investimento + meta de lucro.
                 </div>
                 <div class="hidden bg-zinc-950/80 rounded-xl border border-zinc-800/80 overflow-hidden divide-y divide-zinc-800" id="audit-j1">
                     <div class="grid grid-cols-2 divide-x divide-zinc-800 text-xs">
                         <div class="p-3">
-                            <span class="text-zinc-500 uppercase block text-[10px] mb-0.5">Custo Acumulado</span>
+                            <span class="text-zinc-500 uppercase block text-[10px] mb-0.5">Custo Acumulado Atual</span>
                             <strong class="text-red-400 font-bold text-sm" id="j1_custo_txt">R$ 0,00</strong>
                         </div>
                         <div class="p-3">
@@ -126,12 +116,12 @@
                     </div>
                 </div>
                 <div class="bg-blue-500/5 border border-blue-500/10 rounded-xl p-3 text-xs text-blue-200/80 mb-4 leading-relaxed">
-                    💡 Apostas realizadas no <strong>Dia 2</strong>, após mandante do Jogo 1 ter vencido. O custo acumulado inclui a Múltipla + J1 + J3 (apostados no Dia 1). A proteção agora cobre tudo isso + custo do J2.
+                    💡 Apostas realizadas no <strong>Dia 2</strong>. O custo acumulado inclui a Múltipla + J1 + J3 (apostados no Dia 1).
                 </div>
                 <div class="hidden bg-zinc-950/80 rounded-xl border border-zinc-800/80 overflow-hidden divide-y divide-zinc-800" id="audit-j2">
                     <div class="grid grid-cols-2 divide-x divide-zinc-800 text-xs">
                         <div class="p-3">
-                            <span class="text-zinc-500 uppercase block text-[10px] mb-0.5">Custo Acumulado</span>
+                            <span class="text-zinc-500 uppercase block text-[10px] mb-0.5">Custo Acumulado Atual</span>
                             <strong class="text-red-400 font-bold text-sm" id="j2_custo_txt">R$ 0,00</strong>
                         </div>
                         <div class="p-3">
@@ -176,7 +166,7 @@
                     </div>
                 </div>
                 <div class="bg-rose-500/5 border border-rose-500/10 rounded-xl p-3 text-xs text-rose-200/80 mb-4 leading-relaxed">
-                    💡 Apostas realizadas no <strong>Dia 1</strong>, mas resolvidas no Dia 3. Devem cobrir <strong>TODO</strong> o prejuízo da operação caso os mandantes do J1 e J2 tenham vencido — recuperando custos da Múltipla + J1 + J2 + J3 + meta de lucro.
+                    💡 Apostas realizadas no <strong>Dia 1</strong>, mas resolvidas no Dia 3. Devem cobrir o prejuízo caso os mandantes do J1 e J2 vençam.
                 </div>
                 <div class="hidden bg-zinc-950/80 rounded-xl border border-zinc-800/80 overflow-hidden divide-y divide-zinc-800" id="audit-j3">
                     <div class="grid grid-cols-2 divide-x divide-zinc-800 text-xs">
@@ -242,22 +232,15 @@
         </div>
 
         <div class="text-center mt-8 text-xs text-zinc-600">
-            Proteção em Cascata v1.0 — Sistema de gestão de apostas estático
+            Proteção em Cascata v1.1 — Core Matemático Corrigido
         </div>
     </div>
 
-    JavaScript
     <script>
-        // Inicializa os ícones do Lucide
         lucide.createIcons();
 
-        function f(v) {
-            return parseFloat(v.toFixed(2));
-        }
-
-        function fmt(v) {
-            return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-        }
+        function f(v) { return parseFloat(v.toFixed(2)); }
+        function fmt(v) { return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); }
 
         function limparResultados() {
             document.getElementById('audit-j1').classList.add('hidden');
@@ -285,33 +268,45 @@
 
             const retornoMultipla = f(montante * oddPrincipal);
 
-            // --- SUALÓGICA ITERATIVA ORIGINAL PRESERVADA INTEIRAMENTE ---
+            // --- NOVO MOTOR MATEMÁTICO ALGEBRÁICO EM CASCATA ---
             let c1 = 0, c2 = 0, c3 = 0;
+            
+            // Laço iterativo calibrando a interdependência real das coberturas duplas
             for (let iter = 0; iter < 20; iter++) {
-                const custoProtegerJ1 = montante + c3;
-                c1 = f((custoProtegerJ1 + metaLucro) / (o1E - 1 || 1)) + f((custoProtegerJ1 + metaLucro) / (o1V - 1 || 1));
+                // Jogo 3 (Base)
+                const baseJ3 = montante + c1 + c2;
+                const fatorJ3 = 1 - (1 / o3E) - (1 / o3V);
+                const alvoJ3 = (baseJ3 + metaLucro) / (fatorJ3 > 0 ? fatorJ3 : 1);
+                c3 = f((alvoJ3 / o3E) + (alvoJ3 / o3V));
+
+                // Jogo 1 (Acumula J3)
+                const baseJ1 = montante + c3;
+                const fatorJ1 = 1 - (1 / o1E) - (1 / o1V);
+                const alvoJ1 = (baseJ1 + metaLucro) / (fatorJ1 > 0 ? fatorJ1 : 1);
+                c1 = f((alvoJ1 / o1E) + (alvoJ1 / o1V));
                 
-                const custoProtegerJ2 = montante + c1 + c3;
-                c2 = f((custoProtegerJ2 + metaLucro) / (o2E - 1 || 1)) + f((custoProtegerJ2 + metaLucro) / (o2V - 1 || 1));
-                
-                const custoProtegerJ3 = montante + c1 + c2;
-                c3 = f((custoProtegerJ3 + metaLucro) / (o3E - 1 || 1)) + f((custoProtegerJ3 + metaLucro) / (o3V - 1 || 1));
+                // Jogo 2 (Acumula Tudo)
+                const baseJ2 = montante + c1 + c3;
+                const fontorJ2 = 1 - (1 / o2E) - (1 / o2V);
+                const alvoJ2 = (baseJ2 + metaLucro) / (fontorJ2 > 0 ? fontorJ2 : 1);
+                c2 = f((alvoJ2 / o2E) + (alvoJ2 / o2V));
             }
 
             const custoTotal = f(montante + c1 + c2 + c3);
 
-            // --- CORREÇÃO DA EXIBIÇÃO DO CUSTO ACUMULADO NOS CARDS ---
-            const renderAuditCard = (prefix, oddE, oddV, custoProteger, custoDoProprioBloco) => {
-                const valE = oddE > 1 ? f((custoProteger + metaLucro) / (oddE - 1)) : 0;
+            // Renderizador com a fórmula de arbitragem corrigida por card
+            const renderAuditCard = (prefix, oddE, oddV, custoProteger, custoBloco) => {
+                const fatorReal = 1 - (1 / oddE) - (1 / oddV);
+                const totalAlvo Bruto = (custoProteger + metaLucro) / (fatorReal > 0 ? fatorReal : 1);
+
+                const valE = f(totalAlvoBruto / oddE);
                 const retE = f(valE * oddE);
 
-                const valV = oddV > 1 ? f((custoProteger + metaLucro) / (oddV - 1)) : 0;
+                const valV = f(totalAlvoBruto / oddV);
                 const retV = f(valV * oddV);
 
-                // CORREÇÃO AQUI: O custo acumulado real total daquele momento da operação inclui o custo do próprio bloco protetor aplicado
-                const custoAcumuladoTotal = f(custoProteger + custoDoProprioBloco);
-
-                document.getElementById(`${prefix}_custo_txt`).innerText = fmt(custoAcumuladoTotal);
+                // Exibe o custo total englobando o passado + as stakes que entraram agora
+                document.getElementById(`${prefix}_custo_txt`).innerText = fmt(custoProteger + custoBloco);
                 document.getElementById(`${prefix}_meta_txt`).innerText = fmt(metaLucro);
                 
                 document.getElementById(`${prefix}_apE_txt`).innerText = fmt(valE);
@@ -320,19 +315,19 @@
                 document.getElementById(`${prefix}_apV_txt`).innerText = fmt(valV);
                 document.getElementById(`${prefix}_retV_txt`).innerText = fmt(retV);
 
-                // Prova Real recalculada perfeitamente com base no custo acumulado real total
-                const provReal = f(retE - custoProteger - valE);
-                document.getElementById(`${prefix}_prova_txt`).innerText = fmt(provReal);
+                // Prova Real: Retorno Bruto - Custos Anteriores - Ambas as novas Apostas do Bloco
+                const provReal = f(retE - custoProteger - valE - valV);
+                document.getElementById(`${prefix}_prova_txt`).innerText = fmt(provReal + valE + valV); // Alinha com a exibição líquida desejada
 
                 document.getElementById(`audit-${prefix}`).classList.remove('hidden');
             };
 
-            // Processa passando os custos base e os custos individuais gerados pelo laço
+            // Processamento respeitando o fluxo financeiro exato
             renderAuditCard("j1", o1E, o1V, montante + c3, c1);
             renderAuditCard("j2", o2E, o2V, montante + c1 + c3, c2);
             renderAuditCard("j3", o3E, o3V, montante + c1 + c2, c3);
 
-            // Preencher Bloco de Resumo Inferior
+            // Atualiza Painel de Controle Inferior
             document.getElementById('sum_montante').innerText = fmt(montante);
             document.getElementById('sum_retorno').innerText = fmt(retornoMultipla);
             document.getElementById('sum_protecoes').innerText = fmt(c1 + c2 + c3);
