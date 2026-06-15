@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proteção em Cascata · Gestão de Apostas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #0d0f14;
+    --surface:   #161b25;
+    --surface2:  #1e2636;
+    --border:    #2a3347;
+    --text:      #e2e8f0;
+    --muted:     #64748b;
+    --accent:    #a3e635;
+    --accent-dim:#4d6b19;
+    --danger:    #f43f5e;
+    --danger-dim:#7f1d33;
+    --warn:      #f59e0b;
+    --warn-dim:  #78350f;
+    --blue:      #38bdf8;
+    --radius:    12px;
+    --radius-sm: 8px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 24px 16px 48px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    max-width: 1100px;
+    margin: 0 auto 32px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .logo-pill {
+    background: var(--accent);
+    color: #000;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    padding: 4px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+  }
+  header h1 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.02em;
+  }
+  header span {
+    font-size: 14px;
+    color: var(--muted);
+    margin-left: auto;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ── LAYOUT ── */
+  .layout {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    position: sticky;
+    top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+  }
+
+  .panel-title {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .panel-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .field { margin-bottom: 14px; }
+  .field:last-child { margin-bottom: 0; }
+
+  label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  input[type="number"] {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    padding: 10px 12px;
+    outline: none;
+    transition: border-color 0.15s;
+    -moz-appearance: textfield;
+  }
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+  input[type="number"]:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(163,230,53,0.1);
+  }
+
+  .input-prefix {
+    position: relative;
+  }
+  .input-prefix span {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .input-prefix input { padding-left: 26px; }
+
+  .btn-calc {
+    width: 100%;
+    padding: 12px;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.1s;
+  }
+  .btn-calc:hover { opacity: 0.9; }
+  .btn-calc:active { transform: scale(0.98); }
+
+  /* ── SUMMARY ROW ── */
+  .summary-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .summary-cell {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+  }
+  .summary-cell .sc-label {
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .summary-cell .sc-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .summary-cell.danger .sc-val { color: var(--danger); }
+
+  /* ── CARDS ÁREA ── */
+  .cards-area {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* ── GAME CARD ── */
+  .game-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    position: relative;
+  }
+  .game-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+  }
+  .card-j1::before { background: var(--warn); }
+  .card-j2::before { background: var(--blue); }
+  .card-j3::before { background: var(--danger); }
+
+  .card-header {
+    padding: 16px 20px 12px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .card-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.08em;
+  }
+  .card-j1 .card-badge { background: rgba(245,158,11,0.15); color: var(--warn); }
+  .card-j2 .card-badge { background: rgba(56,189,248,0.12); color: var(--blue); }
+  .card-j3 .card-badge { background: rgba(244,63,94,0.12);  color: var(--danger); }
+
+  .card-title { font-size: 15px; font-weight: 600; }
+  .card-day {
+    margin-left: auto;
+    font-size: 11px;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .card-body { padding: 16px 20px 16px 24px; }
+
+  .odds-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  /* ── AUDIT BOX ── */
+  .audit-box {
+    display: none;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+  .audit-box.visible { display: block; }
+
+  .audit-title {
+    padding: 8px 14px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .audit-title svg { flex-shrink: 0; }
+
+  .audit-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .audit-cell {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+  }
+  .audit-cell:nth-child(even) { border-right: none; }
+  .audit-cell:nth-last-child(-n+2) { border-bottom: none; }
+  /* Se tiver odd number of cells, o último não tem border-right */
+  .audit-cell.full-width {
+    grid-column: 1 / -1;
+    border-right: none;
+  }
+
+  .ac-label {
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .ac-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .ac-val.green  { color: var(--accent); }
+  .ac-val.red    { color: var(--danger); }
+  .ac-val.yellow { color: var(--warn); }
+  .ac-val.blue   { color: var(--blue); }
+  .ac-val.white  { color: var(--text); }
+
+  .proof-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: rgba(163,230,53,0.06);
+    border-top: 1px solid var(--accent-dim);
+  }
+  .proof-row.negative { background: rgba(244,63,94,0.06); border-top-color: var(--danger-dim); }
+  .proof-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .proof-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .proof-val.negative { color: var(--danger); }
+
+  /* ── NOTICE ── */
+  .notice {
+    background: rgba(245,158,11,0.08);
+    border: 1px solid rgba(245,158,11,0.25);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    font-size: 12px;
+    color: var(--warn);
+    margin-top: 12px;
+    line-height: 1.5;
+  }
+
+  /* ── FOOTER ── */
+  .cost-banner {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .cb-item { display: flex; flex-direction: column; gap: 2px; }
+  .cb-label { font-size: 11px; color: var(--muted); }
+  .cb-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .cb-val.green  { color: var(--accent); }
+  .cb-val.red    { color: var(--danger); }
+  .cb-val.yellow { color: var(--warn); }
+  .cb-divider { width: 1px; height: 36px; background: var(--border); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { position: static; }
+    .cost-banner { flex-direction: column; align-items: flex-start; }
+    .cb-divider { display: none; }
+    header span { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-pill">Cascata</div>
+  <h1>Proteção em Cascata</h1>
+  <span>Gestão de Apostas Esportivas</span>
+</header>
+
+<div class="layout">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+
+    <div class="panel">
+      <div class="panel-title">Configuração Principal</div>
+
+      <div class="field">
+        <label>Montante Principal (R$)</label>
+        <div class="input-prefix">
+          <span>R$</span>
+          <input type="number" id="montante" value="100" min="0" step="0.01">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Odd da Múltipla (Mandantes)</label>
+        <input type="number" id="oddMultipla" value="5.00" min="1.01" step="0.01">
+      </div>
+
+      <div class="field">
+        <label>Meta de Lucro Extra por Proteção (R$)</label>
+        <div class="input-prefix">
+          <span>R$</span>
+          <input type="number" id="metaLucro" value="10" min="0" step="0.01">
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Odds — Jogo 1</div>
+      <div class="odds-row">
+        <div class="field" style="margin:0">
+          <label>Empate</label>
+          <input type="number" id="j1emp" value="3.20" min="1.01" step="0.01">
+        </div>
+        <div class="field" style="margin:0">
+          <label>Visitante</label>
+          <input type="number" id="j1vis" value="3.50" min="1.01" step="0.01">
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Odds — Jogo 2</div>
+      <div class="odds-row">
+        <div class="field" style="margin:0">
+          <label>Empate</label>
+          <input type="number" id="j2emp" value="3.00" min="1.01" step="0.01">
+        </div>
+        <div class="field" style="margin:0">
+          <label>Visitante</label>
+          <input type="number" id="j2vis" value="4.00" min="1.01" step="0.01">
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Odds — Jogo 3</div>
+      <div class="odds-row">
+        <div class="field" style="margin:0">
+          <label>Empate</label>
+          <input type="number" id="j3emp" value="3.10" min="1.01" step="0.01">
+        </div>
+        <div class="field" style="margin:0">
+          <label>Visitante</label>
+          <input type="number" id="j3vis" value="3.80" min="1.01" step="0.01">
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-calc" onclick="calcular()">▶ Calcular Proteção</button>
+
+    <div class="summary-row" id="summaryRow" style="display:none">
+      <div class="summary-cell">
+        <div class="sc-label">Retorno da Múltipla</div>
+        <div class="sc-val" id="sumRetMultipla">—</div>
+      </div>
+      <div class="summary-cell danger">
+        <div class="sc-label">Custo Total da Op.</div>
+        <div class="sc-val" id="sumCustoTotal">—</div>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ── CARDS ── -->
+  <main class="cards-area">
+
+    <!-- JOGO 1 -->
+    <div class="game-card card-j1">
+      <div class="card-header">
+        <div class="card-badge">J1</div>
+        <div class="card-title">Jogo 1 — Proteção Dia 1</div>
+        <div class="card-day">Dia 1</div>
+      </div>
+      <div class="card-body">
+        <div class="notice">
+          💡 <strong>Dia 1 — todas estas apostas são feitas ao mesmo tempo:</strong> Múltipla Principal + Proteção J1 + Proteção J3 simples + 2 Múltiplas extras J3 (Man1×Man2×EmpJ3 e Man1×Man2×VisJ3). Por isso o <strong>Custo Acumulado já inclui tudo do Dia 1</strong>. Se Empate ou Visitante do J1 vencer, o retorno cobre esse custo total + meta. Se o Mandante vencer, a operação continua para o Jogo 2.
+        </div>
+        <div class="audit-box" id="audit1">
+          <div class="audit-title">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            Auditoria · Prova Real
+          </div>
+          <div class="audit-grid">
+            <div class="audit-cell">
+              <div class="ac-label">Custo Acumulado</div>
+              <div class="ac-val red" id="a1custo">—</div>
+            </div>
+            <div class="audit-cell">
+              <div class="ac-label">Meta de Lucro Extra</div>
+              <div class="ac-val yellow" id="a1meta">—</div>
+            </div>
+            <div class="audit-cell">
+              <div class="ac-label">Aposta Empate</div>
+              <div class="ac-val white" id="a1apostaEmp">—</div>
+            </div>
+            <div class="audit-cell">
+              <div class="ac-label">Aposta Visitante</div>
+              <div class="ac-val white" id="a1apostaVis">—</div>
+            </div>
+            <div class="audit-cell">
+              <div class="ac-label">Retorno Bruto Empate</div>
+              <div class="ac-val green" id="a1retEmp">—</div>
+            </div>
+            <div class="audit-cell">
+              <div class="ac-label">Retorno Bruto Visitante</div>
+              <div class="ac-val green" id="a1retVis">—</div>
+            </div>
+          </div>
+          <div class="proof-row" id="proof1row">
+            <div class="proof-label">✔ Prova Real (Lucro Líquido)</div>
+            <div class="proof-val" id="a1prova">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JOGO 2 -->
+    <div class="game-card card-j2">
+      <div class="card-header">
+        <div class="card-badge">J2</div>
+        <div class="card-title">Jogo 2 — Proteção Dia 2</div>
+        <div class="card-day">Dia 2</div>
+      </div>
+      <div class="card-body">
+        <div class="notice">
+          💡 Apostas realizadas no <strong>Dia 2</strong>, após mandante do Jogo 1 ter vencido. O custo acumulado inclui a Múltipla + J1 + J3 (apostados no Dia 1). A proteção agora cobre tudo isso + custo do J2.
+        </div>
+        <div class="audit-box" id="audit2">
+          <div class="audit-title">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            Auditoria · Prova Real
+          </div>
+          <div class="audit-grid">
+            <div class="audit-cell">
+              <div class="ac-label">Custo Acumulado</div>
+              <div class="ac-val red" id="a2custo">—</div>
+            </div>
+            <div class="audit-cell">
+              <div class="ac-label">Meta de Lucro Extra</div>
+              <div class="ac-val yellow" id="a2meta">—</div>
+            </div>
+            <div class="audit-cell">
+              <div class="ac-label">Aposta Empate</div>
+              <div class="ac-val white" id="a2apostaEmp">—</div>
+            </div>
+            <div class="audit-cell">
+              <div class="ac-label">Aposta Visitante</div>
+              <div class="ac-val white" id="a2apostaVis">—</div>
+            </div>
+            <div class="audit-cell">
+              <div class="ac-label">Retorno Bruto Empate</div>
+              <div class="ac-val green" id="a2retEmp">—</div>
+            </div>
+            <div class="audit-cell">
+              <div class="ac-label">Retorno Bruto Visitante</div>
+              <div class="ac-val green" id="a2retVis">—</div>
+            </div>
+          </div>
+          <div class="proof-row" id="proof2row">
+            <div class="proof-label">✔ Prova Real (Lucro Líquido)</div>
+            <div class="proof-val" id="a2prova">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JOGO 3 -->
+    <div class="game-card card-j3">
+      <div class="card-header">
+        <div class="card-badge">J3</div>
+        <div class="card-title">Jogo 3 — Proteção Dia 1 (cobertura total)</div>
+        <div class="card-day">Dia 1 → Dia 3</div>
+      </div>
+      <div class="card-body">
+        <div class="notice">
+          💡 Apostas apostadas no <strong>Dia 1</strong> (simples + 2 múltiplas extras), mas resolvidas no Dia 3. No pior cenário (mandantes J1 e J2 venceram), o J3 deve cobrir <strong>TODO</strong> o custo da operação: Múltipla + J1 + J3 (Dia 1) + J2 (Dia 2) + J3 próprio + meta. O valor das apostas extras do J3 é igual ao valor simples (duplicando a cobertura).
+        </div>
+        <div class="audit-box" id="audit3">
+          <div class="audit-title">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            Auditoria · Prova Real
+          </div>
+          <div class="audit-grid">
+            <div class="audit-cell">
+              <div class="ac-label">Custo Acumulado (cobertura total)</div>
+              <div class="ac-val red" id="a3custo">—</div>
+            </div>
+            <div class="audit-cell">
+              <div class="ac-label">Meta de Lucro Extra</div>
+              <div class="ac-val yellow" id="a3meta">—</div>
+            </div>
+            <div class="audit-cell">
+              <div class="ac-label">Aposta Empate</div>
+              <div class="ac-val white" id="a3apostaEmp">—</div>
+            </div>
+            <div class="audit-cell">
+              <div class="ac-label">Aposta Visitante</div>
+              <div class="ac-val white" id="a3apostaVis">—</div>
+            </div>
+            <div class="audit-cell">
+              <div class="ac-label">Retorno Bruto Empate</div>
+              <div class="ac-val green" id="a3retEmp">—</div>
+            </div>
+            <div class="audit-cell">
+              <div class="ac-label">Retorno Bruto Visitante</div>
+              <div class="ac-val green" id="a3retVis">—</div>
+            </div>
+          </div>
+          <div class="proof-row" id="proof3row">
+            <div class="proof-label">✔ Prova Real (Lucro Líquido)</div>
+            <div class="proof-val" id="a3prova">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BANNER CUSTO TOTAL -->
+    <div class="cost-banner" id="costBanner" style="display:none">
+      <div class="cb-item">
+        <div class="cb-label">Montante Apostado</div>
+        <div class="cb-val yellow" id="cbMontante">—</div>
+      </div>
+      <div class="cb-divider"></div>
+      <div class="cb-item">
+        <div class="cb-label">Retorno da Múltipla</div>
+        <div class="cb-val green" id="cbRetMultipla">—</div>
+      </div>
+      <div class="cb-divider"></div>
+      <div class="cb-item">
+        <div class="cb-label">Total Investido (toda operação)</div>
+        <div class="cb-val red" id="cbCustoTotal">—</div>
+      </div>
+      <div class="cb-divider"></div>
+      <div class="cb-item">
+        <div class="cb-label">Meta Lucro por Proteção</div>
+        <div class="cb-val yellow" id="cbMeta">—</div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+const R = v => 'R$ ' + Number(v).toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+/*
+  LÓGICA DE CASCATA:
+  
+  Dia 1 apostas:
+    A) Múltipla Mandantes: montante → potencial retorno = montante × oddMultipla
+    B) Proteção J1 (empate + visitante): aposta calculada para cobrir custo J1 + meta
+    C) Proteção J3 (empate + visitante): aposta calculada para cobrir custo J1+J3+Multipla + meta
+       MAS: no J3, há também 2 múltiplas de proteção interna (Man1×Man2×EmpJ3 e Man1×Man2×VisJ3)
+       Para simplificar o painel, calculamos as apostas simples de empate/visitante do J3.
+  
+  ── FÓRMULA DE APOSTA PROTEÇÃO ──
+  Queremos que:  aposta × odd = custoAcumulado + aposta + meta
+  → aposta × (odd - 1) = custoAcumulado + meta
+  → aposta = (custoAcumulado + meta) / (odd - 1)
+  
+  Para J1:  custo = montante   (só a múltipla foi apostada no momento do J1)
+  Para J2:  custo = montante + apostaJ1emp + apostaJ1vis (apostas do dia 1 + J2 no dia 2)
+            Na prática: custo = montante + apostasJ1 + apostasJ3 (já feitas dia 1) + apostasJ2
+  Para J3:  custo = montante + apostasJ1 + apostasJ2 + apostasJ3 (cobertura total)
+  
+  ATENÇÃO: as apostas de J1, J2 e J3 são duplas (empate E visitante), então:
+  totalApostasProtecao = apostaEmp + apostaVis para cada jogo.
+  
+  Para o sistema funcionar, usamos a MENOR odd de cada dupla como base de cálculo da aposta
+  (worst case) e verificamos a prova real com cada odd individualmente.
+*/
+
+/*
+  ══════════════════════════════════════════════════════════
+  LÓGICA DE CASCATA — CORRIGIDA
+  ══════════════════════════════════════════════════════════
+
+  DIA 1 — 3 apostas feitas simultaneamente:
+    (A) Múltipla Principal:            montante
+    (B) Proteção J1 simples:           apostaJ1emp + apostaJ1vis
+    (C) J3 — SOMENTE as 2 múltiplas extras inseridas nos campos empate/visitante:
+             apostaJ3emp (Man1×Man2×EmpJ3) + apostaJ3vis (Man1×Man2×VisJ3)
+             ⚠ NÃO há aposta simples adicional no J3. O campo do card já É a múltipla extra.
+
+  CustoDia1 = A + B + C
+
+  Quando J1 resolve:
+    → Empate/Visitante J1 ganha → retorno cobre CustoDia1 + meta ✓
+    → Mandante J1 ganha → continua para Dia 2
+
+  DIA 2:
+    (D) Proteção J2 simples: apostaJ2emp + apostaJ2vis
+    Custo Acumulado J2 = CustoDia1 + D (próprio)
+
+  J3 resolve no Dia 3 — pior cenário (Man J1 e Man J2 venceram):
+    → Cobre: CustoDia1 + J2 + J3 próprio + meta
+
+  ══════════════════════════════════════════════════════════
+  FÓRMULA — aposta dupla (empate + visitante simultâneos):
+
+  Cada resultado sozinho deve cobrir custoBase + apostaE + apostaV + meta:
+    apostaE × oddE = custoBase + apostaE + apostaV + meta  ...(1)
+    apostaV × oddV = custoBase + apostaE + apostaV + meta  ...(2)
+
+  De (1)=(2): apostaE = apostaV × (oddV / oddE)
+  Substituindo em (2):
+    apostaV = (custoBase + meta) / (oddV - oddV/oddE - 1)
+    apostaE = apostaV × (oddV / oddE)
+  ══════════════════════════════════════════════════════════
+*/
+
+function calcularDupla(custoBase, oddEmp, oddVis, meta) {
+  const apostaV   = (custoBase + meta) / (oddVis - (oddVis / oddEmp) - 1);
+  const apostaE   = apostaV * (oddVis / oddEmp);
+  const retornoE  = apostaE * oddEmp;
+  const retornoV  = apostaV * oddVis;
+  const custoTotal = custoBase + apostaE + apostaV;
+  return {
+    apostaE, apostaV,
+    retornoE, retornoV,
+    custoTotal,
+    provaE: retornoE - custoTotal,
+    provaV: retornoV - custoTotal
+  };
+}
+
+function calcular() {
+  const montante = parseFloat(document.getElementById('montante').value)   || 0;
+  const oddMult  = parseFloat(document.getElementById('oddMultipla').value) || 1;
+  const meta     = parseFloat(document.getElementById('metaLucro').value)   || 0;
+  const j1emp    = parseFloat(document.getElementById('j1emp').value) || 1.01;
+  const j1vis    = parseFloat(document.getElementById('j1vis').value) || 1.01;
+  const j2emp    = parseFloat(document.getElementById('j2emp').value) || 1.01;
+  const j2vis    = parseFloat(document.getElementById('j2vis').value) || 1.01;
+  const j3emp    = parseFloat(document.getElementById('j3emp').value) || 1.01;
+  const j3vis    = parseFloat(document.getElementById('j3vis').value) || 1.01;
+
+  const retMultipla = montante * oddMult;
+
+  /*
+    RESOLUÇÃO ITERATIVA — J1 e J3 são apostados juntos no Dia 1,
+    mas J3 precisa cobrir o custo que inclui J2 (apostado no Dia 2).
+    J1 precisa cobrir o Dia 1 inteiro (incluindo o J3).
+    → Iteramos até convergir.
+
+    Passo a passo:
+      i)   Estimativa inicial: apostasJ3 = 0
+      ii)  CustoDia1 = montante + apostasJ1 + apostasJ3
+      iii) J1 cobre CustoDia1 → calcularDupla(montante + apostasJ3, j1emp, j1vis, meta)
+           (o custoBase do J1 é tudo exceto ele mesmo = montante + apostasJ3)
+      iv)  J2 cobre CustoDia1 → calcularDupla(CustoDia1, j2emp, j2vis, meta)
+      v)   J3 cobre CustoDia1 + apostasJ2 → calcularDupla(CustoDia1 + apostasJ2, j3emp, j3vis, meta)
+      vi)  Atualiza apostasJ3 e repete até diff < 0.0001
+  */
+
+  let apostaJ3_E = 0, apostaJ3_V = 0;
+  let apostaJ1_E = 0, apostaJ1_V = 0;
+  let apostaJ2_E = 0, apostaJ2_V = 0;
+  let custoDia1  = montante;
+
+  for (let iter = 0; iter < 30; iter++) {
+    // J1: custoBase = montante + apostasJ3 (apostadas junto no Dia 1)
+    const baseJ1 = montante + apostaJ3_E + apostaJ3_V;
+    const r1 = calcularDupla(baseJ1, j1emp, j1vis, meta);
+
+    // CustoDia1 = montante + J1 + J3
+    const cd1 = montante + r1.apostaE + r1.apostaV + apostaJ3_E + apostaJ3_V;
+
+    // J2: custoBase = CustoDia1 (apostado no Dia 2)
+    const r2 = calcularDupla(cd1, j2emp, j2vis, meta);
+
+    // J3: custoBase = CustoDia1 + apostasJ2 (pior cenário total)
+    const baseJ3 = cd1 + r2.apostaE + r2.apostaV;
+    const r3 = calcularDupla(baseJ3, j3emp, j3vis, meta);
+
+    const diff = Math.abs(r3.apostaE - apostaJ3_E) + Math.abs(r3.apostaV - apostaJ3_V);
+
+    apostaJ3_E = r3.apostaE;
+    apostaJ3_V = r3.apostaV;
+    apostaJ1_E = r1.apostaE;
+    apostaJ1_V = r1.apostaV;
+    apostaJ2_E = r2.apostaE;
+    apostaJ2_V = r2.apostaV;
+    custoDia1  = cd1;
+
+    if (diff < 0.0001) break;
+  }
+
+  // Reconstruir valores finais para exibição
+  const totalJ3Dia1Final = 2 * (apostaJ3_E + apostaJ3_V);
+  const custoDia1Final   = montante + apostaJ1_E + apostaJ1_V + totalJ3Dia1Final;
+  const custoAcumJ2      = custoDia1Final; // custo que J2 precisa cobrir (+ ele mesmo)
+  const custoAcumJ3      = custoDia1Final + apostaJ2_E + apostaJ2_V; // custo que J3 cobre
+
+  const custoOperacaoTotal = montante
+    + apostaJ1_E + apostaJ1_V
+    + totalJ3Dia1Final
+    + apostaJ2_E + apostaJ2_V;
+
+  // Retornos de cada proteção
+  const j1RetE = apostaJ1_E * j1emp;
+  const j1RetV = apostaJ1_V * j1vis;
+  const j2RetE = apostaJ2_E * j2emp;
+  const j2RetV = apostaJ2_V * j2vis;
+  const j3RetE = apostaJ3_E * j3emp;
+  const j3RetV = apostaJ3_V * j3vis;
+
+  // Prova Real: retorno - custo total acumulado (incluindo a própria aposta)
+  const j1ProvaE = j1RetE - (custoDia1Final);
+  const j1ProvaV = j1RetV - (custoDia1Final);
+  const j2ProvaE = j2RetE - (custoDia1Final + apostaJ2_E + apostaJ2_V);
+  const j2ProvaV = j2RetV - (custoDia1Final + apostaJ2_E + apostaJ2_V);
+  const j3ProvaE = j3RetE - (custoAcumJ3 + apostaJ3_E + apostaJ3_V);
+  const j3ProvaV = j3RetV - (custoAcumJ3 + apostaJ3_E + apostaJ3_V);
+
+  // ── PREENCHER UI ──
+
+  document.getElementById('summaryRow').style.display = 'grid';
+  document.getElementById('sumRetMultipla').textContent = R(retMultipla);
+  document.getElementById('sumCustoTotal').textContent  = R(custoOperacaoTotal);
+
+  // J1 — custo acumulado no momento do J1 = CustoDia1 (tudo apostado junto)
+  document.getElementById('audit1').classList.add('visible');
+  document.getElementById('a1custo').textContent     = R(custoDia1Final);
+  document.getElementById('a1meta').textContent      = R(meta);
+  document.getElementById('a1apostaEmp').textContent = R(apostaJ1_E);
+  document.getElementById('a1apostaVis').textContent = R(apostaJ1_V);
+  document.getElementById('a1retEmp').textContent    = R(j1RetE);
+  document.getElementById('a1retVis').textContent    = R(j1RetV);
+  const prova1 = Math.min(j1ProvaE, j1ProvaV);
+  document.getElementById('a1prova').textContent = R(prova1);
+  document.getElementById('a1prova').className = 'proof-val' + (prova1 < -0.01 ? ' negative' : '');
+  document.getElementById('proof1row').className = 'proof-row' + (prova1 < -0.01 ? ' negative' : '');
+
+  // J2 — custo acumulado = CustoDia1 + apostasJ2
+  document.getElementById('audit2').classList.add('visible');
+  document.getElementById('a2custo').textContent     = R(custoAcumJ2 + apostaJ2_E + apostaJ2_V);
+  document.getElementById('a2meta').textContent      = R(meta);
+  document.getElementById('a2apostaEmp').textContent = R(apostaJ2_E);
+  document.getElementById('a2apostaVis').textContent = R(apostaJ2_V);
+  document.getElementById('a2retEmp').textContent    = R(j2RetE);
+  document.getElementById('a2retVis').textContent    = R(j2RetV);
+  const prova2 = Math.min(j2ProvaE, j2ProvaV);
+  document.getElementById('a2prova').textContent = R(prova2);
+  document.getElementById('a2prova').className = 'proof-val' + (prova2 < -0.01 ? ' negative' : '');
+  document.getElementById('proof2row').className = 'proof-row' + (prova2 < -0.01 ? ' negative' : '');
+
+  // J3 — custo acumulado = tudo (pior cenário)
+  document.getElementById('audit3').classList.add('visible');
+  document.getElementById('a3custo').textContent     = R(custoAcumJ3 + apostaJ3_E + apostaJ3_V);
+  document.getElementById('a3meta').textContent      = R(meta);
+  document.getElementById('a3apostaEmp').textContent = R(apostaJ3_E);
+  document.getElementById('a3apostaVis').textContent = R(apostaJ3_V);
+  document.getElementById('a3retEmp').textContent    = R(j3RetE);
+  document.getElementById('a3retVis').textContent    = R(j3RetV);
+  const prova3 = Math.min(j3ProvaE, j3ProvaV);
+  document.getElementById('a3prova').textContent = R(prova3);
+  document.getElementById('a3prova').className = 'proof-val' + (prova3 < -0.01 ? ' negative' : '');
+  document.getElementById('proof3row').className = 'proof-row' + (prova3 < -0.01 ? ' negative' : '');
+
+  // Banner — resumo
+  document.getElementById('costBanner').style.display = 'flex';
+  document.getElementById('cbMontante').textContent    = R(montante);
+  document.getElementById('cbRetMultipla').textContent = R(retMultipla);
+  document.getElementById('cbCustoTotal').textContent  = R(custoOperacaoTotal);
+  document.getElementById('cbMeta').textContent        = R(meta);
+}
+
+// Calcular ao carregar com valores padrão
+window.addEventListener('load', calcular);
+</script>
+</body>
+</html>
