@@ -1,247 +1,439 @@
 pages/Home.jsx—
 
 import React, { useState, useEffect } from "react";
+
 import { Button } from "@/components/ui/button";
+
 import { Input } from "@/components/ui/input";
+
 import {
+
   Dialog,
+
   DialogContent,
+
   DialogHeader,
+
   DialogTitle,
+
   DialogTrigger,
+
   DialogFooter,
+
   DialogClose,
+
 } from "@/components/ui/dialog";
+
 import { Calculator, Save, BookmarkCheck, Shield, TrendingUp } from "lucide-react";
+
 import { motion } from "framer-motion";
+
 import { toast } from "sonner";
+
 import GlobalInputs from "@/components/betting/GlobalInputs";
+
 import GameCard from "@/components/betting/GameCard";
+
 import SavedBets from "@/components/betting/SavedBets";
+
 import OperationSummary from "@/components/betting/OperationSummary";
+
 import { calculateProtections } from "@/lib/bettingCalculator";
 
 const STORAGE_KEY = "cascading_bets_saved";
 
 const defaultGames = [
+
   { mandante: "", visitante: "", oddEmpate: 0, oddVisitante: 0 },
+
   { mandante: "", visitante: "", oddEmpate: 0, oddVisitante: 0 },
+
   { mandante: "", visitante: "", oddEmpate: 0, oddVisitante: 0 },
+
 ];
 
 export default function Home() {
+
   const [montante, setMontante] = useState(0);
+
   const [oddPrincipal, setOddPrincipal] = useState(0);
+
   const [metaLucro, setMetaLucro] = useState(0);
+
   const [games, setGames] = useState(defaultGames);
+
   const [results, setResults] = useState(null);
+
   const [calculated, setCalculated] = useState(false);
+
   const [savedBets, setSavedBets] = useState([]);
+
   const [saveName, setSaveName] = useState("");
 
   useEffect(() => {
+
     const saved = localStorage.getItem(STORAGE_KEY);
+
     if (saved) setSavedBets(JSON.parse(saved));
+
   }, []);
 
   const updateGame = (index, game) => {
+
     const newGames = [...games];
+
     newGames[index] = game;
+
     setGames(newGames);
+
     setCalculated(false);
+
   };
 
   const handleCalculate = () => {
+
     if (!montante || !oddPrincipal) {
+
       toast.error("Preencha o Montante e a Odd Principal.");
+
       return;
+
     }
+
     const hasOdds = games.some(g => g.oddEmpate > 1 || g.oddVisitante > 1);
+
     if (!hasOdds) {
+
       toast.error("Preencha pelo menos uma odd de proteção.");
+
       return;
+
     }
+
     const res = calculateProtections({ montante, oddPrincipal, metaLucro, games });
+
     setResults(res);
+
     setCalculated(true);
+
     toast.success("Cálculo realizado com sucesso!");
+
   };
 
   const handleSave = () => {
+
     if (!saveName.trim()) {
+
       toast.error("Dê um nome para a aposta.");
+
       return;
+
     }
+
     const bet = {
+
       id: Date.now().toString(),
+
       name: saveName,
+
       montante,
+
       oddPrincipal,
+
       metaLucro,
+
       games,
+
       createdAt: new Date().toISOString(),
+
     };
+
     const updated = [...savedBets, bet];
+
     setSavedBets(updated);
+
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+
     setSaveName("");
+
     toast.success("Aposta salva!");
+
   };
 
   const handleLoadBet = (bet) => {
+
     setMontante(bet.montante);
+
     setOddPrincipal(bet.oddPrincipal);
+
     setMetaLucro(bet.metaLucro);
+
     setGames(bet.games);
+
     setCalculated(false);
+
     setResults(null);
+
     toast.success(`"${bet.name}" carregada!`);
+
   };
 
   const handleDeleteBet = (id) => {
+
     const updated = savedBets.filter((b) => b.id !== id);
+
     setSavedBets(updated);
+
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+
     toast.success("Aposta removida.");
+
   };
 
   const dayLabels = ["Dia 1 — Proteção imediata", "Dia 2 — Se mandante J1 venceu", "Dia 1 — Proteção antecipada"];
+
   const gameAuditKeys = ["j1", "j2", "j3"];
 
   return (
+
     <div className="min-h-screen bg-background dark">
+
       <div className="max-w-4xl mx-auto px-4 py-8 sm:py-12">
+
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-10">
+
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-4">
+
             <Shield className="w-4 h-4 text-primary" />
+
             <span className="text-xs font-semibold text-primary uppercase tracking-wider">Proteção em Cascata</span>
+
           </div>
+
           <h1 className="text-3xl sm:text-4xl font-display font-black text-foreground tracking-tight">Calculadora de Apostas</h1>
+
           <p className="text-muted-foreground mt-2 text-sm max-w-md mx-auto">
+
             Sistema avançado de gestão de apostas com proteção em cascata e auditoria completa.
+
           </p>
+
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
+
           className="rounded-2xl border border-border bg-card p-5 sm:p-6 mb-6">
+
           <div className="flex items-center gap-2 mb-5">
+
             <TrendingUp className="w-5 h-5 text-primary" />
+
             <h2 className="font-bold text-foreground">Aposta Principal</h2>
+
           </div>
+
           <GlobalInputs montante={montante} oddPrincipal={oddPrincipal} metaLucro={metaLucro}
+
             onChangeMontante={setMontante} onChangeOddPrincipal={setOddPrincipal} onChangeMetaLucro={setMetaLucro} />
+
         </motion.div>
 
         <div className="grid grid-cols-1 gap-5 mb-6">
+
           {games.map((game, i) => (
+
             <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 + i * 0.05 }}>
+
               <GameCard index={i} dayLabel={dayLabels[i]} game={game}
+
                 onChangeGame={(g) => updateGame(i, g)}
+
                 auditEmpate={results?.[gameAuditKeys[i]]?.empate}
+
                 auditVisitante={results?.[gameAuditKeys[i]]?.visitante}
+
                 calculated={calculated} />
+
             </motion.div>
+
           ))}
+
         </div>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}
+
           className="flex flex-col sm:flex-row gap-3 mb-6">
+
           <Button onClick={handleCalculate}
+
             className="flex-1 h-13 text-base font-bold bg-primary hover:bg-primary/90 text-primary-foreground gap-2 rounded-xl">
+
             <Calculator className="w-5 h-5" /> Calcular Proteções
+
           </Button>
+
           <Dialog>
+
             <DialogTrigger asChild>
+
               <Button variant="outline" className="flex-1 h-13 text-base font-bold gap-2 rounded-xl border-border">
+
                 <Save className="w-5 h-5" /> Salvar Aposta
+
               </Button>
+
             </DialogTrigger>
+
             <DialogContent className="bg-card border-border">
+
               <DialogHeader><DialogTitle className="text-foreground">Salvar Aposta</DialogTitle></DialogHeader>
+
               <Input placeholder="Nome da aposta (ex: Rodada 15)" value={saveName}
+
                 onChange={(e) => setSaveName(e.target.value)} className="bg-secondary/50 border-border" />
+
               <DialogFooter>
+
                 <DialogClose asChild><Button variant="outline">Cancelar</Button></DialogClose>
+
                 <DialogClose asChild><Button onClick={handleSave} className="bg-primary text-primary-foreground">Salvar</Button></DialogClose>
+
               </DialogFooter>
+
             </DialogContent>
+
           </Dialog>
+
         </motion.div>
 
         {calculated && results && (
+
           <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="mb-6">
+
             <OperationSummary results={results.summary} />
+
           </motion.div>
+
         )}
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
+
           className="rounded-2xl border border-border bg-card p-5 sm:p-6">
+
           <div className="flex items-center gap-2 mb-4">
+
             <BookmarkCheck className="w-5 h-5 text-primary" />
+
             <h2 className="font-bold text-foreground">Apostas Salvas</h2>
+
           </div>
+
           <SavedBets savedBets={savedBets} onLoad={handleLoadBet} onDelete={handleDeleteBet} />
+
         </motion.div>
 
         <div className="text-center mt-8 text-xs text-muted-foreground/50">
+
           Proteção em Cascata v1.0 — Sistema de gestão de apostas
+
         </div>
+
       </div>
+
     </div>
+
   );
+
 }
-📄lib/bettingCalculator.js—
+
+lib/bettingCalculator.js—
 
 export function calculateProtections({ montante, oddPrincipal, metaLucro, games }) {
+
   const f = (v) => parseFloat(v.toFixed(2));
+
   const custoMultipla = montante;
+
   const retornoMultipla = f(montante * oddPrincipal);
 
   const oddEmpateJ1 = games[0].oddEmpate || 1;
+
   const oddVisitanteJ1 = games[0].oddVisitante || 1;
+
   const oddEmpateJ2 = games[1].oddEmpate || 1;
+
   const oddVisitanteJ2 = games[1].oddVisitante || 1;
+
   const oddEmpateJ3 = games[2].oddEmpate || 1;
+
   const oddVisitanteJ3 = games[2].oddVisitante || 1;
 
   let c1 = 0, c2 = 0, c3 = 0;
 
   for (let iter = 0; iter < 20; iter++) {
+
     const custoProtegerJ1 = montante + c3;
+
     c1 = f((custoProtegerJ1 + metaLucro) / (oddEmpateJ1 - 1 || 1)) + f((custoProtegerJ1 + metaLucro) / (oddVisitanteJ1 - 1 || 1));
 
     const custoProtegerJ2 = montante + c1 + c3;
+
     c2 = f((custoProtegerJ2 + metaLucro) / (oddEmpateJ2 - 1 || 1)) + f((custoProtegerJ2 + metaLucro) / (oddVisitanteJ2 - 1 || 1));
 
     const custoProtegerJ3 = montante + c1 + c2;
+
     c3 = f((custoProtegerJ3 + metaLucro) / (oddEmpateJ3 - 1 || 1)) + f((custoProtegerJ3 + metaLucro) / (oddVisitanteJ3 - 1 || 1));
+
   }
 
   const makeAudit = (odd, custoProteger) => {
+
     const valor = odd > 1 ? f((custoProteger + metaLucro) / (odd - 1)) : 0;
+
     const retorno = f(valor * odd);
+
     return {
+
       custoAcumulado: custoProteger.toFixed(2),
+
       valorAposta: valor.toFixed(2),
+
       retornoBruto: retorno.toFixed(2),
+
       provaReal: f(retorno - custoProteger - valor).toFixed(2),
+
       metaLucro: metaLucro.toFixed(2),
+
     };
+
   };
 
   const custoTotal = f(montante + c1 + c2 + c3);
 
   return {
+
     summary: {
+
       custoMultipla: f(montante).toFixed(2),
+
       custoProtecaoJ1: c1.toFixed(2),
+
       custoProtecaoJ2: c2.toFixed(2),
+
       custoProtecaoJ3: c3.toFixed(2),
+
       custoTotal: custoTotal.toFixed(2),
+
       retornoMultipla: retornoMultipla.toFixed(2),
+
     },
+
     j1: { empate: makeAudit(oddEmpateJ1, montante + c3), visitante: makeAudit(oddVisitanteJ1, montante + c3) },
+
     j2: { empate: makeAudit(oddEmpateJ2, montante + c1 + c3), visitante: makeAudit(oddVisitanteJ2, montante + c1 + c3) },
+
     j3: { empate: makeAudit(oddEmpateJ3, montante + c1 + c2), visitante: makeAudit(oddVisitanteJ3, montante + c1 + c2) },
+
   };
+
 }
