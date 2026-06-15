@@ -37,8 +37,8 @@
 </div>
 
 <script>
+// Criação dos cards dinamicamente
 const div = document.getElementById("jogos");
-// Criando os cards dinamicamente
 const nomes = ["Jogo 3 (Base)", "Jogo 1 (Acumula J3)", "Jogo 2 (Acumula Tudo)"];
 for(let i=0; i<3; i++){
     div.innerHTML += `
@@ -50,55 +50,47 @@ for(let i=0; i<3; i++){
         </div>`;
 }
 
+// A FUNÇÃO DO BOTÃO
 function calcular() {
     let montante = parseFloat(document.getElementById("valor").value) || 0;
-    let oddP = parseFloat(document.getElementById("odd").value) || 0;
     let meta = parseFloat(document.getElementById("metaExtra").value) || 0;
 
-    // RESUMO GERAL
-    let retornoPrincipal = montante * oddP;
-    document.getElementById("resumoGeral").innerHTML = `
-        Retorno Bruto Múltipla: <span class="res-val">R$ ${retornoPrincipal.toFixed(2)}</span>
-    `;
-
-    // LÓGICA DE CASCATA
     // 1. JOGO 3 (BASE)
     let e3 = +document.getElementById("e3").value;
     let v3 = +document.getElementById("v3").value;
-    let custoJ3 = montante; // A base só conhece o montante inicialmente
-    let ae3 = (custoJ3 + meta) / (e3 - 1);
-    let av3 = (custoJ3 + meta) / (v3 - 1);
-    let totalJ3 = ae3 + av3;
-    renderAuditoria(3, ae3, av3, e3, v3, custoJ3 + totalJ3);
+    let aE3 = (montante + meta) / (e3 - 1);
+    let aV3 = (montante + meta) / (v3 - 1);
+    let custoJ3 = montante + aE3 + aV3;
+    renderAuditoria(3, aE3, aV3, e3, v3, custoJ3);
 
-    // 2. JOGO 1 (Acumula J3)
+    // 2. JOGO 1 (ACUMULA J3)
     let e1 = +document.getElementById("e1").value;
     let v1 = +document.getElementById("v1").value;
-    let custoJ1 = montante + totalJ3;
-    let ae1 = (custoJ1 + meta) / (e1 - 1);
-    let av1 = (custoJ1 + meta) / (v1 - 1);
-    let totalJ1 = ae1 + av1;
-    renderAuditoria(1, ae1, av1, e1, v1, custoJ1 + totalJ1);
+    let aE1 = (custoJ3 + meta) / (e1 - 1);
+    let aV1 = (custoJ3 + meta) / (v1 - 1);
+    let custoJ1 = custoJ3 + aE1 + aV1;
+    renderAuditoria(1, aE1, aV1, e1, v1, custoJ1);
 
-    // 3. JOGO 2 (Acumula Tudo)
+    // 3. JOGO 2 (ACUMULA TUDO)
     let e2 = +document.getElementById("e2").value;
     let v2 = +document.getElementById("v2").value;
-    let custoJ2 = montante + totalJ3 + totalJ1;
-    let ae2 = (custoJ2 + meta) / (e2 - 1);
-    let av2 = (custoJ2 + meta) / (v2 - 1);
-    let totalJ2 = ae2 + av2;
-    renderAuditoria(2, ae2, av2, e2, v2, custoJ2 + totalJ2);
+    let aE2 = (custoJ1 + meta) / (e2 - 1);
+    let aV2 = (custoJ1 + meta) / (v2 - 1);
+    let custoJ2 = custoJ1 + aE2 + aV2;
+    renderAuditoria(2, aE2, aV2, e2, v2, custoJ2);
 }
 
+// FUNÇÃO DE AUDITORIA
 function renderAuditoria(id, ae, av, e, v, custoAcumulado) {
-    let ret = ae * e; // Retorno do empate
+    let ret = ae * e; 
     let prova = ret - custoAcumulado;
     document.getElementById("r"+id).innerHTML = `
         Custo Acumulado: <span class="res-val">R$ ${custoAcumulado.toFixed(2)}</span><br>
         Aposta Empate: <b>R$ ${ae.toFixed(2)}</b> | Aposta Visitante: <b>R$ ${av.toFixed(2)}</b><br>
-        Prova Real (Retorno - Custo): <span class="prova-real">R$ ${prova.toFixed(2)}</span>
+        Prova Real: <span class="prova-real">R$ ${prova.toFixed(2)}</span>
     `;
 }
 </script>
+
 </body>
 </html>
