@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Apostas — Controle de Balanço Real</title>
+    <title>Calculadora de Apostas — Stakes Independentes</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -18,7 +18,7 @@
         
         <div class="text-center mb-8">
             <h1 class="text-3xl font-black text-white tracking-tight">Calculadora de Apostas</h1>
-            <p class="text-zinc-400 mt-1 text-xs">Ajuste fino de margens com cálculo de prejuízo e lucro real unificado.</p>
+            <p class="text-zinc-400 mt-1 text-xs">Proteções isoladas: Ajuste sem efeito gangorra nas odds.</p>
         </div>
 
         <div class="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-5 mb-5">
@@ -32,8 +32,8 @@
                     <input type="number" id="oddPrincipal" value="15.80" step="0.01" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-white font-bold focus:outline-none focus:border-emerald-500 text-lg" oninput="calcularOperacao()">
                 </div>
                 <div class="flex flex-col gap-1.5 justify-end">
-                    <button onclick="zerarMargens()" class="w-full bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold py-2.5 px-4 rounded-xl text-xs transition border border-zinc-700/50 flex items-center justify-center gap-2">
-                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i> Resetar Lucros Extras
+                    <button onclick="zerarAjustes()" class="w-full bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold py-2.5 px-4 rounded-xl text-xs transition border border-zinc-700/50 flex items-center justify-center gap-2">
+                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i> Limpar Ajustes Manuais
                     </button>
                 </div>
             </div>
@@ -59,15 +59,14 @@
                                 <strong class="text-md text-white font-mono" id="j1_apE_txt">R$ 0,00</strong>
                             </div>
                             <div class="flex gap-1">
-                                <button onclick="ajustarMargem('j1e', -2)" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-zinc-400">-2</button>
-                                <button onclick="ajustarMargem('j1e', 2)" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-amber-500">+2</button>
-                                <button onclick="ajustarMargem('j1e', 5)" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-amber-400">+5</button>
+                                <button onclick="modificarStake('j1e', -2)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-zinc-400">-2</button>
+                                <button onclick="modificarStake('j1e', 2)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-amber-500">+2</button>
+                                <button onclick="modificarStake('j1e', 5)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-amber-400">+5</button>
                             </div>
                         </div>
-                        <div class="grid grid-cols-3 text-[10px] font-mono text-zinc-400 mt-1 pt-1 border-t border-zinc-900">
-                            <span>Ret: <span class="text-zinc-200 font-bold" id="j1_retE_txt">R$ 0</span></span>
-                            <span class="text-center">Margem: <span id="j1e_mg_txt" class="text-amber-500 font-bold">R$ 0</span></span>
-                            <span class="text-right">Líquido: <span id="j1_prE_txt" class="font-bold">R$ 0</span></span>
+                        <div class="grid grid-cols-2 text-[11px] font-mono text-zinc-400 mt-1 pt-1 border-t border-zinc-900">
+                            <span>Retorno: <span class="text-zinc-200 font-bold" id="j1_retE_txt">R$ 0</span></span>
+                            <span class="text-right">Líquido Real: <span id="j1_prE_txt" class="font-bold">R$ 0</span></span>
                         </div>
                     </div>
 
@@ -85,15 +84,14 @@
                                 <strong class="text-md text-white font-mono" id="j1_apV_txt">R$ 0,00</strong>
                             </div>
                             <div class="flex gap-1">
-                                <button onclick="ajustarMargem('j1v', -2)" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-zinc-400">-2</button>
-                                <button onclick="ajustarMargem('j1v', 2)" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-amber-500">+2</button>
-                                <button onclick="ajustarMargem('j1v', 5)" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-amber-400">+5</button>
+                                <button onclick="modificarStake('j1v', -2)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-zinc-400">-2</button>
+                                <button onclick="modificarStake('j1v', 2)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-amber-500">+2</button>
+                                <button onclick="modificarStake('j1v', 5)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-amber-400">+5</button>
                             </div>
                         </div>
-                        <div class="grid grid-cols-3 text-[10px] font-mono text-zinc-400 mt-1 pt-1 border-t border-zinc-900">
-                            <span>Ret: <span class="text-zinc-200 font-bold" id="j1_retV_txt">R$ 0</span></span>
-                            <span class="text-center">Margem: <span id="j1v_mg_txt" class="text-amber-500 font-bold">R$ 0</span></span>
-                            <span class="text-right">Líquido: <span id="j1_prV_txt" class="font-bold">R$ 0</span></span>
+                        <div class="grid grid-cols-2 text-[11px] font-mono text-zinc-400 mt-1 pt-1 border-t border-zinc-900">
+                            <span>Retorno: <span class="text-zinc-200 font-bold" id="j1_retV_txt">R$ 0</span></span>
+                            <span class="text-right">Líquido Real: <span id="j1_prV_txt" class="font-bold">R$ 0</span></span>
                         </div>
                     </div>
 
@@ -118,15 +116,14 @@
                                 <strong class="text-md text-white font-mono" id="j2_apE_txt">R$ 0,00</strong>
                             </div>
                             <div class="flex gap-1">
-                                <button onclick="ajustarMargem('j2e', -2)" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-zinc-400">-2</button>
-                                <button onclick="ajustarMargem('j2e', 2)" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-blue-500">+2</button>
-                                <button onclick="ajustarMargem('j2e', 5)" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-blue-400">+5</button>
+                                <button onclick="modificarStake('j2e', -2)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-zinc-400">-2</button>
+                                <button onclick="modificarStake('j2e', 2)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-blue-500">+2</button>
+                                <button onclick="modificarStake('j2e', 5)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-blue-400">+5</button>
                             </div>
                         </div>
-                        <div class="grid grid-cols-3 text-[10px] font-mono text-zinc-400 mt-1 pt-1 border-t border-zinc-900">
-                            <span>Ret: <span class="text-zinc-200 font-bold" id="j2_retE_txt">R$ 0</span></span>
-                            <span class="text-center">Margem: <span id="j2e_mg_txt" class="text-blue-500 font-bold">R$ 0</span></span>
-                            <span class="text-right">Líquido: <span id="j2_prE_txt" class="font-bold">R$ 0</span></span>
+                        <div class="grid grid-cols-2 text-[11px] font-mono text-zinc-400 mt-1 pt-1 border-t border-zinc-900">
+                            <span>Retorno: <span class="text-zinc-200 font-bold" id="j2_retE_txt">R$ 0</span></span>
+                            <span class="text-right">Líquido Real: <span id="j2_prE_txt" class="font-bold">R$ 0</span></span>
                         </div>
                     </div>
 
@@ -144,15 +141,14 @@
                                 <strong class="text-md text-white font-mono" id="j2_apV_txt">R$ 0,00</strong>
                             </div>
                             <div class="flex gap-1">
-                                <button onclick="ajustarMargem('j2v', -2)" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-zinc-400">-2</button>
-                                <button onclick="ajustarMargem('j2v', 2)" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-blue-500">+2</button>
-                                <button onclick="ajustarMargem('j2v', 5)" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-blue-400">+5</button>
+                                <button onclick="modificarStake('j2v', -2)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-zinc-400">-2</button>
+                                <button onclick="modificarStake('j2v', 2)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-blue-500">+2</button>
+                                <button onclick="modificarStake('j2v', 5)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-blue-400">+5</button>
                             </div>
                         </div>
-                        <div class="grid grid-cols-3 text-[10px] font-mono text-zinc-400 mt-1 pt-1 border-t border-zinc-900">
-                            <span>Ret: <span class="text-zinc-200 font-bold" id="j2_retV_txt">R$ 0</span></span>
-                            <span class="text-center">Margem: <span id="j2v_mg_txt" class="text-blue-500 font-bold">R$ 0</span></span>
-                            <span class="text-right">Líquido: <span id="j2_prV_txt" class="font-bold">R$ 0</span></span>
+                        <div class="grid grid-cols-2 text-[11px] font-mono text-zinc-400 mt-1 pt-1 border-t border-zinc-900">
+                            <span>Retorno: <span class="text-zinc-200 font-bold" id="j2_retV_txt">R$ 0</span></span>
+                            <span class="text-right">Líquido Real: <span id="j2_prV_txt" class="font-bold">R$ 0</span></span>
                         </div>
                     </div>
 
@@ -177,15 +173,14 @@
                                 <strong class="text-md text-white font-mono" id="j3_apE_txt">R$ 0,00</strong>
                             </div>
                             <div class="flex gap-1">
-                                <button onclick="ajustarMargem('j3e', -2)" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-zinc-400">-2</button>
-                                <button onclick="ajustarMargem('j3e', 2)" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-rose-500">+2</button>
-                                <button onclick="ajustarMargem('j3e', 5)" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-rose-400">+5</button>
+                                <button onclick="modificarStake('j3e', -2)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-zinc-400">-2</button>
+                                <button onclick="modificarStake('j3e', 2)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-rose-500">+2</button>
+                                <button onclick="modificarStake('j3e', 5)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-rose-400">+5</button>
                             </div>
                         </div>
-                        <div class="grid grid-cols-3 text-[10px] font-mono text-zinc-400 mt-1 pt-1 border-t border-zinc-900">
-                            <span>Ret: <span class="text-zinc-200 font-bold" id="j3_retE_txt">R$ 0</span></span>
-                            <span class="text-center">Margem: <span id="j3e_mg_txt" class="text-rose-500 font-bold">R$ 0</span></span>
-                            <span class="text-right">Líquido: <span id="j3_prE_txt" class="font-bold">R$ 0</span></span>
+                        <div class="grid grid-cols-2 text-[11px] font-mono text-zinc-400 mt-1 pt-1 border-t border-zinc-900">
+                            <span>Retorno: <span class="text-zinc-200 font-bold" id="j3_retE_txt">R$ 0</span></span>
+                            <span class="text-right">Líquido Real: <span id="j3_prE_txt" class="font-bold">R$ 0</span></span>
                         </div>
                     </div>
 
@@ -203,15 +198,14 @@
                                 <strong class="text-md text-white font-mono" id="j3_apV_txt">R$ 0,00</strong>
                             </div>
                             <div class="flex gap-1">
-                                <button onclick="ajustarMargem('j3v', -2)" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-zinc-400">-2</button>
-                                <button onclick="ajustarMargem('j3v', 2)" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-rose-500">+2</button>
-                                <button onclick="ajustarMargem('j3v', 5)" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-rose-400">+5</button>
+                                <button onclick="modificarStake('j3v', -2)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-zinc-400">-2</button>
+                                <button onclick="modificarStake('j3v', 2)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-rose-500">+2</button>
+                                <button onclick="modificarStake('j3v', 5)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-rose-400">+5</button>
                             </div>
                         </div>
-                        <div class="grid grid-cols-3 text-[10px] font-mono text-zinc-400 mt-1 pt-1 border-t border-zinc-900">
-                            <span>Ret: <span class="text-zinc-200 font-bold" id="j3_retV_txt">R$ 0</span></span>
-                            <span class="text-center">Margem: <span id="j3v_mg_txt" class="text-rose-500 font-bold">R$ 0</span></span>
-                            <span class="text-right">Líquido: <span id="j3_prV_txt" class="font-bold">R$ 0</span></span>
+                        <div class="grid grid-cols-2 text-[11px] font-mono text-zinc-400 mt-1 pt-1 border-t border-zinc-900">
+                            <span>Retorno: <span class="text-zinc-200 font-bold" id="j3_retV_txt">R$ 0</span></span>
+                            <span class="text-right">Líquido Real: <span id="j3_prV_txt" class="font-bold">R$ 0</span></span>
                         </div>
                     </div>
 
@@ -253,8 +247,8 @@
     <script>
         lucide.createIcons();
 
-        // Armazena as margens manuais injetadas por cada mercado
-        const margens = { j1e: 0, j1v: 0, j2e: 0, j2v: 0, j3e: 0, j3v: 0 };
+        // Agora guardamos os AJUSTES MANUAIS DIRETO NA STAKE para evitar o efeito gangorra circular
+        const ajustesStakes = { j1e: 0, j1v: 0, j2e: 0, j2v: 0, j3e: 0, j3v: 0 };
 
         window.addEventListener('DOMContentLoaded', () => {
             calcularOperacao();
@@ -263,16 +257,14 @@
         function f(v) { return parseFloat(v.toFixed(2)); }
         function fmt(v) { return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); }
 
-        function ajustarMargem(id, valor) {
-            margens[id] = Math.max(0, margens[id] + valor);
-            document.getElementById(`${id}_mg_txt`).innerText = `R$ ${margens[id]}`;
+        function modificarStake(id, valor) {
+            ajustesStakes[id] += valor;
             calcularOperacao();
         }
 
-        function zerarMargens() {
-            for (let k in margens) {
-                margens[k] = 0;
-                document.getElementById(`${k}_mg_txt`).innerText = `R$ 0`;
+        function zerarAjustes() {
+            for (let k in ajustesStakes) {
+                ajustesStakes[k] = 0;
             }
             calcularOperacao();
         }
@@ -288,37 +280,23 @@
             const o3e = parseFloat(document.getElementById('j3_oddE').value) || 1;
             const o3v = parseFloat(document.getElementById('j3_oddV').value) || 1;
 
-            // 1. CÁLCULO BASE POR PROPORÇÃO DE INVERSOS (ARBITRAGEM PURE BREAK-EVEN)
-            const inv1e = 1 / o1e; const inv1v = 1 / o1v;
-            const inv2e = 1 / o2e; const inv2v = 1 / o2v;
-            const inv3e = 1 / o3e; const inv3v = 1 / o3v;
+            // 1. BASE DE STAKE INICIAL ISOLADA (Cada proteção foca em cobrir apenas o montante da Principal inicialmente)
+            // Isso previne que odds gigantescas joguem os valores das caixinhas para centavos e travem o script
+            let ap1e = Math.max(0, f((stakePrincipal / o1e) + ajustesStakes.j1e));
+            let ap1v = Math.max(0, f((stakePrincipal / o1v) + ajustesStakes.j1v));
+            let ap2e = Math.max(0, f((stakePrincipal / o2e) + ajustesStakes.j2e));
+            let ap2v = Math.max(0, f((stakePrincipal / o2v) + ajustesStakes.j2v));
+            let ap3e = Math.max(0, f((stakePrincipal / o3e) + ajustesStakes.j3e));
+            let ap3v = Math.max(0, f((stakePrincipal / o3v) + ajustesStakes.j3v));
 
-            const somaInversos = inv1e + inv1v + inv2e + inv2v + inv3e + inv3v;
-            const divisor = 1 - somaInversos;
-
-            // Encontra o custo total estimado unificado para atingir break-even (+R$ 0.01)
-            let custoEstimado = (stakePrincipal + 0.05) / (divisor > 0.01 ? divisor : 0.1);
-
-            // Adiciona proporcionalmente as margens de lucro adicionadas pelo usuário nos botões largos
-            const somaMargens = margens.j1e + margens.j1v + margens.j2e + margens.j2v + margens.j3e + margens.j3v;
-            custoEstimado += (somaMargens * 0.35); 
-
-            // Determina as Stakes de Proteção iniciais
-            let ap1e = f((custoEstimado + margens.j1e) * inv1e);
-            let ap1v = f((custoEstimado + margens.j1v) * inv1v);
-            let ap2e = f((custoEstimado + margens.j2e) * inv2e);
-            let ap2v = f((custoEstimado + margens.j2v) * inv2v);
-            let ap3e = f((custoEstimado + margens.j3e) * inv3e);
-            let ap3v = f((custoEstimado + margens.j3v) * inv3v);
-
-            // Calcula o Custo Real Absoluto final (Soma real do caixa despendido)
+            // Custo Total Absoluto (Sem loops ou divisões cruzadas de inversos)
             const totalProtecoes = f(ap1e + ap1v + ap2e + ap2v + ap3e + ap3v);
             const custoTotalReal = f(stakePrincipal + totalProtecoes);
 
-            // 2. FUNÇÃO MATEMÁTICA DE ATUALIZAÇÃO E RENDERIZAÇÃO REAL DE LÍQUIDO (Retorno - Custo Total)
-            const atualizarMercado = (ap, odd, elAp, elRet, elPr) => {
+            // 2. RENDERIZADOR ISOLADO DO LÍQUIDO REAL (Retorno do Bilhete - Custo Geral da Operação)
+            const renderLinha = (ap, odd, elAp, elRet, elPr) => {
                 const ret = f(ap * odd);
-                const liqReal = f(ret - custoTotalReal); // Conta real solicitada
+                const liqReal = f(ret - custoTotalReal);
 
                 document.getElementById(elAp).innerText = fmt(ap);
                 document.getElementById(elRet).innerText = fmt(ret);
@@ -326,7 +304,6 @@
                 const elLiquido = document.getElementById(elPr);
                 elLiquido.innerText = fmt(liqReal);
                 
-                // Formatação condicional: Verde se cobriu o custo total, Vermelho se der prejuízo real
                 if (liqReal >= 0.01) {
                     elLiquido.className = "text-emerald-400 font-bold";
                 } else {
@@ -334,13 +311,12 @@
                 }
             };
 
-            // Processa individualmente as 6 frentes de proteção do sistema
-            atualizarMercado(ap1e, o1e, 'j1_apE_txt', 'j1_retE_txt', 'j1_prE_txt');
-            atualizarMercado(ap1v, o1v, 'j1_apV_txt', 'j1_retV_txt', 'j1_prV_txt');
-            atualizarMercado(ap2e, o2e, 'j2_apE_txt', 'j2_retE_txt', 'j2_prE_txt');
-            atualizarMercado(ap2v, o2v, 'j2_apV_txt', 'j2_retV_txt', 'j2_prV_txt');
-            atualizarMercado(ap3e, o3e, 'j3_apE_txt', 'j3_retE_txt', 'j3_prE_txt');
-            atualizarMercado(ap3v, o3v, 'j3_apV_txt', 'j3_retV_txt', 'j3_prV_txt');
+            renderLinha(ap1e, o1e, 'j1_apE_txt', 'j1_retE_txt', 'j1_prE_txt');
+            renderLinha(ap1v, o1v, 'j1_apV_txt', 'j1_retV_txt', 'j1_prV_txt');
+            renderLinha(ap2e, o2e, 'j2_apE_txt', 'j2_retE_txt', 'j2_prE_txt');
+            renderLinha(ap2v, o2v, 'j2_apV_txt', 'j2_retV_txt', 'j2_prV_txt');
+            renderLinha(ap3e, o3e, 'j3_apE_txt', 'j3_retE_txt', 'j3_prE_txt');
+            renderLinha(ap3v, o3v, 'j3_apV_txt', 'j3_retV_txt', 'j3_prV_txt');
 
             // 3. RETORNOS DO BLOCO DE RESUMO FINAL DO SISTEMA
             const retPrincipal = f(stakePrincipal * oddPrincipal);
