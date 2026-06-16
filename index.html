@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Apostas — Amortização Controlada</title>
+    <title>Calculadora de Apostas — Controle de Balanço Real</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -17,12 +17,8 @@
     <div class="max-w-4xl mx-auto px-4 py-6 sm:py-10">
         
         <div class="text-center mb-8">
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 mb-3">
-                <i data-lucide="shield" class="w-4 h-4 text-emerald-400"></i>
-                <span class="text-xs font-semibold text-emerald-400 uppercase tracking-wider">Algoritmo de Amortização Estável — Sem Inflação</span>
-            </div>
             <h1 class="text-3xl font-black text-white tracking-tight">Calculadora de Apostas</h1>
-            <p class="text-zinc-400 mt-1 text-xs">Stakes iniciais baixas. As proteções apenas resguardam o capital aplicado.</p>
+            <p class="text-zinc-400 mt-1 text-xs">Ajuste fino de margens com cálculo de prejuízo e lucro real unificado.</p>
         </div>
 
         <div class="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-5 mb-5">
@@ -46,173 +42,179 @@
         <div class="grid grid-cols-1 gap-5 mb-6">
             
             <div class="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-4 relative overflow-hidden before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-amber-500">
-                <div class="mb-3">
-                    <span class="text-[10px] font-bold text-amber-500 uppercase tracking-wider block">Jogo 1</span>
-                    <h3 class="text-md font-bold text-white">Proteções Simples (Secas)</h3>
-                </div>
-
+                <h3 class="text-sm font-bold text-zinc-400 uppercase tracking-wider mb-3">Jogo 1 — Proteções Simples (Secas)</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800">
+                    
+                    <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 flex flex-col justify-between">
                         <div class="flex justify-between items-center mb-2">
-                            <span class="text-xs font-semibold text-zinc-300">Bilhete 6: Empate J1</span>
+                            <span class="text-xs font-bold text-zinc-200">Bilhete 6: Empate J1</span>
                             <div class="flex items-center gap-1">
-                                <span class="text-[10px] text-zinc-500 uppercase font-mono mr-1">Odd:</span>
+                                <span class="text-[10px] text-zinc-500 font-mono">ODD:</span>
                                 <input type="number" id="j1_oddE" value="3.30" step="0.01" class="w-16 bg-zinc-900 border border-zinc-700 text-center rounded px-1 py-0.5 text-xs text-white font-bold" oninput="calcularOperacao()">
                             </div>
                         </div>
-                        <div class="flex items-center justify-between gap-2 bg-zinc-900/40 p-2 rounded-lg border border-zinc-800/60">
+                        <div class="flex items-center justify-between bg-zinc-900/50 p-2 rounded-lg border border-zinc-800/80 my-1">
                             <div>
-                                <span class="text-[10px] text-zinc-500 block uppercase">Stake</span>
+                                <span class="text-[9px] text-zinc-500 uppercase block">Stake</span>
                                 <strong class="text-md text-white font-mono" id="j1_apE_txt">R$ 0,00</strong>
                             </div>
                             <div class="flex gap-1">
-                                <button onclick="ajustarMargem('j1e', -2)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded-lg text-xs font-bold text-zinc-400">-2</button>
-                                <button onclick="ajustarMargem('j1e', 2)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded-lg text-xs font-bold text-amber-500">+2</button>
+                                <button onclick="ajustarMargem('j1e', -2)" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-zinc-400">-2</button>
+                                <button onclick="ajustarMargem('j1e', 2)" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-amber-500">+2</button>
+                                <button onclick="ajustarMargem('j1e', 5)" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-amber-400">+5</button>
                             </div>
                         </div>
-                        <div class="flex justify-between text-[11px] mt-2 text-zinc-400 font-mono">
-                            <span>Retorno: <span class="text-emerald-400" id="j1_retE_txt">R$ 0,00</span></span>
-                            <span>Líquido: <span id="j1_prE_txt" class="font-bold">R$ 0,00</span></span>
+                        <div class="grid grid-cols-3 text-[10px] font-mono text-zinc-400 mt-1 pt-1 border-t border-zinc-900">
+                            <span>Ret: <span class="text-zinc-200 font-bold" id="j1_retE_txt">R$ 0</span></span>
+                            <span class="text-center">Margem: <span id="j1e_mg_txt" class="text-amber-500 font-bold">R$ 0</span></span>
+                            <span class="text-right">Líquido: <span id="j1_prE_txt" class="font-bold">R$ 0</span></span>
                         </div>
                     </div>
 
-                    <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800">
+                    <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 flex flex-col justify-between">
                         <div class="flex justify-between items-center mb-2">
-                            <span class="text-xs font-semibold text-zinc-300">Bilhete 7: Visitante J1</span>
+                            <span class="text-xs font-bold text-zinc-200">Bilhete 7: Visitante J1</span>
                             <div class="flex items-center gap-1">
-                                <span class="text-[10px] text-zinc-500 uppercase font-mono mr-1">Odd:</span>
+                                <span class="text-[10px] text-zinc-500 font-mono">ODD:</span>
                                 <input type="number" id="j1_oddV" value="2.77" step="0.01" class="w-16 bg-zinc-900 border border-zinc-700 text-center rounded px-1 py-0.5 text-xs text-white font-bold" oninput="calcularOperacao()">
                             </div>
                         </div>
-                        <div class="flex items-center justify-between gap-2 bg-zinc-900/40 p-2 rounded-lg border border-zinc-800/60">
+                        <div class="flex items-center justify-between bg-zinc-900/50 p-2 rounded-lg border border-zinc-800/80 my-1">
                             <div>
-                                <span class="text-[10px] text-zinc-500 block uppercase">Stake</span>
+                                <span class="text-[9px] text-zinc-500 uppercase block">Stake</span>
                                 <strong class="text-md text-white font-mono" id="j1_apV_txt">R$ 0,00</strong>
                             </div>
                             <div class="flex gap-1">
-                                <button onclick="ajustarMargem('j1v', -2)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded-lg text-xs font-bold text-zinc-400">-2</button>
-                                <button onclick="ajustarMargem('j1v', 2)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded-lg text-xs font-bold text-amber-500">+2</button>
+                                <button onclick="ajustarMargem('j1v', -2)" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-zinc-400">-2</button>
+                                <button onclick="ajustarMargem('j1v', 2)" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-amber-500">+2</button>
+                                <button onclick="ajustarMargem('j1v', 5)" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-amber-400">+5</button>
                             </div>
                         </div>
-                        <div class="flex justify-between text-[11px] mt-2 text-zinc-400 font-mono">
-                            <span>Retorno: <span class="text-emerald-400" id="j1_retV_txt">R$ 0,00</span></span>
-                            <span>Líquido: <span id="j1_prV_txt" class="font-bold">R$ 0,00</span></span>
+                        <div class="grid grid-cols-3 text-[10px] font-mono text-zinc-400 mt-1 pt-1 border-t border-zinc-900">
+                            <span>Ret: <span class="text-zinc-200 font-bold" id="j1_retV_txt">R$ 0</span></span>
+                            <span class="text-center">Margem: <span id="j1v_mg_txt" class="text-amber-500 font-bold">R$ 0</span></span>
+                            <span class="text-right">Líquido: <span id="j1_prV_txt" class="font-bold">R$ 0</span></span>
                         </div>
                     </div>
+
                 </div>
             </div>
 
             <div class="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-4 relative overflow-hidden before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-blue-500">
-                <div class="mb-3">
-                    <span class="text-[10px] font-bold text-blue-500 uppercase tracking-wider block">Jogo 2</span>
-                    <h3 class="text-md font-bold text-white">Proteções em Duplas (Odds Prontas)</h3>
-                </div>
-
+                <h3 class="text-sm font-bold text-zinc-400 uppercase tracking-wider mb-3">Jogo 2 — Proteções em Duplas (Odds Prontas)</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800">
+                    
+                    <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 flex flex-col justify-between">
                         <div class="flex justify-between items-center mb-2">
-                            <span class="text-xs font-semibold text-zinc-300">Bilhete 4: Dupla Empate 2</span>
+                            <span class="text-xs font-bold text-zinc-200">Bilhete 4: Dupla Empate 2</span>
                             <div class="flex items-center gap-1">
-                                <span class="text-[10px] text-zinc-500 uppercase font-mono mr-1">Odd:</span>
+                                <span class="text-[10px] text-zinc-500 font-mono">ODD:</span>
                                 <input type="number" id="j2_oddE" value="8.35" step="0.01" class="w-16 bg-zinc-900 border border-zinc-700 text-center rounded px-1 py-0.5 text-xs text-white font-bold" oninput="calcularOperacao()">
                             </div>
                         </div>
-                        <div class="flex items-center justify-between gap-2 bg-zinc-900/40 p-2 rounded-lg border border-zinc-800/60">
+                        <div class="flex items-center justify-between bg-zinc-900/50 p-2 rounded-lg border border-zinc-800/80 my-1">
                             <div>
-                                <span class="text-[10px] text-zinc-500 block uppercase">Stake</span>
+                                <span class="text-[9px] text-zinc-500 uppercase block">Stake</span>
                                 <strong class="text-md text-white font-mono" id="j2_apE_txt">R$ 0,00</strong>
                             </div>
                             <div class="flex gap-1">
-                                <button onclick="ajustarMargem('j2e', -2)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded-lg text-xs font-bold text-zinc-400">-2</button>
-                                <button onclick="ajustarMargem('j2e', 2)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded-lg text-xs font-bold text-blue-500">+2</button>
+                                <button onclick="ajustarMargem('j2e', -2)" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-zinc-400">-2</button>
+                                <button onclick="ajustarMargem('j2e', 2)" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-blue-500">+2</button>
+                                <button onclick="ajustarMargem('j2e', 5)" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-blue-400">+5</button>
                             </div>
                         </div>
-                        <div class="flex justify-between text-[11px] mt-2 text-zinc-400 font-mono">
-                            <span>Retorno: <span class="text-emerald-400" id="j2_retE_txt">R$ 0,00</span></span>
-                            <span>Líquido: <span id="j2_prE_txt" class="font-bold">R$ 0,00</span></span>
+                        <div class="grid grid-cols-3 text-[10px] font-mono text-zinc-400 mt-1 pt-1 border-t border-zinc-900">
+                            <span>Ret: <span class="text-zinc-200 font-bold" id="j2_retE_txt">R$ 0</span></span>
+                            <span class="text-center">Margem: <span id="j2e_mg_txt" class="text-blue-500 font-bold">R$ 0</span></span>
+                            <span class="text-right">Líquido: <span id="j2_prE_txt" class="font-bold">R$ 0</span></span>
                         </div>
                     </div>
 
-                    <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800">
+                    <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 flex flex-col justify-between">
                         <div class="flex justify-between items-center mb-2">
-                            <span class="text-xs font-semibold text-zinc-300">Bilhete 5: Dupla Visitante 2</span>
+                            <span class="text-xs font-bold text-zinc-200">Bilhete 5: Dupla Visitante 2</span>
                             <div class="flex items-center gap-1">
-                                <span class="text-[10px] text-zinc-500 uppercase font-mono mr-1">Odd:</span>
+                                <span class="text-[10px] text-zinc-500 font-mono">ODD:</span>
                                 <input type="number" id="j2_oddV" value="7.06" step="0.01" class="w-16 bg-zinc-900 border border-zinc-700 text-center rounded px-1 py-0.5 text-xs text-white font-bold" oninput="calcularOperacao()">
                             </div>
                         </div>
-                        <div class="flex items-center justify-between gap-2 bg-zinc-900/40 p-2 rounded-lg border border-zinc-800/60">
+                        <div class="flex items-center justify-between bg-zinc-900/50 p-2 rounded-lg border border-zinc-800/80 my-1">
                             <div>
-                                <span class="text-[10px] text-zinc-500 block uppercase">Stake</span>
+                                <span class="text-[9px] text-zinc-500 uppercase block">Stake</span>
                                 <strong class="text-md text-white font-mono" id="j2_apV_txt">R$ 0,00</strong>
                             </div>
                             <div class="flex gap-1">
-                                <button onclick="ajustarMargem('j2v', -2)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded-lg text-xs font-bold text-zinc-400">-2</button>
-                                <button onclick="ajustarMargem('j2v', 2)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded-lg text-xs font-bold text-blue-500">+2</button>
+                                <button onclick="ajustarMargem('j2v', -2)" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-zinc-400">-2</button>
+                                <button onclick="ajustarMargem('j2v', 2)" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-blue-500">+2</button>
+                                <button onclick="ajustarMargem('j2v', 5)" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-blue-400">+5</button>
                             </div>
                         </div>
-                        <div class="flex justify-between text-[11px] mt-2 text-zinc-400 font-mono">
-                            <span>Retorno: <span class="text-emerald-400" id="j2_retV_txt">R$ 0,00</span></span>
-                            <span>Líquido: <span id="j2_prV_txt" class="font-bold">R$ 0,00</span></span>
+                        <div class="grid grid-cols-3 text-[10px] font-mono text-zinc-400 mt-1 pt-1 border-t border-zinc-900">
+                            <span>Ret: <span class="text-zinc-200 font-bold" id="j2_retV_txt">R$ 0</span></span>
+                            <span class="text-center">Margem: <span id="j2v_mg_txt" class="text-blue-500 font-bold">R$ 0</span></span>
+                            <span class="text-right">Líquido: <span id="j2_prV_txt" class="font-bold">R$ 0</span></span>
                         </div>
                     </div>
+
                 </div>
             </div>
 
             <div class="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-4 relative overflow-hidden before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-rose-500">
-                <div class="mb-3">
-                    <span class="text-[10px] font-bold text-rose-500 uppercase tracking-wider block">Jogo 3</span>
-                    <h3 class="text-md font-bold text-white">Proteções em Triplas (Odds Prontas)</h3>
-                </div>
-
+                <h3 class="text-sm font-bold text-zinc-400 uppercase tracking-wider mb-3">Jogo 3 — Proteções em Triplas (Odds Prontas)</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800">
+                    
+                    <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 flex flex-col justify-between">
                         <div class="flex justify-between items-center mb-2">
-                            <span class="text-xs font-semibold text-zinc-300">Bilhete 2: Tripla Empate 3</span>
+                            <span class="text-xs font-bold text-zinc-200">Bilhete 2: Tripla Empate 3</span>
                             <div class="flex items-center gap-1">
-                                <span class="text-[10px] text-zinc-500 uppercase font-mono mr-1">Odd:</span>
+                                <span class="text-[10px] text-zinc-500 font-mono">ODD:</span>
                                 <input type="number" id="j3_oddE" value="21.45" step="0.01" class="w-16 bg-zinc-900 border border-zinc-700 text-center rounded px-1 py-0.5 text-xs text-white font-bold" oninput="calcularOperacao()">
                             </div>
                         </div>
-                        <div class="flex items-center justify-between gap-2 bg-zinc-900/40 p-2 rounded-lg border border-zinc-800/60">
+                        <div class="flex items-center justify-between bg-zinc-900/50 p-2 rounded-lg border border-zinc-800/80 my-1">
                             <div>
-                                <span class="text-[10px] text-zinc-500 block uppercase">Stake</span>
+                                <span class="text-[9px] text-zinc-500 uppercase block">Stake</span>
                                 <strong class="text-md text-white font-mono" id="j3_apE_txt">R$ 0,00</strong>
                             </div>
                             <div class="flex gap-1">
-                                <button onclick="ajustarMargem('j3e', -2)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded-lg text-xs font-bold text-zinc-400">-2</button>
-                                <button onclick="ajustarMargem('j3e', 2)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded-lg text-xs font-bold text-rose-500">+2</button>
+                                <button onclick="ajustarMargem('j3e', -2)" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-zinc-400">-2</button>
+                                <button onclick="ajustarMargem('j3e', 2)" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-rose-500">+2</button>
+                                <button onclick="ajustarMargem('j3e', 5)" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-rose-400">+5</button>
                             </div>
                         </div>
-                        <div class="flex justify-between text-[11px] mt-2 text-zinc-400 font-mono">
-                            <span>Retorno: <span class="text-emerald-400" id="j3_retE_txt">R$ 0,00</span></span>
-                            <span>Líquido: <span id="j3_prE_txt" class="font-bold">R$ 0,00</span></span>
+                        <div class="grid grid-cols-3 text-[10px] font-mono text-zinc-400 mt-1 pt-1 border-t border-zinc-900">
+                            <span>Ret: <span class="text-zinc-200 font-bold" id="j3_retE_txt">R$ 0</span></span>
+                            <span class="text-center">Margem: <span id="j3e_mg_txt" class="text-rose-500 font-bold">R$ 0</span></span>
+                            <span class="text-right">Líquido: <span id="j3_prE_txt" class="font-bold">R$ 0</span></span>
                         </div>
                     </div>
 
-                    <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800">
+                    <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 flex flex-col justify-between">
                         <div class="flex justify-between items-center mb-2">
-                            <span class="text-xs font-semibold text-zinc-300">Bilhete 3: Tripla Visitante 3</span>
+                            <span class="text-xs font-bold text-zinc-200">Bilhete 3: Tripla Visitante 3</span>
                             <div class="flex items-center gap-1">
-                                <span class="text-[10px] text-zinc-500 uppercase font-mono mr-1">Odd:</span>
+                                <span class="text-[10px] text-zinc-500 font-mono">ODD:</span>
                                 <input type="number" id="j3_oddV" value="22.81" step="0.01" class="w-16 bg-zinc-900 border border-zinc-700 text-center rounded px-1 py-0.5 text-xs text-white font-bold" oninput="calcularOperacao()">
                             </div>
                         </div>
-                        <div class="flex items-center justify-between gap-2 bg-zinc-900/40 p-2 rounded-lg border border-zinc-800/60">
+                        <div class="flex items-center justify-between bg-zinc-900/50 p-2 rounded-lg border border-zinc-800/80 my-1">
                             <div>
-                                <span class="text-[10px] text-zinc-500 block uppercase">Stake</span>
+                                <span class="text-[9px] text-zinc-500 uppercase block">Stake</span>
                                 <strong class="text-md text-white font-mono" id="j3_apV_txt">R$ 0,00</strong>
                             </div>
                             <div class="flex gap-1">
-                                <button onclick="ajustarMargem('j3v', -2)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded-lg text-xs font-bold text-zinc-400">-2</button>
-                                <button onclick="ajustarMargem('j3v', 2)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded-lg text-xs font-bold text-rose-500">+2</button>
+                                <button onclick="ajustarMargem('j3v', -2)" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-zinc-400">-2</button>
+                                <button onclick="ajustarMargem('j3v', 2)" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-rose-500">+2</button>
+                                <button onclick="ajustarMargem('j3v', 5)" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-rose-400">+5</button>
                             </div>
                         </div>
-                        <div class="flex justify-between text-[11px] mt-2 text-zinc-400 font-mono">
-                            <span>Retorno: <span class="text-emerald-400" id="j3_retV_txt">R$ 0,00</span></span>
-                            <span>Líquido: <span id="j3_prV_txt" class="font-bold">R$ 0,00</span></span>
+                        <div class="grid grid-cols-3 text-[10px] font-mono text-zinc-400 mt-1 pt-1 border-t border-zinc-900">
+                            <span>Ret: <span class="text-zinc-200 font-bold" id="j3_retV_txt">R$ 0</span></span>
+                            <span class="text-center">Margem: <span id="j3v_mg_txt" class="text-rose-500 font-bold">R$ 0</span></span>
+                            <span class="text-right">Líquido: <span id="j3_prV_txt" class="font-bold">R$ 0</span></span>
                         </div>
                     </div>
+
                 </div>
             </div>
 
@@ -251,6 +253,7 @@
     <script>
         lucide.createIcons();
 
+        // Armazena as margens manuais injetadas por cada mercado
         const margens = { j1e: 0, j1v: 0, j2e: 0, j2v: 0, j3e: 0, j3v: 0 };
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -262,17 +265,21 @@
 
         function ajustarMargem(id, valor) {
             margens[id] = Math.max(0, margens[id] + valor);
+            document.getElementById(`${id}_mg_txt`).innerText = `R$ ${margens[id]}`;
             calcularOperacao();
         }
 
         function zerarMargens() {
-            for (let k in margens) margens[k] = 0;
+            for (let k in margens) {
+                margens[k] = 0;
+                document.getElementById(`${k}_mg_txt`).innerText = `R$ 0`;
+            }
             calcularOperacao();
         }
 
         function calcularOperacao() {
-            const M = parseFloat(document.getElementById('montante').value) || 0;
-            const oddP = parseFloat(document.getElementById('oddPrincipal').value) || 1;
+            const stakePrincipal = parseFloat(document.getElementById('montante').value) || 0;
+            const oddPrincipal = parseFloat(document.getElementById('oddPrincipal').value) || 1;
 
             const o1e = parseFloat(document.getElementById('j1_oddE').value) || 1;
             const o1v = parseFloat(document.getElementById('j1_oddV').value) || 1;
@@ -281,50 +288,65 @@
             const o3e = parseFloat(document.getElementById('j3_oddE').value) || 1;
             const o3v = parseFloat(document.getElementById('j3_oddV').value) || 1;
 
-            // NOVO MOTOR CORRIGIDO: Proteção baseada estritamente no Montante Aplicado (M)
-            // Cada par de proteção calcula sua stake para retornar exatamente o valor de M + lucro extra.
-            let ap3e = f((M + margens.j3e) / o3e);
-            let ap3v = f((M + margens.j3v) / o3v);
-            let custoJ3 = f(ap3e + ap3v);
+            // 1. CÁLCULO BASE POR PROPORÇÃO DE INVERSOS (ARBITRAGEM PURE BREAK-EVEN)
+            const inv1e = 1 / o1e; const inv1v = 1 / o1v;
+            const inv2e = 1 / o2e; const inv2v = 1 / o2v;
+            const inv3e = 1 / o3e; const inv3v = 1 / o3v;
 
-            let ap2e = f((M + margens.j2e) / o2e);
-            let ap2v = f((M + margens.j2v) / o2v);
-            let custoJ2 = f(ap2e + ap2v);
+            const somaInversos = inv1e + inv1v + inv2e + inv2v + inv3e + inv3v;
+            const divisor = 1 - somaInversos;
 
-            let ap1e = f((M + margens.j1e) / o1e);
-            let ap1v = f((M + margens.j1v) / o1v);
-            let custoJ1 = f(ap1e + ap1v);
+            // Encontra o custo total estimado unificado para atingir break-even (+R$ 0.01)
+            let custoEstimado = (stakePrincipal + 0.05) / (divisor > 0.01 ? divisor : 0.1);
 
-            // Soma correta e limpa de todas as saídas
-            const totalProtecoes = f(custoJ1 + custoJ2 + custoJ3);
-            const custoTotalReal = f(M + totalProtecoes);
+            // Adiciona proporcionalmente as margens de lucro adicionadas pelo usuário nos botões largos
+            const somaMargens = margens.j1e + margens.j1v + margens.j2e + margens.j2v + margens.j3e + margens.j3v;
+            custoEstimado += (somaMargens * 0.35); 
 
-            // Renderizador atualizando dinamicamente cada elemento na tela
-            const renderMercado = (ap, odd, metaLucro, elAp, elRet, elPr) => {
-                let retorno = f(ap * odd);
-                // O retorno da proteção garante o retorno do Montante Aplicado (M) mais a meta manual escolhida por você
-                let liquido = f(retorno - M);
+            // Determina as Stakes de Proteção iniciais
+            let ap1e = f((custoEstimado + margens.j1e) * inv1e);
+            let ap1v = f((custoEstimado + margens.j1v) * inv1v);
+            let ap2e = f((custoEstimado + margens.j2e) * inv2e);
+            let ap2v = f((custoEstimado + margens.j2v) * inv2v);
+            let ap3e = f((custoEstimado + margens.j3e) * inv3e);
+            let ap3v = f((custoEstimado + margens.j3v) * inv3v);
+
+            // Calcula o Custo Real Absoluto final (Soma real do caixa despendido)
+            const totalProtecoes = f(ap1e + ap1v + ap2e + ap2v + ap3e + ap3v);
+            const custoTotalReal = f(stakePrincipal + totalProtecoes);
+
+            // 2. FUNÇÃO MATEMÁTICA DE ATUALIZAÇÃO E RENDERIZAÇÃO REAL DE LÍQUIDO (Retorno - Custo Total)
+            const atualizarMercado = (ap, odd, elAp, elRet, elPr) => {
+                const ret = f(ap * odd);
+                const liqReal = f(ret - custoTotalReal); // Conta real solicitada
 
                 document.getElementById(elAp).innerText = fmt(ap);
-                document.getElementById(elRet).innerText = fmt(retorno);
+                document.getElementById(elRet).innerText = fmt(ret);
                 
-                const compLiq = document.getElementById(elPr);
-                compLiq.innerText = fmt(liquido);
-                compLiq.className = liquido >= -0.05 ? "text-emerald-400 font-bold" : "text-red-400 font-bold";
+                const elLiquido = document.getElementById(elPr);
+                elLiquido.innerText = fmt(liqReal);
+                
+                // Formatação condicional: Verde se cobriu o custo total, Vermelho se der prejuízo real
+                if (liqReal >= 0.01) {
+                    elLiquido.className = "text-emerald-400 font-bold";
+                } else {
+                    elLiquido.className = "text-red-400 font-bold";
+                }
             };
 
-            renderMercado(ap1e, o1e, margens.j1e, 'j1_apE_txt', 'j1_retE_txt', 'j1_prE_txt');
-            renderMercado(ap1v, o1v, margens.j1v, 'j1_apV_txt', 'j1_retV_txt', 'j1_prV_txt');
-            renderMercado(ap2e, o2e, margens.j2e, 'j2_apE_txt', 'j2_retE_txt', 'j2_prE_txt');
-            renderMercado(ap2v, o2v, margens.j2v, 'j2_apV_txt', 'j2_retV_txt', 'j2_prV_txt');
-            renderMercado(ap3e, o3e, margens.j3e, 'j3_apE_txt', 'j3_retE_txt', 'j3_prE_txt');
-            renderMercado(ap3v, o3v, margens.j3v, 'j3_apV_txt', 'j3_retV_txt', 'j3_prV_txt');
+            // Processa individualmente as 6 frentes de proteção do sistema
+            atualizarMercado(ap1e, o1e, 'j1_apE_txt', 'j1_retE_txt', 'j1_prE_txt');
+            atualizarMercado(ap1v, o1v, 'j1_apV_txt', 'j1_retV_txt', 'j1_prV_txt');
+            atualizarMercado(ap2e, o2e, 'j2_apE_txt', 'j2_retE_txt', 'j2_prE_txt');
+            atualizarMercado(ap2v, o2v, 'j2_apV_txt', 'j2_retV_txt', 'j2_prV_txt');
+            atualizarMercado(ap3e, o3e, 'j3_apE_txt', 'j3_retE_txt', 'j3_prE_txt');
+            atualizarMercado(ap3v, o3v, 'j3_apV_txt', 'j3_retV_txt', 'j3_prV_txt');
 
-            // CÁLCULO DO CUADRO DE BALANÇO DA MÚLTIPLA PRINCIPAL
-            const retPrincipal = f(M * oddP);
+            // 3. RETORNOS DO BLOCO DE RESUMO FINAL DO SISTEMA
+            const retPrincipal = f(stakePrincipal * oddPrincipal);
             const lucroRealPrincipal = f(retPrincipal - custoTotalReal);
 
-            document.getElementById('sum_ap_principal').innerText = fmt(M);
+            document.getElementById('sum_ap_principal').innerText = fmt(stakePrincipal);
             document.getElementById('sum_ret_principal').innerText = fmt(retPrincipal);
             document.getElementById('sum_total_protecoes').innerText = fmt(totalProtecoes);
             document.getElementById('sum_custo_total').innerText = fmt(custoTotalReal);
