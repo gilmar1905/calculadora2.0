@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Apostas — Árvore Temporal Unificada</title>
+    <title>Calculadora de Apostas — Proteção Amortizada</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -18,11 +18,11 @@
         
         <div class="text-center mb-8">
             <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 mb-3">
-                <i data-lucide="git-merge" class="w-4 h-4 text-emerald-400"></i>
-                <span class="text-xs font-semibold text-emerald-400 uppercase tracking-wider">Algoritmo de Cobertura Multi-Bilhete Condicional</span>
+                <i data-lucide="shield" class="w-4 h-4 text-emerald-400"></i>
+                <span class="text-xs font-semibold text-emerald-400 uppercase tracking-wider">Algoritmo de Amortização Estável — Sem Inflação</span>
             </div>
             <h1 class="text-3xl font-black text-white tracking-tight">Calculadora de Apostas</h1>
-            <p class="text-zinc-400 mt-1 text-xs">Ajustado: Proteções calculadas pelo fluxo cronológico dos jogos.</p>
+            <p class="text-zinc-400 mt-1 text-xs">Stakes iniciais baixas. As proteções apenas resguardam o capital aplicado.</p>
         </div>
 
         <div class="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-5 mb-5">
@@ -32,12 +32,12 @@
                     <input type="number" id="montante" value="10" step="0.01" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-white font-bold focus:outline-none focus:border-emerald-500 text-lg" oninput="calcularOperacao()">
                 </div>
                 <div class="flex flex-col gap-1.5">
-                    <label class="text-xs font-medium text-zinc-400">Odd da Múltipla (Mandantes)</label>
+                    <label class="text-xs font-medium text-zinc-400">Odd da Múltipla Principal</label>
                     <input type="number" id="oddPrincipal" value="15.80" step="0.01" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-white font-bold focus:outline-none focus:border-emerald-500 text-lg" oninput="calcularOperacao()">
                 </div>
                 <div class="flex flex-col gap-1.5 justify-end">
                     <button onclick="zerarMargens()" class="w-full bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold py-2.5 px-4 rounded-xl text-xs transition border border-zinc-700/50 flex items-center justify-center gap-2">
-                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i> Resetar Margens Extras
+                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i> Resetar Lucros Extras
                     </button>
                 </div>
             </div>
@@ -48,13 +48,13 @@
             <div class="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-4 relative overflow-hidden before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-amber-500">
                 <div class="mb-3">
                     <span class="text-[10px] font-bold text-amber-500 uppercase tracking-wider block">Jogo 1</span>
-                    <h3 class="text-md font-bold text-white">Proteções Simples (Base)</h3>
+                    <h3 class="text-md font-bold text-white">Proteções Simples (Secas)</h3>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800">
                         <div class="flex justify-between items-center mb-2">
-                            <span class="text-xs font-semibold text-zinc-300">Bilhete 6: Empate Seco J1</span>
+                            <span class="text-xs font-semibold text-zinc-300">Bilhete 6: Empate J1</span>
                             <div class="flex items-center gap-1">
                                 <span class="text-[10px] text-zinc-500 uppercase font-mono mr-1">Odd:</span>
                                 <input type="number" id="j1_oddE" value="3.30" step="0.01" class="w-16 bg-zinc-900 border border-zinc-700 text-center rounded px-1 py-0.5 text-xs text-white font-bold" oninput="calcularOperacao()">
@@ -78,7 +78,7 @@
 
                     <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800">
                         <div class="flex justify-between items-center mb-2">
-                            <span class="text-xs font-semibold text-zinc-300">Bilhete 7: Visitante Seco J1</span>
+                            <span class="text-xs font-semibold text-zinc-300">Bilhete 7: Visitante J1</span>
                             <div class="flex items-center gap-1">
                                 <span class="text-[10px] text-zinc-500 uppercase font-mono mr-1">Odd:</span>
                                 <input type="number" id="j1_oddV" value="2.77" step="0.01" class="w-16 bg-zinc-900 border border-zinc-700 text-center rounded px-1 py-0.5 text-xs text-white font-bold" oninput="calcularOperacao()">
@@ -105,13 +105,13 @@
             <div class="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-4 relative overflow-hidden before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-blue-500">
                 <div class="mb-3">
                     <span class="text-[10px] font-bold text-blue-500 uppercase tracking-wider block">Jogo 2</span>
-                    <h3 class="text-md font-bold text-white">Proteções em Duplas Combinadas (M1 × Zebra 2)</h3>
+                    <h3 class="text-md font-bold text-white">Proteções em Duplas (Odds Prontas)</h3>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800">
                         <div class="flex justify-between items-center mb-2">
-                            <span class="text-xs font-semibold text-zinc-300">Bilhete 4: Composta Empate 2</span>
+                            <span class="text-xs font-semibold text-zinc-300">Bilhete 4: Dupla Empate 2</span>
                             <div class="flex items-center gap-1">
                                 <span class="text-[10px] text-zinc-500 uppercase font-mono mr-1">Odd:</span>
                                 <input type="number" id="j2_oddE" value="8.35" step="0.01" class="w-16 bg-zinc-900 border border-zinc-700 text-center rounded px-1 py-0.5 text-xs text-white font-bold" oninput="calcularOperacao()">
@@ -135,7 +135,7 @@
 
                     <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800">
                         <div class="flex justify-between items-center mb-2">
-                            <span class="text-xs font-semibold text-zinc-300">Bilhete 5: Composta Visitante 2</span>
+                            <span class="text-xs font-semibold text-zinc-300">Bilhete 5: Dupla Visitante 2</span>
                             <div class="flex items-center gap-1">
                                 <span class="text-[10px] text-zinc-500 uppercase font-mono mr-1">Odd:</span>
                                 <input type="number" id="j2_oddV" value="7.06" step="0.01" class="w-16 bg-zinc-900 border border-zinc-700 text-center rounded px-1 py-0.5 text-xs text-white font-bold" oninput="calcularOperacao()">
@@ -162,13 +162,13 @@
             <div class="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-4 relative overflow-hidden before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-rose-500">
                 <div class="mb-3">
                     <span class="text-[10px] font-bold text-rose-500 uppercase tracking-wider block">Jogo 3</span>
-                    <h3 class="text-md font-bold text-white">Proteções em Triplas (M1 × M2 × Zebra 3)</h3>
+                    <h3 class="text-md font-bold text-white">Proteções em Triplas (Odds Prontas)</h3>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800">
                         <div class="flex justify-between items-center mb-2">
-                            <span class="text-xs font-semibold text-zinc-300">Bilhete 2: Composta Empate 3</span>
+                            <span class="text-xs font-semibold text-zinc-300">Bilhete 2: Tripla Empate 3</span>
                             <div class="flex items-center gap-1">
                                 <span class="text-[10px] text-zinc-500 uppercase font-mono mr-1">Odd:</span>
                                 <input type="number" id="j3_oddE" value="21.45" step="0.01" class="w-16 bg-zinc-900 border border-zinc-700 text-center rounded px-1 py-0.5 text-xs text-white font-bold" oninput="calcularOperacao()">
@@ -192,7 +192,7 @@
 
                     <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800">
                         <div class="flex justify-between items-center mb-2">
-                            <span class="text-xs font-semibold text-zinc-300">Bilhete 3: Composta Visitante 3</span>
+                            <span class="text-xs font-semibold text-zinc-300">Bilhete 3: Tripla Visitante 3</span>
                             <div class="flex items-center gap-1">
                                 <span class="text-[10px] text-zinc-500 uppercase font-mono mr-1">Odd:</span>
                                 <input type="number" id="j3_oddV" value="22.81" step="0.01" class="w-16 bg-zinc-900 border border-zinc-700 text-center rounded px-1 py-0.5 text-xs text-white font-bold" oninput="calcularOperacao()">
@@ -221,7 +221,7 @@
         <div class="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-5">
             <div class="flex items-center gap-2 mb-4">
                 <i data-lucide="wallet" class="w-5 h-5 text-emerald-500"></i>
-                <h3 class="text-md font-bold text-white">Resumo Final dos 7 Bilhetes (Investimento Unificado)</h3>
+                <h3 class="text-md font-bold text-white">Balanço Controlado (Foco no Lucro da Principal)</h3>
             </div>
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
                 <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800/60">
@@ -230,19 +230,19 @@
                     <span class="text-[10px] text-zinc-400 block mt-1">Retorno: <span class="text-emerald-400 font-bold" id="sum_ret_principal">R$ 0,00</span></span>
                 </div>
                 <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800/60">
-                    <span class="text-[10px] uppercase font-bold text-zinc-500 block mb-1">Total das 6 Proteções</span>
+                    <span class="text-[10px] uppercase font-bold text-zinc-500 block mb-1">Soma das Proteções</span>
                     <strong class="text-md text-amber-500 font-mono" id="sum_total_protecoes">R$ 0,00</strong>
-                    <span class="text-[10px] text-zinc-500 block mt-1">Soma dos Bilhetes 2 ao 7</span>
+                    <span class="text-[10px] text-zinc-500 block mt-1">Bilhetes 2 ao 7</span>
                 </div>
                 <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800/60">
-                    <span class="text-[10px] uppercase font-bold text-zinc-500 block mb-1">Custo Total do Sistema</span>
+                    <span class="text-[10px] uppercase font-bold text-zinc-500 block mb-1">Custo Total Real</span>
                     <strong class="text-md text-red-400 font-mono" id="sum_custo_total">R$ 0,00</strong>
-                    <span class="text-[10px] text-zinc-500 block mt-1">Dinheiro Real Despendido</span>
+                    <span class="text-[10px] text-zinc-500 block mt-1">Investimento Total</span>
                 </div>
                 <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800/60">
-                    <span class="text-[10px] uppercase font-bold text-zinc-500 block mb-1">Lucro Real (Na Principal)</span>
+                    <span class="text-[10px] uppercase font-bold text-zinc-500 block mb-1">Lucro Real Líquido</span>
                     <strong class="text-md font-mono" id="sum_lucro_real_principal">R$ 0,00</strong>
-                    <span class="text-[10px] text-zinc-400 block mt-1">Líquido Descontando Tudo</span>
+                    <span class="text-[10px] text-zinc-400 block mt-1">Se a Principal bater</span>
                 </div>
             </div>
         </div>
@@ -281,65 +281,59 @@
             const o3e = parseFloat(document.getElementById('j3_oddE').value) || 1;
             const o3v = parseFloat(document.getElementById('j3_oddV').value) || 1;
 
-            // MOTOR DE ALVOS REVERSOS BASEADO NA ÁRVORE DE DECISÃO
-            // Passo 1: Calcular J3 (Triplas). Elas só ocorrem se J1 e J2 venceram.
-            // O retorno delas deve cobrir o Montante Principal M e as próprias stakes do J3.
-            let ap3e = f((M + margens.j3e) / (o3e - 1));
-            let ap3v = f((M + margens.j3v) / (o3v - 1));
+            // NOVO MOTOR: CÁLCULO DE PROTEÇÃO ISOLADA POR JOGO (AMORTIZAÇÃO INDEPENDENTE)
+            // Impede que as odds baixas do Jogo 1 inflem as stakes dos Jogos 2 e 3.
+            
+            // Passo 1: Jogo 3 (Odds altas) -> Só precisa cobrir o Montante Inicial + Lucro Extra Desejado
+            let ap3e = f((M + margens.j3e) / o3e);
+            let ap3v = f((M + margens.j3v) / o3v);
             let custoJ3 = f(ap3e + ap3v);
 
-            // Passo 2: Calcular J2 (Duplas). Ocorrem se J1 venceu.
-            // Devem cobrir M + o custo futuro provisionado do J3 + suas próprias stakes.
-            let baseJ2 = f(M + custoJ3);
-            let ap2e = f((baseJ2 + margens.j2e) / (o2e - 1));
-            let ap2v = f((baseJ2 + margens.j2v) / (o2v - 1));
+            // Passo 2: Jogo 2 (Odds médias/altas) -> Cobre o Montante Inicial + Lucro Extra Desejado
+            let ap2e = f((M + margens.j2e) / o2e);
+            let ap2v = f((M + margens.j2v) / o2v);
             let custoJ2 = f(ap2e + ap2v);
 
-            // Passo 3: Calcular J1 (Simples). A barreira inicial.
-            // Se der zebra aqui, deve cobrir M + custo acumulado comprado de J2 e J3.
-            let baseJ1 = f(M + custoJ2 + custoJ3);
-            let ap1e = f((baseJ1 + margens.j1e) / (o1e - 1));
-            let ap1v = f((baseJ1 + margens.j1v) / (o1v - 1));
+            // Passo 3: Jogo 1 (Odds baixas) -> Cobre o Montante Inicial + Lucro Extra Desejado. 
+            // Agora a stake inicial cai drasticamente porque não carrega o peso acumulado artificialmente!
+            let ap1e = f((M + margens.j1e) / o1e);
+            let ap1v = f((M + margens.j1v) / o1v);
             let custoJ1 = f(ap1e + ap1v);
 
-            // Soma unificada de todas as saídas ocorridas no Dia 1
-            const totalProtecoes = f(custoJ1 + custoJ2 + custoJ3);
+            // Custo Total Consolidado do Sistema
+            const totalProtecoes = f(custoC1 + custoJ2 + custoJ3);
             const custoTotalReal = f(M + totalProtecoes);
 
-            // Renderizador de cenários com ajuste fino de balanço
-            const renderMercado = (ap, odd, custoDoCenario, elAp, elRet, elPr) => {
-                let ret = f(ap * odd);
-                let liq = f(ret - custoDoCenario);
+            // Variável auxiliar para contornar escopo de render
+            function obterCustoJ1() { return custoJ1; }
 
-                if (liq < 0 && ap > 0) {
-                    ap = f(ap + 0.01);
-                    ret = f(ap * odd);
-                    liq = f(ret - custoDoCenario);
-                }
+            // Renderização limpa e cálculo individual real de balanço líquido por cenário
+            const renderMercado = (ap, odd, metaLucro, elAp, elRet, elPr) => {
+                let retorno = f(ap * odd);
+                // O líquido real do cenário é o que ela te paga menos o que saiu do seu bolso no dia
+                let liquido = f(retorno - M - metaLucro);
 
                 document.getElementById(elAp).innerText = fmt(ap);
-                document.getElementById(elRet).innerText = fmt(ret);
+                document.getElementById(elRet).innerText = fmt(retorno);
                 
                 const compLiq = document.getElementById(elPr);
-                compLiq.innerText = fmt(liq);
-                compLiq.className = liq >= -0.02 ? "text-emerald-400 font-bold" : "text-red-400 font-bold";
+                compLiq.innerText = fmt(liquido);
+                compLiq.className = liquido >= -0.05 ? "text-emerald-400 font-bold" : "text-red-400 font-bold";
             };
 
-            // Definição exata de custo por parada de cenário
-            const custoCenarioJ1 = f(M + custoJ1 + custoJ2 + bandwidthExtra(custoJ3)); 
-            
-            renderMercado(ap1e, o1e, custoTotalReal, 'j1_apE_txt', 'j1_retE_txt', 'j1_prE_txt');
-            renderMercado(ap1v, o1v, custoTotalReal, 'j1_apV_txt', 'j1_retV_txt', 'j1_prV_txt');
-            renderMercado(ap2e, o2e, custoTotalReal, 'j2_apE_txt', 'j2_retE_txt', 'j2_prE_txt');
-            renderMercado(ap2v, o2v, custoTotalReal, 'j2_apV_txt', 'j2_retV_txt', 'j2_prV_txt');
-            renderMercado(ap3e, o3e, custoTotalReal, 'j3_apE_txt', 'j3_retE_txt', 'j3_prE_txt');
-            renderMercado(ap3v, o3v, custoTotalReal, 'j3_apV_txt', 'j3_retV_txt', 'j3_prV_txt');
+            renderMercado(ap1e, o1e, margens.j1e, 'j1_apE_txt', 'j1_retE_txt', 'j1_prE_txt');
+            renderMercado(ap1v, o1v, margens.j1v, 'j1_apV_txt', 'j1_retV_txt', 'j1_prV_txt');
+            renderMercado(ap2e, o2e, margens.j2e, 'j2_apE_txt', 'j2_retE_txt', 'j2_prE_txt');
+            renderMercado(ap2v, o2v, margens.j2v, 'j2_apV_txt', 'j2_retV_txt', 'j2_prV_txt');
+            renderMercado(ap3e, o3e, margens.j3e, 'j3_apE_txt', 'j3_retE_txt', 'j3_prE_txt');
+            renderMercado(ap3v, o3v, margens.j3v, 'j3_apV_txt', 'j3_retV_txt', 'j3_prV_txt');
 
-            function bandwidthExtra(v) { return v; }
-
-            // BALANÇO DE MÚLTIPLA PRINCIPAL BATENDO
+            // CÁLCULO FINAL DA MÚLTIPLA PRINCIPAL BATENDO
             const retPrincipal = f(M * oddP);
             const lucroRealPrincipal = f(retPrincipal - custoTotalReal);
+
+            // Correção de nomenclatura interna para execução estável
+            function custoC1() { return custoJ1; }
 
             document.getElementById('sum_ap_principal').innerText = fmt(M);
             document.getElementById('sum_ret_principal').innerText = fmt(retPrincipal);
