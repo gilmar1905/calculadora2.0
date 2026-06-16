@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Apostas — Cascata Real</title>
+    <title>Calculadora de Apostas — Simultânea Total</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -18,11 +18,11 @@
         
         <div class="text-center mb-8">
             <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 mb-3">
-                <i data-lucide="refresh-cw" class="w-4 h-4 text-emerald-400"></i>
-                <span class="text-xs font-semibold text-emerald-400 uppercase tracking-wider">Algoritmo de Cascata Condicional Restaurado</span>
+                <i data-lucide="layers" class="w-4 h-4 text-emerald-400"></i>
+                <span class="text-xs font-semibold text-emerald-400 uppercase tracking-wider">Operação Simultânea de Bloco Único (Mesmo Dia)</span>
             </div>
             <h1 class="text-3xl font-black text-white tracking-tight">Calculadora de Apostas</h1>
-            <p class="text-zinc-400 mt-1 text-xs">Proteção real passo a passo. Fim do prejuízo na principal.</p>
+            <p class="text-zinc-400 mt-1 text-xs">Todas as 6 proteções feitas juntas. Caixa fechando milimetricamente.</p>
         </div>
 
         <div class="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-5 mb-5">
@@ -48,7 +48,7 @@
             <div class="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-4 relative overflow-hidden before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-amber-500">
                 <div class="mb-3">
                     <span class="text-[10px] font-bold text-amber-500 uppercase tracking-wider block">Jogo 1</span>
-                    <h3 class="text-md font-bold text-white">Proteções Simples Secas (Dia 1)</h3>
+                    <h3 class="text-md font-bold text-white">Proteções Simples</h3>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -74,7 +74,7 @@
                         <div class="flex justify-between text-[11px] mt-2 text-zinc-400 font-mono">
                             <span>Retorno: <span class="text-emerald-400" id="j1_retE_txt">R$ 0,00</span></span>
                             <span>Margem: <span class="text-amber-500 font-bold" id="j1e_mg_txt">+R$ 0</span></span>
-                            <span>Cenário J1: <span id="j1_prE_txt" class="font-bold">R$ 0,00</span></span>
+                            <span>Líquido: <span id="j1_prE_txt" class="font-bold">R$ 0,00</span></span>
                         </div>
                     </div>
 
@@ -100,7 +100,7 @@
                         <div class="flex justify-between text-[11px] mt-2 text-zinc-400 font-mono">
                             <span>Retorno: <span class="text-emerald-400" id="j1_retV_txt">R$ 0,00</span></span>
                             <span>Margem: <span class="text-amber-500 font-bold" id="j1v_mg_txt">+R$ 0</span></span>
-                            <span>Cenário J1: <span id="j1_prV_txt" class="font-bold">R$ 0,00</span></span>
+                            <span>Líquido: <span id="j1_prV_txt" class="font-bold">R$ 0,00</span></span>
                         </div>
                     </div>
                 </div>
@@ -109,7 +109,7 @@
             <div class="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-4 relative overflow-hidden before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-blue-500">
                 <div class="mb-3">
                     <span class="text-[10px] font-bold text-blue-500 uppercase tracking-wider block">Jogo 2</span>
-                    <h3 class="text-md font-bold text-white">Proteções em Duplas (Se Mandante 1 Venceu)</h3>
+                    <h3 class="text-md font-bold text-white">Proteções em Duplas</h3>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -135,7 +135,7 @@
                         <div class="flex justify-between text-[11px] mt-2 text-zinc-400 font-mono">
                             <span>Retorno: <span class="text-emerald-400" id="j2_retE_txt">R$ 0,00</span></span>
                             <span>Margem: <span class="text-blue-400 font-bold" id="j2e_mg_txt">+R$ 0</span></span>
-                            <span>Cenário J2: <span id="j2_prE_txt" class="font-bold">R$ 0,00</span></span>
+                            <span>Líquido: <span id="j2_prE_txt" class="font-bold">R$ 0,00</span></span>
                         </div>
                     </div>
 
@@ -161,7 +161,7 @@
                         <div class="flex justify-between text-[11px] mt-2 text-zinc-400 font-mono">
                             <span>Retorno: <span class="text-emerald-400" id="j2_retV_txt">R$ 0,00</span></span>
                             <span>Margem: <span class="text-blue-400 font-bold" id="j2v_mg_txt">+R$ 0</span></span>
-                            <span>Cenário J2: <span id="j2_prV_txt" class="font-bold">R$ 0,00</span></span>
+                            <span>Líquido: <span id="j2_prV_txt" class="font-bold">R$ 0,00</span></span>
                         </div>
                     </div>
                 </div>
@@ -170,7 +170,7 @@
             <div class="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-4 relative overflow-hidden before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-rose-500">
                 <div class="mb-3">
                     <span class="text-[10px] font-bold text-rose-500 uppercase tracking-wider block">Jogo 3</span>
-                    <h3 class="text-md font-bold text-white">Proteções em Triplas (Se M1 e M2 Venceram)</h3>
+                    <h3 class="text-md font-bold text-white">Proteções em Triplas</h3>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -196,7 +196,7 @@
                         <div class="flex justify-between text-[11px] mt-2 text-zinc-400 font-mono">
                             <span>Retorno: <span class="text-emerald-400" id="j3_retE_txt">R$ 0,00</span></span>
                             <span>Margem: <span class="text-rose-400 font-bold" id="j3e_mg_txt">+R$ 0</span></span>
-                            <span>Cenário J3: <span id="j3_prE_txt" class="font-bold">R$ 0,00</span></span>
+                            <span>Líquido: <span id="j3_prE_txt" class="font-bold">R$ 0,00</span></span>
                         </div>
                     </div>
 
@@ -222,7 +222,7 @@
                         <div class="flex justify-between text-[11px] mt-2 text-zinc-400 font-mono">
                             <span>Retorno: <span class="text-emerald-400" id="j3_retV_txt">R$ 0,00</span></span>
                             <span>Margem: <span class="text-rose-400 font-bold" id="j3v_mg_txt">+R$ 0</span></span>
-                            <span>Cenário J3: <span id="j3_prV_txt" class="font-bold">R$ 0,00</span></span>
+                            <span>Líquido: <span id="j3_prV_txt" class="font-bold">R$ 0,00</span></span>
                         </div>
                     </div>
                 </div>
@@ -233,7 +233,7 @@
         <div class="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-5">
             <div class="flex items-center gap-2 mb-4">
                 <i data-lucide="wallet" class="w-5 h-5 text-emerald-500"></i>
-                <h3 class="text-md font-bold text-white">Balanço Total da Operação (Investimento Inicial)</h3>
+                <h3 class="text-md font-bold text-white">Balanço Total (Lançamento Simultâneo)</h3>
             </div>
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
                 <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800/60">
@@ -242,17 +242,17 @@
                     <span class="text-[10px] text-zinc-400 block mt-1">Retorno: <span class="text-emerald-400 font-bold" id="sum_ret_principal">R$ 0,00</span></span>
                 </div>
                 <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800/60">
-                    <span class="text-[10px] uppercase font-bold text-zinc-500 block mb-1">Investimento Proteções</span>
+                    <span class="text-[10px] uppercase font-bold text-zinc-500 block mb-1">Total Proteções</span>
                     <strong class="text-md text-amber-500 font-mono" id="sum_total_protecoes">R$ 0,00</strong>
-                    <span class="text-[10px] text-zinc-500 block mt-1">Soma dos 6 Bilhetes</span>
+                    <span class="text-[10px] text-zinc-500 block mt-1">Bilhetes 2 ao 7</span>
                 </div>
                 <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800/60">
-                    <span class="text-[10px] uppercase font-bold text-zinc-500 block mb-1">Custo Total Total</span>
+                    <span class="text-[10px] uppercase font-bold text-zinc-500 block mb-1">Custo Total Real</span>
                     <strong class="text-md text-red-400 font-mono" id="sum_custo_total">R$ 0,00</strong>
-                    <span class="text-[10px] text-zinc-500 block mt-1">Total do seu Bolso</span>
+                    <span class="text-[10px] text-zinc-500 block mt-1">Total Comprado</span>
                 </div>
                 <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800/60">
-                    <span class="text-[10px] uppercase font-bold text-zinc-500 block mb-1">Lucro Líquido Real</span>
+                    <span class="text-[10px] uppercase font-bold text-zinc-500 block mb-1">Lucro Real Líquido</span>
                     <strong class="text-md font-mono" id="sum_lucro_real_principal">R$ 0,00</strong>
                     <span class="text-[10px] text-zinc-400 block mt-1">Se a Principal bater</span>
                 </div>
@@ -260,14 +260,13 @@
         </div>
 
         <div class="text-center mt-6 text-[10px] text-zinc-600">
-            Proteção Reajustada v6.0 — Motor de Árvore Sequencial Ativo
+            Proteção Simultânea Absoluta v7.0 — Fechamento em Bloco Único
         </div>
     </div>
 
     <script>
         lucide.createIcons();
 
-        // Estado das margens manuais por card
         const margens = { j1e: 0, j1v: 0, j2e: 0, j2v: 0, j3e: 0, j3v: 0 };
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -302,37 +301,43 @@
             const o3e = parseFloat(document.getElementById('j3_oddE').value) || 1;
             const o3v = parseFloat(document.getElementById('j3_oddV').value) || 1;
 
-            // FÓRMULA REVERSA DE CASCATA EM ÁRVORE (Backwards Induction)
-            // Passo 1: Jogo 3 (Triplas) - Só responde pelo custo inicial + o seu próprio valor
-            let ap3e = f((M + margens.j3e) / (o3e - 1 || 1));
-            let ap3v = f((M + margens.j3v) / (o3v - 1 || 1));
-            const custoAcumuladoJ3 = f(ap3e + ap3v);
+            // SISTEMA DE MATRIZ SIMULTÂNEA REAL DE 6 VIAS
+            // Todas as 6 apostas existem fisicamente no mesmo momento. 
+            // Para qualquer proteção cobrir o custo total (M + soma das 6 stakes + margem), usamos a seguinte proporção matricial:
+            const inv1e = 1 / o1e;
+            const inv1v = 1 / o1v;
+            const inv2e = 1 / o2e;
+            const inv2v = 1 / o2v;
+            const inv3e = 1 / o3e;
+            const inv3v = 1 / o3v;
 
-            // Passo 2: Jogo 2 (Duplas) - Deve cobrir o principal + o custo injetado no passo 3
-            const baseJ2 = f(M + custoAcumuladoJ3);
-            let ap2e = f((baseJ2 + margens.j2e) / (o2e - 1 || 1));
-            let ap2v = f((baseJ2 + margens.j2v) / (o2v - 1 || 1));
-            const custoAcumuladoJ2 = f(ap2e + ap2v);
+            const somaInversos = inv1e + inv1v + inv2e + inv2v + inv3e + inv3v;
+            const div = 1 - somaInversos;
+            const divSeguro = div > 0.01 ? div : 0.02;
 
-            // Passo 3: Jogo 1 (Simples) - Linha de frente, cobre absolutamente todo o dinheiro desembolsado
-            const baseJ1 = f(M + custoAcumuladoJ2 + custoAcumuladoJ3);
-            let ap1e = f((baseJ1 + margens.j1e) / (o1e - 1 || 1));
-            let ap1v = f((baseJ1 + margens.j1v) / (o1v - 1 || 1));
+            // Base unificada calculando a injeção necessária das margens individuais
+            const custoBaseAlvo = (M + (margens.j1e*inv1e) + (margens.j1v*inv1v) + (margens.j2e*inv2e) + (margens.j2v*inv2v) + (margens.j3e*inv3e) + (margens.j3v*inv3v)) / divSeguro;
 
-            // Soma física real de toda a operação comprada na casa
+            // Definição exata das stakes
+            let ap1e = f((custoBaseAlvo + margens.j1e) / o1e);
+            let ap1v = f((custoBaseAlvo + margens.j1v) / o1v);
+            let ap2e = f((custoBaseAlvo + margens.j2e) / o2e);
+            let ap2v = f((custoBaseAlvo + margens.j2v) / o2v);
+            let ap3e = f((custoBaseAlvo + margens.j3e) / o3e);
+            let ap3v = f((custoBaseAlvo + margens.j3v) / o3v);
+
             const totalProtecoes = f(ap1e + ap1v + ap2e + ap2v + ap3e + ap3v);
             const custoTotalReal = f(M + totalProtecoes);
 
-            // Renderiza e ajusta cenários específicos de cada cenário de erro
-            const renderMercado = (ap, odd, custoDoCenario, margemLocal, elAp, elRet, elPr) => {
+            const renderMercado = (ap, odd, elAp, elRet, elPr) => {
                 let ret = f(ap * odd);
-                // O lucro real daquele cenário é o Retorno menos o que foi gasto até o momento do erro acontecer
-                let liq = f(ret - custoDoCenario);
+                let liq = f(ret - custoTotalReal);
 
-                if (liq < 0.01 && ap > 0) {
-                    ap = f(ap + 0.02);
+                // Calibrador fino de centavos
+                if (liq < 0.00 && ap > 0) {
+                    ap = f(ap + 0.01);
                     ret = f(ap * odd);
-                    liq = f(ret - custoDoCenario);
+                    liq = f(ret - custoTotalReal);
                 }
 
                 document.getElementById(elAp).innerText = fmt(ap);
@@ -340,22 +345,17 @@
                 
                 const compLiq = document.getElementById(elPr);
                 compLiq.innerText = fmt(liq);
-                compLiq.className = "text-emerald-400 font-bold";
+                compLiq.className = liq >= -0.05 ? "text-emerald-400 font-bold" : "text-red-400 font-bold";
             };
 
-            // Cenários de custos parciais reais em caso de queda precoce:
-            const custoSeCairNoJ1 = f(M + ap1e + ap1v + custoAcumuladoJ2 + custoAcumuladoJ3);
-            const custoSeCairNoJ2 = f(M + custoAcumuladoJ2 + custoAcumuladoJ3);
-            const custoSeCairNoJ3 = f(M + custoAcumuladoJ3);
+            renderMercado(ap1e, o1e, 'j1_apE_txt', 'j1_retE_txt', 'j1_prE_txt');
+            renderMercado(ap1v, o1v, 'j1_apV_txt', 'j1_retV_txt', 'j1_prV_txt');
+            renderMercado(ap2e, o2e, 'j2_apE_txt', 'j2_retE_txt', 'j2_prE_txt');
+            renderMercado(ap2v, o2v, 'j2_apV_txt', 'j2_retV_txt', 'j2_prV_txt');
+            renderMercado(ap3e, o3e, 'j3_apE_txt', 'j3_retE_txt', 'j3_prE_txt');
+            renderMercado(ap3v, o3v, 'j3_apV_txt', 'j3_retV_txt', 'j3_prV_txt');
 
-            renderMercado(ap1e, o1e, custoSeCairNoJ1, margens.j1e, 'j1_apE_txt', 'j1_retE_txt', 'j1_prE_txt');
-            renderMercado(ap1v, o1v, custoSeCairNoJ1, margens.j1v, 'j1_apV_txt', 'j1_retV_txt', 'j1_prV_txt');
-            renderMercado(ap2e, o2e, custoSeCairNoJ2, margens.j2e, 'j2_apE_txt', 'j2_retE_txt', 'j2_prE_txt');
-            renderMercado(ap2v, o2v, custoSeCairNoJ2, margens.j2v, 'j2_apV_txt', 'j2_retV_txt', 'j2_prV_txt');
-            renderMercado(ap3e, o3e, custoSeCairNoJ3, margens.j3e, 'j3_apE_txt', 'j3_retE_txt', 'j3_prE_txt');
-            renderMercado(ap3v, o3v, custoSeCairNoJ3, margens.j3v, 'j3_apV_txt', 'j3_retV_txt', 'j3_prV_txt');
-
-            // CÁCULO DA LINHA DE CHEGADA (SE A MÚLTIPLA DA CASA DE APOSTAS BATER)
+            // CÁLCULO DO BALANÇO DE LINHA DE CHEGADA
             const retPrincipal = f(M * oddP);
             const lucroRealPrincipal = f(retPrincipal - custoTotalReal);
 
