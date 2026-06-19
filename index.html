@@ -1,336 +1,450 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="dark">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Apostas — Stakes Independentes</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <title>Calculadora de Ecossistema 4.0 - Totalmente Editável</title>
     <style>
-        body { background-color: #09090b; color: #f4f4f5; }
-        input[type="number"]::-webkit-inner-spin-button,
-        input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        :root {
+            --bg-principal: #0d1117;
+            --bg-card: #161b22;
+            --bg-input: #090d13;
+            --borda: #21262d;
+            --texto-principal: #c9d1d9;
+            --texto-secundario: #8b949e;
+            --verde-sucesso: #2ea44f;
+            --verde-texto: #58a6ff;
+            --azul-destaque: #1f6feb;
+            --laranja-alerta: #f0883e;
+        }
+
+        body {
+            background-color: var(--bg-principal);
+            color: var(--texto-principal);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .titulo-secao {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--texto-secundario);
+            margin: 10px 0 5px 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--borda);
+            border-radius: 6px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        label {
+            font-size: 12px;
+            color: var(--texto-secundario);
+        }
+
+        input {
+            background-color: var(--bg-input);
+            border: 1px solid var(--borda);
+            border-radius: 6px;
+            color: var(--texto-principal);
+            padding: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--azul-destaque);
+        }
+
+        /* Caixa Verde transformada em Input de Digitação */
+        .stake-input {
+            border: 1px solid var(--verde-sucesso);
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--verde-sucesso);
+            background-color: rgba(46, 164, 79, 0.05);
+            outline: none;
+            width: calc(100% - 26px);
+        }
+
+        .stake-input:focus {
+            border-color: #34d399;
+            background-color: rgba(46, 164, 79, 0.1);
+        }
+
+        .btn-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+        }
+
+        button {
+            background-color: #21262d;
+            border: 1px solid #30363d;
+            color: var(--texto-principal);
+            border-radius: 6px;
+            padding: 8px 0;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:active {
+            background-color: #282e38;
+        }
+
+        button.ativo {
+            background-color: var(--azul-destaque);
+            border-color: #388bfd;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--texto-secundario);
+        }
+
+        .valor-destaque {
+            color: var(--texto-principal);
+        }
+
+        .valor-sucesso {
+            color: var(--verde-sucesso);
+            font-weight: bold;
+        }
+
+        .card-auditoria {
+            border-color: rgba(31, 111, 235, 0.4);
+        }
+
+        .linha-auditoria {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(33, 38, 45, 0.5);
+        }
+
+        .linha-auditoria:last-child {
+            border-bottom: none;
+        }
+
+        .auditoria-label {
+            color: var(--texto-secundario);
+        }
+
+        .auditoria-valor {
+            font-weight: bold;
+        }
+
+        .auditoria-valor.azul { color: var(--azul-destaque); }
+        .auditoria-valor.vermelho { color: var(--laranja-alerta); }
     </style>
 </head>
-<body class="min-h-screen font-sans antialiased">
+<body>
 
-    <div class="max-w-4xl mx-auto px-4 py-6 sm:py-10">
-        
-        <div class="text-center mb-8">
-            <h1 class="text-3xl font-black text-white tracking-tight">Calculadora de Apostas</h1>
-            <p class="text-zinc-400 mt-1 text-xs">Proteções isoladas: Ajuste sem efeito gangorra nas odds.</p>
+<div class="container">
+
+    <div class="titulo-secao">💰 Entrada Operacional</div>
+    <div class="card">
+        <div class="input-group">
+            <label>Montante da Múltipla Principal (R$)</label>
+            <input type="number" id="montante_principal" value="1.00" step="0.50">
         </div>
-
-        <div class="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-5 mb-5">
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div class="flex flex-col gap-1.5">
-                    <label class="text-xs font-medium text-zinc-400">Montante Principal (R$)</label>
-                    <input type="number" id="montante" value="10" step="0.01" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-white font-bold focus:outline-none focus:border-emerald-500 text-lg" oninput="calcularOperacao()">
-                </div>
-                <div class="flex flex-col gap-1.5">
-                    <label class="text-xs font-medium text-zinc-400">Odd da Múltipla Principal</label>
-                    <input type="number" id="oddPrincipal" value="15.80" step="0.01" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-white font-bold focus:outline-none focus:border-emerald-500 text-lg" oninput="calcularOperacao()">
-                </div>
-                <div class="flex flex-col gap-1.5 justify-end">
-                    <button onclick="zerarAjustes()" class="w-full bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold py-2.5 px-4 rounded-xl text-xs transition border border-zinc-700/50 flex items-center justify-center gap-2">
-                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i> Limpar Ajustes Manuais
-                    </button>
-                </div>
-            </div>
+        <div class="input-group">
+            <label>Odd Total Combinada (Múltipla Base)</label>
+            <input type="number" id="odd_principal" value="33.45" step="0.01">
         </div>
-
-        <div class="grid grid-cols-1 gap-5 mb-6">
-            
-            <div class="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-4 relative overflow-hidden before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-amber-500">
-                <h3 class="text-sm font-bold text-zinc-400 uppercase tracking-wider mb-3">Jogo 1 — Proteções Simples (Secas)</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    
-                    <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 flex flex-col justify-between">
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="text-xs font-bold text-zinc-200">Bilhete 6: Empate J1</span>
-                            <div class="flex items-center gap-1">
-                                <span class="text-[10px] text-zinc-500 font-mono">ODD:</span>
-                                <input type="number" id="j1_oddE" value="3.30" step="0.01" class="w-16 bg-zinc-900 border border-zinc-700 text-center rounded px-1 py-0.5 text-xs text-white font-bold" oninput="calcularOperacao()">
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-between bg-zinc-900/50 p-2 rounded-lg border border-zinc-800/80 my-1">
-                            <div>
-                                <span class="text-[9px] text-zinc-500 uppercase block">Stake</span>
-                                <strong class="text-md text-white font-mono" id="j1_apE_txt">R$ 0,00</strong>
-                            </div>
-                            <div class="flex gap-1">
-                                <button onclick="modificarStake('j1e', -2)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-zinc-400">-2</button>
-                                <button onclick="modificarStake('j1e', 2)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-amber-500">+2</button>
-                                <button onclick="modificarStake('j1e', 5)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-amber-400">+5</button>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-2 text-[11px] font-mono text-zinc-400 mt-1 pt-1 border-t border-zinc-900">
-                            <span>Retorno: <span class="text-zinc-200 font-bold" id="j1_retE_txt">R$ 0</span></span>
-                            <span class="text-right">Líquido Real: <span id="j1_prE_txt" class="font-bold">R$ 0</span></span>
-                        </div>
-                    </div>
-
-                    <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 flex flex-col justify-between">
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="text-xs font-bold text-zinc-200">Bilhete 7: Visitante J1</span>
-                            <div class="flex items-center gap-1">
-                                <span class="text-[10px] text-zinc-500 font-mono">ODD:</span>
-                                <input type="number" id="j1_oddV" value="2.77" step="0.01" class="w-16 bg-zinc-900 border border-zinc-700 text-center rounded px-1 py-0.5 text-xs text-white font-bold" oninput="calcularOperacao()">
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-between bg-zinc-900/50 p-2 rounded-lg border border-zinc-800/80 my-1">
-                            <div>
-                                <span class="text-[9px] text-zinc-500 uppercase block">Stake</span>
-                                <strong class="text-md text-white font-mono" id="j1_apV_txt">R$ 0,00</strong>
-                            </div>
-                            <div class="flex gap-1">
-                                <button onclick="modificarStake('j1v', -2)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-zinc-400">-2</button>
-                                <button onclick="modificarStake('j1v', 2)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-amber-500">+2</button>
-                                <button onclick="modificarStake('j1v', 5)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-amber-400">+5</button>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-2 text-[11px] font-mono text-zinc-400 mt-1 pt-1 border-t border-zinc-900">
-                            <span>Retorno: <span class="text-zinc-200 font-bold" id="j1_retV_txt">R$ 0</span></span>
-                            <span class="text-right">Líquido Real: <span id="j1_prV_txt" class="font-bold">R$ 0</span></span>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-            <div class="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-4 relative overflow-hidden before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-blue-500">
-                <h3 class="text-sm font-bold text-zinc-400 uppercase tracking-wider mb-3">Jogo 2 — Proteções em Duplas (Odds Prontas)</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    
-                    <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 flex flex-col justify-between">
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="text-xs font-bold text-zinc-200">Bilhete 4: Dupla Empate 2</span>
-                            <div class="flex items-center gap-1">
-                                <span class="text-[10px] text-zinc-500 font-mono">ODD:</span>
-                                <input type="number" id="j2_oddE" value="8.35" step="0.01" class="w-16 bg-zinc-900 border border-zinc-700 text-center rounded px-1 py-0.5 text-xs text-white font-bold" oninput="calcularOperacao()">
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-between bg-zinc-900/50 p-2 rounded-lg border border-zinc-800/80 my-1">
-                            <div>
-                                <span class="text-[9px] text-zinc-500 uppercase block">Stake</span>
-                                <strong class="text-md text-white font-mono" id="j2_apE_txt">R$ 0,00</strong>
-                            </div>
-                            <div class="flex gap-1">
-                                <button onclick="modificarStake('j2e', -2)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-zinc-400">-2</button>
-                                <button onclick="modificarStake('j2e', 2)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-blue-500">+2</button>
-                                <button onclick="modificarStake('j2e', 5)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-blue-400">+5</button>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-2 text-[11px] font-mono text-zinc-400 mt-1 pt-1 border-t border-zinc-900">
-                            <span>Retorno: <span class="text-zinc-200 font-bold" id="j2_retE_txt">R$ 0</span></span>
-                            <span class="text-right">Líquido Real: <span id="j2_prE_txt" class="font-bold">R$ 0</span></span>
-                        </div>
-                    </div>
-
-                    <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 flex flex-col justify-between">
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="text-xs font-bold text-zinc-200">Bilhete 5: Dupla Visitante 2</span>
-                            <div class="flex items-center gap-1">
-                                <span class="text-[10px] text-zinc-500 font-mono">ODD:</span>
-                                <input type="number" id="j2_oddV" value="7.06" step="0.01" class="w-16 bg-zinc-900 border border-zinc-700 text-center rounded px-1 py-0.5 text-xs text-white font-bold" oninput="calcularOperacao()">
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-between bg-zinc-900/50 p-2 rounded-lg border border-zinc-800/80 my-1">
-                            <div>
-                                <span class="text-[9px] text-zinc-500 uppercase block">Stake</span>
-                                <strong class="text-md text-white font-mono" id="j2_apV_txt">R$ 0,00</strong>
-                            </div>
-                            <div class="flex gap-1">
-                                <button onclick="modificarStake('j2v', -2)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-zinc-400">-2</button>
-                                <button onclick="modificarStake('j2v', 2)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-blue-500">+2</button>
-                                <button onclick="modificarStake('j2v', 5)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-blue-400">+5</button>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-2 text-[11px] font-mono text-zinc-400 mt-1 pt-1 border-t border-zinc-900">
-                            <span>Retorno: <span class="text-zinc-200 font-bold" id="j2_retV_txt">R$ 0</span></span>
-                            <span class="text-right">Líquido Real: <span id="j2_prV_txt" class="font-bold">R$ 0</span></span>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-            <div class="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-4 relative overflow-hidden before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-rose-500">
-                <h3 class="text-sm font-bold text-zinc-400 uppercase tracking-wider mb-3">Jogo 3 — Proteções em Triplas (Odds Prontas)</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    
-                    <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 flex flex-col justify-between">
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="text-xs font-bold text-zinc-200">Bilhete 2: Tripla Empate 3</span>
-                            <div class="flex items-center gap-1">
-                                <span class="text-[10px] text-zinc-500 font-mono">ODD:</span>
-                                <input type="number" id="j3_oddE" value="21.45" step="0.01" class="w-16 bg-zinc-900 border border-zinc-700 text-center rounded px-1 py-0.5 text-xs text-white font-bold" oninput="calcularOperacao()">
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-between bg-zinc-900/50 p-2 rounded-lg border border-zinc-800/80 my-1">
-                            <div>
-                                <span class="text-[9px] text-zinc-500 uppercase block">Stake</span>
-                                <strong class="text-md text-white font-mono" id="j3_apE_txt">R$ 0,00</strong>
-                            </div>
-                            <div class="flex gap-1">
-                                <button onclick="modificarStake('j3e', -2)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-zinc-400">-2</button>
-                                <button onclick="modificarStake('j3e', 2)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-rose-500">+2</button>
-                                <button onclick="modificarStake('j3e', 5)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-rose-400">+5</button>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-2 text-[11px] font-mono text-zinc-400 mt-1 pt-1 border-t border-zinc-900">
-                            <span>Retorno: <span class="text-zinc-200 font-bold" id="j3_retE_txt">R$ 0</span></span>
-                            <span class="text-right">Líquido Real: <span id="j3_prE_txt" class="font-bold">R$ 0</span></span>
-                        </div>
-                    </div>
-
-                    <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 flex flex-col justify-between">
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="text-xs font-bold text-zinc-200">Bilhete 3: Tripla Visitante 3</span>
-                            <div class="flex items-center gap-1">
-                                <span class="text-[10px] text-zinc-500 font-mono">ODD:</span>
-                                <input type="number" id="j3_oddV" value="22.81" step="0.01" class="w-16 bg-zinc-900 border border-zinc-700 text-center rounded px-1 py-0.5 text-xs text-white font-bold" oninput="calcularOperacao()">
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-between bg-zinc-900/50 p-2 rounded-lg border border-zinc-800/80 my-1">
-                            <div>
-                                <span class="text-[9px] text-zinc-500 uppercase block">Stake</span>
-                                <strong class="text-md text-white font-mono" id="j3_apV_txt">R$ 0,00</strong>
-                            </div>
-                            <div class="flex gap-1">
-                                <button onclick="modificarStake('j3v', -2)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-zinc-400">-2</button>
-                                <button onclick="modificarStake('j3v', 2)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-rose-500">+2</button>
-                                <button onclick="modificarStake('j3v', 5)" class="px-2.5 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded text-xs font-bold text-rose-400">+5</button>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-2 text-[11px] font-mono text-zinc-400 mt-1 pt-1 border-t border-zinc-900">
-                            <span>Retorno: <span class="text-zinc-200 font-bold" id="j3_retV_txt">R$ 0</span></span>
-                            <span class="text-right">Líquido Real: <span id="j3_prV_txt" class="font-bold">R$ 0</span></span>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-        </div>
-
-        <div class="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-5">
-            <div class="flex items-center gap-2 mb-4">
-                <i data-lucide="wallet" class="w-5 h-5 text-emerald-500"></i>
-                <h3 class="text-md font-bold text-white">Balanço Controlado (Foco no Lucro da Principal)</h3>
-            </div>
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
-                <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800/60">
-                    <span class="text-[10px] uppercase font-bold text-zinc-500 block mb-1">Múltipla Principal</span>
-                    <strong class="text-md text-white font-mono" id="sum_ap_principal">R$ 0,00</strong>
-                    <span class="text-[10px] text-zinc-400 block mt-1">Retorno: <span class="text-emerald-400 font-bold" id="sum_ret_principal">R$ 0,00</span></span>
-                </div>
-                <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800/60">
-                    <span class="text-[10px] uppercase font-bold text-zinc-500 block mb-1">Soma das Proteções</span>
-                    <strong class="text-md text-amber-500 font-mono" id="sum_total_protecoes">R$ 0,00</strong>
-                    <span class="text-[10px] text-zinc-500 block mt-1">Bilhetes 2 ao 7</span>
-                </div>
-                <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800/60">
-                    <span class="text-[10px] uppercase font-bold text-zinc-500 block mb-1">Custo Total Real</span>
-                    <strong class="text-md text-red-400 font-mono" id="sum_custo_total">R$ 0,00</strong>
-                    <span class="text-[10px] text-zinc-500 block mt-1">Investimento Total</span>
-                </div>
-                <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800/60">
-                    <span class="text-[10px] uppercase font-bold text-zinc-500 block mb-1">Lucro Real Líquido</span>
-                    <strong class="text-md font-mono" id="sum_lucro_real_principal">R$ 0,00</strong>
-                    <span class="text-[10px] text-zinc-400 block mt-1">Se a Principal bater</span>
-                </div>
-            </div>
+        <div class="info-row" style="background: rgba(31, 111, 235, 0.05); padding: 8px; border-radius: 4px; border: 1px dashed rgba(31, 111, 235, 0.3); margin-top: 4px;">
+            <span>Retorno Bruto da Principal:</span>
+            <span id="txt_retorno_bruto_topo" style="color: var(--azul-destaque); font-weight: bold;">R$ 0,00</span>
         </div>
     </div>
 
-    <script>
-        lucide.createIcons();
+    <div class="titulo-secao">⚽ Ecossistema Inicial (A)</div>
+    
+    <div class="card">
+        <div class="info-row" style="font-weight: bold; color: var(--azul-destaque);">
+            <span>⚽ Jogo 1 — Cobertura Imediata (Dia 1)</span>
+        </div>
+        <div class="input-group">
+            <input type="text" placeholder="Nome do Confronto 1">
+        </div>
+        <div class="input-group">
+            <label>Odd Chance Dupla (X2)</label>
+            <input type="number" id="odd_j1" value="1.6" step="0.01">
+        </div>
+        <label style="margin-bottom: -6px;">Definir/Digitar Stake do Jogo 1 (R$):</label>
+        <input type="number" class="stake-input" id="stake_j1" value="3.26" step="0.01">
+        <div class="btn-container">
+            <button onclick="ajustar('j1', -5)">-5</button>
+            <button onclick="ajustar('j1', -1)">-1</button>
+            <button onclick="ajustar('j1', 1)">+1</button>
+            <button onclick="ajustar('j1', 5)">+5</button>
+            <button class="ativo" onclick="sincronizarProporcional('j1')">🔄</button>
+        </div>
+        <div class="info-row">
+            <span>Custo no Tempo (M + J3 + J1):</span>
+            <span class="valor-destaque" id="custo_tempo_j1">R$ 0,00</span>
+        </div>
+        <div class="info-row">
+            <span>Retorno Bruto X2:</span>
+            <span class="valor-destaque" id="retorno_x2_j1">R$ 0,00</span>
+        </div>
+        <div class="info-row">
+            <span>Lucro Líquido Real:</span>
+            <span class="valor-sucesso" id="lucro_liquido_j1">R$ 0,00</span>
+        </div>
+    </div>
 
-        // Agora guardamos os AJUSTES MANUAIS DIRETO NA STAKE para evitar o efeito gangorra circular
-        const ajustesStakes = { j1e: 0, j1v: 0, j2e: 0, j2v: 0, j3e: 0, j3v: 0 };
+    <div class="card">
+        <div class="info-row" style="font-weight: bold; color: var(--azul-destaque);">
+            <span>⚽ Jogo 2 — Rolagem Condicional (Dia 2)</span>
+        </div>
+        <div class="input-group">
+            <input type="text" placeholder="Nome do Confronto 2">
+        </div>
+        <div class="input-group">
+            <label>Odd Chance Dupla (X2)</label>
+            <input type="number" id="odd_j2" value="1.6" step="0.01">
+        </div>
+        <label style="margin-bottom: -6px;">Definir/Digitar Stake do Jogo 2 (R$):</label>
+        <input type="number" class="stake-input" id="stake_j2" value="8.68" step="0.01">
+        <div class="btn-container">
+            <button onclick="ajustar('j2', -5)">-5</button>
+            <button onclick="ajustar('j2', -1)">-1</button>
+            <button onclick="ajustar('j2', 1)">+1</button>
+            <button onclick="ajustar('j2', 5)">+5</button>
+            <button class="ativo" onclick="sincronizarProporcional('j2')">🔄</button>
+        </div>
+        <div class="info-row">
+            <span>Custo no Tempo (M + J3 + J1 + J2):</span>
+            <span class="valor-destaque" id="custo_tempo_j2">R$ 0,00</span>
+        </div>
+        <div class="info-row">
+            <span>Retorno Bruto X2:</span>
+            <span class="valor-destaque" id="retorno_x2_j2">R$ 0,00</span>
+        </div>
+        <div class="info-row">
+            <span>Lucro Líquido Real:</span>
+            <span class="valor-sucesso" id="lucro_liquido_j2">R$ 0,00</span>
+        </div>
+    </div>
 
-        window.addEventListener('DOMContentLoaded', () => {
-            calcularOperacao();
-        });
+    <div class="card">
+        <div class="info-row" style="font-weight: bold; color: var(--azul-destaque);">
+            <span>⚽ Jogo 3 — A Emenda Paralela (Dia 1)</span>
+        </div>
+        <div class="input-group">
+            <input type="text" placeholder="Nome do Confronto 3">
+        </div>
+        <div class="input-group">
+            <label>Odd X2 Combinada Acumulada</label>
+            <input type="number" id="odd_j3" value="38.67" step="0.01">
+        </div>
+        <label style="margin-bottom: -6px;">Definir/Digitar Stake da Emenda (R$):</label>
+        <input type="number" class="stake-input" id="stake_j3" value="0.80" step="0.01">
+        <div class="btn-container">
+            <button onclick="ajustar('j3', -5)">-5</button>
+            <button onclick="ajustar('j3', -1)">-1</button>
+            <button onclick="ajustar('j3', 1)">+1</button>
+            <button onclick="ajustar('j3', 5)">+5</button>
+            <button class="ativo" onclick="sincronizarProporcional('j3')">🔄</button>
+        </div>
+        <div class="info-row">
+            <span>Custo no Tempo (M + J3 + J1 + J2):</span>
+            <span class="valor-destaque" id="custo_tempo_j3">R$ 0,00</span>
+        </div>
+        <div class="info-row">
+            <span>Retorno Bruto da Emenda:</span>
+            <span class="valor-destaque" id="retorno_bruto_j3">R$ 0,00</span>
+        </div>
+        <div class="info-row">
+            <span>Lucro Líquido Real (Paralelo):</span>
+            <span class="valor-sucesso" id="lucro_liquido_j3">R$ 0,00</span>
+        </div>
+    </div>
 
-        function f(v) { return parseFloat(v.toFixed(2)); }
-        function fmt(v) { return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); }
+    <div class="titulo-secao">📊 Auditoria & Gestão de Risco</div>
+    <div class="card card-auditoria">
+        <div class="info-row" style="font-weight: bold; color: var(--azul-destaque); margin-bottom: 4px;">
+            <span>📊 Consolidação Geral de Caixa</span>
+        </div>
+        
+        <div class="linha-auditoria">
+            <span class="auditoria-label">Valor Apostado (Montante Principal):</span>
+            <span class="auditoria-valor" id="aud_montante">R$ 0,00</span>
+        </div>
+        <div class="linha-auditoria">
+            <span class="auditoria-label">Total de Investimento (Gasto Real):</span>
+            <span class="auditoria-valor azul" id="aud_gasto_real">R$ 0,00</span>
+        </div>
+        <div class="linha-auditoria">
+            <span class="auditoria-label">Lucro Final Líquido (Se a Principal bater):</span>
+            <span class="auditoria-valor" id="aud_lucro_liquido" style="color: var(--verde-sucesso);">R$ 0,00</span>
+        </div>
+        <div class="linha-auditoria">
+            <span class="auditoria-label">Conta de Risco (Exposição Proporcional):</span>
+            <span class="auditoria-valor vermelho" id="aud_conta_risco">0.00%</span>
+        </div>
+    </div>
 
-        function modificarStake(id, valor) {
-            ajustesStakes[id] += valor;
-            calcularOperacao();
-        }
+</div>
 
-        function zerarAjustes() {
-            for (let k in ajustesStakes) {
-                ajustesStakes[k] = 0;
-            }
-            calcularOperacao();
-        }
+<script>
+    // CONSTANTES DE PROPORÇÃO BASE (Referência de R$ 1,00)
+    const BASE_J1 = 3.26;
+    const BASE_J2 = 8.68;
+    const BASE_J3 = 0.80;
 
-        function calcularOperacao() {
-            const stakePrincipal = parseFloat(document.getElementById('montante').value) || 0;
-            const oddPrincipal = parseFloat(document.getElementById('oddPrincipal').value) || 1;
+    // Controla se o usuário alterou manualmente o valor via botões ou digitação direta
+    let manualOverride = {
+        j1: false,
+        j2: false,
+        j3: false
+    };
 
-            const o1e = parseFloat(document.getElementById('j1_oddE').value) || 1;
-            const o1v = parseFloat(document.getElementById('j1_oddV').value) || 1;
-            const o2e = parseFloat(document.getElementById('j2_oddE').value) || 1;
-            const o2v = parseFloat(document.getElementById('j2_oddV').value) || 1;
-            const o3e = parseFloat(document.getElementById('j3_oddE').value) || 1;
-            const o3v = parseFloat(document.getElementById('j3_oddV').value) || 1;
+    // Executado ao mudar o montante principal
+    function recalcularProporcoesAutomaticas() {
+        const montante = parseFloat(document.getElementById('montante_principal').value) || 0;
+        
+        // Só altera automaticamente o jogo se ele não tiver sido modificado manualmente
+        if (!manualOverride.j1) document.getElementById('stake_j1').value = (BASE_J1 * montante).toFixed(2);
+        if (!manualOverride.j2) document.getElementById('stake_j2').value = (BASE_J2 * montante).toFixed(2);
+        if (!manualOverride.j3) document.getElementById('stake_j3').value = (BASE_J3 * montante).toFixed(2);
+        
+        calcularEcossistema();
+    }
 
-            // 1. BASE DE STAKE INICIAL ISOLADA (Cada proteção foca em cobrir apenas o montante da Principal inicialmente)
-            // Isso previne que odds gigantescas joguem os valores das caixinhas para centavos e travem o script
-            let ap1e = Math.max(0, f((stakePrincipal / o1e) + ajustesStakes.j1e));
-            let ap1v = Math.max(0, f((stakePrincipal / o1v) + ajustesStakes.j1v));
-            let ap2e = Math.max(0, f((stakePrincipal / o2e) + ajustesStakes.j2e));
-            let ap2v = Math.max(0, f((stakePrincipal / o2v) + ajustesStakes.j2v));
-            let ap3e = Math.max(0, f((stakePrincipal / o3e) + ajustesStakes.j3e));
-            let ap3v = Math.max(0, f((stakePrincipal / o3v) + ajustesStakes.j3v));
+    // Executado quando o usuário DIGITA diretamente dentro da caixa verde
+    function detectarDigitacaoManual(jogo) {
+        manualOverride[jogo] = true;
+        calcularEcossistema();
+    }
 
-            // Custo Total Absoluto (Sem loops ou divisões cruzadas de inversos)
-            const totalProtecoes = f(ap1e + ap1v + ap2e + ap2v + ap3e + ap3v);
-            const custoTotalReal = f(stakePrincipal + totalProtecoes);
+    // Função dos botões (+/-)
+    function ajustar(jogo, valor) {
+        manualOverride[jogo] = true; 
+        const input = document.getElementById(`stake_${jogo}`);
+        let valorAtual = parseFloat(input.value) || 0;
+        input.value = Math.max(0, parseFloat((valorAtual + valor).toFixed(2)));
+        calcularEcossistema();
+    }
 
-            // 2. RENDERIZADOR ISOLADO DO LÍQUIDO REAL (Retorno do Bilhete - Custo Geral da Operação)
-            const renderLinha = (ap, odd, elAp, elRet, elPr) => {
-                const ret = f(ap * odd);
-                const liqReal = f(ret - custoTotalReal);
+    // Botão azul (🔄) resgata o cálculo proporcional original
+    function sincronizarProporcional(jogo) {
+        const montante = parseFloat(document.getElementById('montante_principal').value) || 0;
+        manualOverride[jogo] = false;
+        
+        if (jogo === 'j1') document.getElementById('stake_j1').value = (BASE_J1 * montante).toFixed(2);
+        if (jogo === 'j2') document.getElementById('stake_j2').value = (BASE_J2 * montante).toFixed(2);
+        if (jogo === 'j3') document.getElementById('stake_j3').value = (BASE_J3 * montante).toFixed(2);
+        
+        calcularEcossistema();
+    }
 
-                document.getElementById(elAp).innerText = fmt(ap);
-                document.getElementById(elRet).innerText = fmt(ret);
-                
-                const elLiquido = document.getElementById(elPr);
-                elLiquido.innerText = fmt(liqReal);
-                
-                if (liqReal >= 0.01) {
-                    elLiquido.className = "text-emerald-400 font-bold";
-                } else {
-                    elLiquido.className = "text-red-400 font-bold";
-                }
-            };
+    function calcularEcossistema() {
+        const montantePrincipal = parseFloat(document.getElementById('montante_principal').value) || 0;
+        const oddPrincipal = parseFloat(document.getElementById('odd_principal').value) || 0;
+        const oddJ1 = parseFloat(document.getElementById('odd_j1').value) || 0;
+        const oddJ2 = parseFloat(document.getElementById('odd_j2').value) || 0;
+        const oddJ3 = parseFloat(document.getElementById('odd_j3').value) || 0;
 
-            renderLinha(ap1e, o1e, 'j1_apE_txt', 'j1_retE_txt', 'j1_prE_txt');
-            renderLinha(ap1v, o1v, 'j1_apV_txt', 'j1_retV_txt', 'j1_prV_txt');
-            renderLinha(ap2e, o2e, 'j2_apE_txt', 'j2_retE_txt', 'j2_prE_txt');
-            renderLinha(ap2v, o2v, 'j2_apV_txt', 'j2_retV_txt', 'j2_prV_txt');
-            renderLinha(ap3e, o3e, 'j3_apE_txt', 'j3_retE_txt', 'j3_prE_txt');
-            renderLinha(ap3v, o3v, 'j3_apV_txt', 'j3_retV_txt', 'j3_prV_txt');
+        // Captura os valores diretamente das caixas de texto (sejam digitados ou automáticos)
+        const stakeJ1 = parseFloat(document.getElementById('stake_j1').value) || 0;
+        const stakeJ2 = parseFloat(document.getElementById('stake_j2').value) || 0;
+        const stakeJ3 = parseFloat(document.getElementById('stake_j3').value) || 0;
 
-            // 3. RETORNOS DO BLOCO DE RESUMO FINAL DO SISTEMA
-            const retPrincipal = f(stakePrincipal * oddPrincipal);
-            const lucroRealPrincipal = f(retPrincipal - custoTotalReal);
+        // Auditoria de Retorno Bruto no Topo
+        const retornoBrutoPrincipal = montantePrincipal * oddPrincipal;
+        document.getElementById('txt_retorno_bruto_topo').innerText = `R$ ${retornoBrutoPrincipal.toFixed(2)}`;
 
-            document.getElementById('sum_ap_principal').innerText = fmt(stakePrincipal);
-            document.getElementById('sum_ret_principal').innerText = fmt(retPrincipal);
-            document.getElementById('sum_total_protecoes').innerText = fmt(totalProtecoes);
-            document.getElementById('sum_custo_total').innerText = fmt(custoTotalReal);
+        // Custos do Sistema
+        const custoTotalAcumulado = montantePrincipal + stakeJ3 + stakeJ1 + stakeJ2;
 
-            const elLucro = document.getElementById('sum_lucro_real_principal');
-            elLucro.innerText = fmt(lucroRealPrincipal);
-            elLucro.className = lucroRealPrincipal >= 0 ? "text-md text-emerald-400 font-bold font-mono" : "text-md text-red-400 font-bold font-mono";
-        }
-    </script>
+        // Jogo 1
+        const custoTempoJ1 = montantePrincipal + stakeJ3 + stakeJ1;
+        const retornoJ1 = stakeJ1 * oddJ1;
+        const lucroJ1 = retornoJ1 - custoTempoJ1;
+
+        // Jogo 2
+        const retornoJ2 = stakeJ2 * oddJ2;
+        const lucroJ2 = retornoJ2 - custoTotalAcumulado;
+
+        // Jogo 3
+        const retornoJ3 = stakeJ3 * oddJ3;
+        const lucroJ3 = retornoJ3 - custoTotalAcumulado;
+
+        // Consolidação Geral
+        const lucroFinalPrincipal = retornoBrutoPrincipal - custoTotalAcumulado;
+        const contaRiscoExposicao = (custoTotalAcumulado / montantePrincipal) * 100;
+
+        // Renderização nos cards
+        document.getElementById('custo_tempo_j1').innerText = `R$ ${custoTempoJ1.toFixed(2)}`;
+        document.getElementById('retorno_x2_j1').innerText = `R$ ${retornoJ1.toFixed(2)}`;
+        document.getElementById('lucro_liquido_j1').innerText = `R$ ${lucroJ1.toFixed(2)}`;
+
+        document.getElementById('custo_tempo_j2').innerText = `R$ ${custoTotalAcumulado.toFixed(2)}`;
+        document.getElementById('retorno_x2_j2').innerText = `R$ ${retornoJ2.toFixed(2)}`;
+        document.getElementById('lucro_liquido_j2').innerText = `R$ ${lucroJ2.toFixed(2)}`;
+
+        document.getElementById('custo_tempo_j3').innerText = `R$ ${custoTotalAcumulado.toFixed(2)}`;
+        document.getElementById('retorno_bruto_j3').innerText = `R$ ${retornoJ3.toFixed(2)}`;
+        document.getElementById('lucro_liquido_j3').innerText = `R$ ${lucroJ3.toFixed(2)}`;
+
+        // Renderização da tabela azul
+        document.getElementById('aud_montante').innerText = `R$ ${montantePrincipal.toFixed(2)}`;
+        document.getElementById('aud_gasto_real').innerText = `R$ ${custoTotalAcumulado.toFixed(2)}`;
+        document.getElementById('aud_lucro_liquido').innerText = `R$ ${lucroFinalPrincipal.toFixed(2)}`;
+        document.getElementById('aud_conta_risco').innerText = `${contaRiscoExposicao.toFixed(2)}%`;
+    }
+
+    // Eventos para escutar digitação nas caixas verdes em tempo real
+    document.getElementById('stake_j1').addEventListener('input', () => detectarDigitacaoManual('j1'));
+    document.getElementById('stake_j2').addEventListener('input', () => detectarDigitacaoManual('j2'));
+    document.getElementById('stake_j3').addEventListener('input', () => detectarDigitacaoManual('j3'));
+
+    // Eventos de digitação nos outros campos
+    document.getElementById('montante_principal').addEventListener('input', recalcularProporcoesAutomaticas);
+    document.getElementById('odd_principal').addEventListener('input', calcularEcossistema);
+    document.getElementById('odd_j1').addEventListener('input', calcularEcossistema);
+    document.getElementById('odd_j2').addEventListener('input', calcularEcossistema);
+    document.getElementById('odd_j3').addEventListener('input', calcularEcossistema);
+
+    window.onload = calcularEcossistema;
+</script>
+
 </body>
 </html>
