@@ -2,449 +2,109 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Ecossistema 4.0 - Totalmente Editável</title>
+    <title>Painel Executivo: Surebet Automática</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root {
-            --bg-principal: #0d1117;
-            --bg-card: #161b22;
-            --bg-input: #090d13;
-            --borda: #21262d;
-            --texto-principal: #c9d1d9;
-            --texto-secundario: #8b949e;
-            --verde-sucesso: #2ea44f;
-            --verde-texto: #58a6ff;
-            --azul-destaque: #1f6feb;
-            --laranja-alerta: #f0883e;
-        }
-
-        body {
-            background-color: var(--bg-principal);
-            color: var(--texto-principal);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 480px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .titulo-secao {
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--texto-secundario);
-            margin: 10px 0 5px 5px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--borda);
-            border-radius: 6px;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        label {
-            font-size: 12px;
-            color: var(--texto-secundario);
-        }
-
-        input {
-            background-color: var(--bg-input);
-            border: 1px solid var(--borda);
-            border-radius: 6px;
-            color: var(--texto-principal);
-            padding: 10px;
-            font-size: 14px;
-            font-weight: bold;
-            outline: none;
-        }
-
-        input:focus {
-            border-color: var(--azul-destaque);
-        }
-
-        /* Caixa Verde transformada em Input de Digitação */
-        .stake-input {
-            border: 1px solid var(--verde-sucesso);
-            border-radius: 6px;
-            padding: 12px;
-            text-align: center;
-            font-size: 18px;
-            font-weight: bold;
-            color: var(--verde-sucesso);
-            background-color: rgba(46, 164, 79, 0.05);
-            outline: none;
-            width: calc(100% - 26px);
-        }
-
-        .stake-input:focus {
-            border-color: #34d399;
-            background-color: rgba(46, 164, 79, 0.1);
-        }
-
-        .btn-container {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 8px;
-        }
-
-        button {
-            background-color: #21262d;
-            border: 1px solid #30363d;
-            color: var(--texto-principal);
-            border-radius: 6px;
-            padding: 8px 0;
-            font-size: 12px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        button:active {
-            background-color: #282e38;
-        }
-
-        button.ativo {
-            background-color: var(--azul-destaque);
-            border-color: #388bfd;
-        }
-
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 11px;
-            color: var(--texto-secundario);
-        }
-
-        .valor-destaque {
-            color: var(--texto-principal);
-        }
-
-        .valor-sucesso {
-            color: var(--verde-sucesso);
-            font-weight: bold;
-        }
-
-        .card-auditoria {
-            border-color: rgba(31, 111, 235, 0.4);
-        }
-
-        .linha-auditoria {
-            display: flex;
-            justify-content: space-between;
-            font-size: 13px;
-            padding: 6px 0;
-            border-bottom: 1px solid rgba(33, 38, 45, 0.5);
-        }
-
-        .linha-auditoria:last-child {
-            border-bottom: none;
-        }
-
-        .auditoria-label {
-            color: var(--texto-secundario);
-        }
-
-        .auditoria-valor {
-            font-weight: bold;
-        }
-
-        .auditoria-valor.azul { color: var(--azul-destaque); }
-        .auditoria-valor.vermelho { color: var(--laranja-alerta); }
+        .card { background: #0f172a; border: 1px solid #1e293b; padding: 16px; border-radius: 12px; }
+        .input-box { background: #020617; border: 1px solid #334155; padding: 6px; border-radius: 4px; width: 100%; text-align: center; }
     </style>
 </head>
-<body>
+<body class="bg-slate-950 text-slate-200 p-6">
+    <div class="max-w-6xl mx-auto space-y-6">
+        <h1 class="text-2xl font-black text-white text-center uppercase tracking-widest">⚡ PAINEL EXECUTIVO: SUREBET AUTOMÁTICA</h1>
 
-<div class="container">
+        <!-- AUDITORIA GLOBAL -->
+        <div class="grid grid-cols-3 gap-4 bg-indigo-950 p-4 rounded-xl border border-indigo-800">
+            <div><p class="text-[10px] text-indigo-300 uppercase font-bold">Investimento Total</p><div id="mCustoTotal" class="text-lg font-black text-white">R$ 0,00</div></div>
+            <div><p class="text-[10px] text-indigo-300 uppercase font-bold">Retorno Múltipla</p><div id="mRetornoTotal" class="text-lg font-black text-emerald-400">R$ 0,00</div></div>
+            <div><p class="text-[10px] text-indigo-300 uppercase font-bold">Líquido Final</p><div id="mLiquidoFinal" class="text-lg font-black text-white">R$ 0,00</div></div>
+        </div>
 
-    <div class="titulo-secao">💰 Entrada Operacional</div>
-    <div class="card">
-        <div class="input-group">
-            <label>Montante da Múltipla Principal (R$)</label>
-            <input type="number" id="montante_principal" value="1.00" step="0.50">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Múltipla -->
+            <div class="card border-l-4 border-l-indigo-500">
+                <h2 class="font-bold text-indigo-400 mb-2">MÚLTIPLA PRINCIPAL</h2>
+                <input type="number" id="mstk" placeholder="Stake" oninput="processar()" class="input-box mb-2">
+                <input type="number" id="modd" placeholder="Odd" oninput="processar()" class="input-box">
+            </div>
+            
+            <!-- Surebet Automática -->
+            <div class="card border-l-4 border-l-emerald-500">
+                <h2 class="font-bold text-emerald-400 mb-2">SUREBET AUTOMÁTICA</h2>
+                <input type="number" id="montanteSure" placeholder="Montante Total" oninput="processar()" class="input-box mb-2">
+                <div class="grid grid-cols-3 gap-2">
+                    <input type="number" id="oDupla" placeholder="Odd Dupla" oninput="processar()" class="input-box">
+                    <input type="number" id="oProtA" placeholder="Odd A" oninput="processar()" class="input-box">
+                    <input type="number" id="oProtB" placeholder="Odd B" oninput="processar()" class="input-box">
+                </div>
+                <div class="mt-3 text-[10px] font-bold text-emerald-500 grid grid-cols-3 gap-1 text-center" id="auditoriaSurebet">
+                    <div>D: 0.00</div><div>A: 0.00</div><div>B: 0.00</div>
+                </div>
+            </div>
         </div>
-        <div class="input-group">
-            <label>Odd Total Combinada (Múltipla Base)</label>
-            <input type="number" id="odd_principal" value="33.45" step="0.01">
-        </div>
-        <div class="info-row" style="background: rgba(31, 111, 235, 0.05); padding: 8px; border-radius: 4px; border: 1px dashed rgba(31, 111, 235, 0.3); margin-top: 4px;">
-            <span>Retorno Bruto da Principal:</span>
-            <span id="txt_retorno_bruto_topo" style="color: var(--azul-destaque); font-weight: bold;">R$ 0,00</span>
-        </div>
+
+        <div id="mGrade" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+        <button onclick="adicionarCard()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 rounded-lg font-bold uppercase text-sm">+ Adicionar Card</button>
     </div>
-
-    <div class="titulo-secao">⚽ Ecossistema Inicial (A)</div>
-    
-    <div class="card">
-        <div class="info-row" style="font-weight: bold; color: var(--azul-destaque);">
-            <span>⚽ Jogo 1 — Cobertura Imediata (Dia 1)</span>
-        </div>
-        <div class="input-group">
-            <input type="text" placeholder="Nome do Confronto 1">
-        </div>
-        <div class="input-group">
-            <label>Odd Chance Dupla (X2)</label>
-            <input type="number" id="odd_j1" value="1.6" step="0.01">
-        </div>
-        <label style="margin-bottom: -6px;">Definir/Digitar Stake do Jogo 1 (R$):</label>
-        <input type="number" class="stake-input" id="stake_j1" value="3.26" step="0.01">
-        <div class="btn-container">
-            <button onclick="ajustar('j1', -5)">-5</button>
-            <button onclick="ajustar('j1', -1)">-1</button>
-            <button onclick="ajustar('j1', 1)">+1</button>
-            <button onclick="ajustar('j1', 5)">+5</button>
-            <button class="ativo" onclick="sincronizarProporcional('j1')">🔄</button>
-        </div>
-        <div class="info-row">
-            <span>Custo no Tempo (M + J3 + J1):</span>
-            <span class="valor-destaque" id="custo_tempo_j1">R$ 0,00</span>
-        </div>
-        <div class="info-row">
-            <span>Retorno Bruto X2:</span>
-            <span class="valor-destaque" id="retorno_x2_j1">R$ 0,00</span>
-        </div>
-        <div class="info-row">
-            <span>Lucro Líquido Real:</span>
-            <span class="valor-sucesso" id="lucro_liquido_j1">R$ 0,00</span>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="info-row" style="font-weight: bold; color: var(--azul-destaque);">
-            <span>⚽ Jogo 2 — Rolagem Condicional (Dia 2)</span>
-        </div>
-        <div class="input-group">
-            <input type="text" placeholder="Nome do Confronto 2">
-        </div>
-        <div class="input-group">
-            <label>Odd Chance Dupla (X2)</label>
-            <input type="number" id="odd_j2" value="1.6" step="0.01">
-        </div>
-        <label style="margin-bottom: -6px;">Definir/Digitar Stake do Jogo 2 (R$):</label>
-        <input type="number" class="stake-input" id="stake_j2" value="8.68" step="0.01">
-        <div class="btn-container">
-            <button onclick="ajustar('j2', -5)">-5</button>
-            <button onclick="ajustar('j2', -1)">-1</button>
-            <button onclick="ajustar('j2', 1)">+1</button>
-            <button onclick="ajustar('j2', 5)">+5</button>
-            <button class="ativo" onclick="sincronizarProporcional('j2')">🔄</button>
-        </div>
-        <div class="info-row">
-            <span>Custo no Tempo (M + J3 + J1 + J2):</span>
-            <span class="valor-destaque" id="custo_tempo_j2">R$ 0,00</span>
-        </div>
-        <div class="info-row">
-            <span>Retorno Bruto X2:</span>
-            <span class="valor-destaque" id="retorno_x2_j2">R$ 0,00</span>
-        </div>
-        <div class="info-row">
-            <span>Lucro Líquido Real:</span>
-            <span class="valor-sucesso" id="lucro_liquido_j2">R$ 0,00</span>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="info-row" style="font-weight: bold; color: var(--azul-destaque);">
-            <span>⚽ Jogo 3 — A Emenda Paralela (Dia 1)</span>
-        </div>
-        <div class="input-group">
-            <input type="text" placeholder="Nome do Confronto 3">
-        </div>
-        <div class="input-group">
-            <label>Odd X2 Combinada Acumulada</label>
-            <input type="number" id="odd_j3" value="38.67" step="0.01">
-        </div>
-        <label style="margin-bottom: -6px;">Definir/Digitar Stake da Emenda (R$):</label>
-        <input type="number" class="stake-input" id="stake_j3" value="0.80" step="0.01">
-        <div class="btn-container">
-            <button onclick="ajustar('j3', -5)">-5</button>
-            <button onclick="ajustar('j3', -1)">-1</button>
-            <button onclick="ajustar('j3', 1)">+1</button>
-            <button onclick="ajustar('j3', 5)">+5</button>
-            <button class="ativo" onclick="sincronizarProporcional('j3')">🔄</button>
-        </div>
-        <div class="info-row">
-            <span>Custo no Tempo (M + J3 + J1 + J2):</span>
-            <span class="valor-destaque" id="custo_tempo_j3">R$ 0,00</span>
-        </div>
-        <div class="info-row">
-            <span>Retorno Bruto da Emenda:</span>
-            <span class="valor-destaque" id="retorno_bruto_j3">R$ 0,00</span>
-        </div>
-        <div class="info-row">
-            <span>Lucro Líquido Real (Paralelo):</span>
-            <span class="valor-sucesso" id="lucro_liquido_j3">R$ 0,00</span>
-        </div>
-    </div>
-
-    <div class="titulo-secao">📊 Auditoria & Gestão de Risco</div>
-    <div class="card card-auditoria">
-        <div class="info-row" style="font-weight: bold; color: var(--azul-destaque); margin-bottom: 4px;">
-            <span>📊 Consolidação Geral de Caixa</span>
-        </div>
-        
-        <div class="linha-auditoria">
-            <span class="auditoria-label">Valor Apostado (Montante Principal):</span>
-            <span class="auditoria-valor" id="aud_montante">R$ 0,00</span>
-        </div>
-        <div class="linha-auditoria">
-            <span class="auditoria-label">Total de Investimento (Gasto Real):</span>
-            <span class="auditoria-valor azul" id="aud_gasto_real">R$ 0,00</span>
-        </div>
-        <div class="linha-auditoria">
-            <span class="auditoria-label">Lucro Final Líquido (Se a Principal bater):</span>
-            <span class="auditoria-valor" id="aud_lucro_liquido" style="color: var(--verde-sucesso);">R$ 0,00</span>
-        </div>
-        <div class="linha-auditoria">
-            <span class="auditoria-label">Conta de Risco (Exposição Proporcional):</span>
-            <span class="auditoria-valor vermelho" id="aud_conta_risco">0.00%</span>
-        </div>
-    </div>
-
-</div>
 
 <script>
-    // CONSTANTES DE PROPORÇÃO BASE (Referência de R$ 1,00)
-    const BASE_J1 = 3.26;
-    const BASE_J2 = 8.68;
-    const BASE_J3 = 0.80;
-
-    // Controla se o usuário alterou manualmente o valor via botões ou digitação direta
-    let manualOverride = {
-        j1: false,
-        j2: false,
-        j3: false
-    };
-
-    // Executado ao mudar o montante principal
-    function recalcularProporcoesAutomaticas() {
-        const montante = parseFloat(document.getElementById('montante_principal').value) || 0;
-        
-        // Só altera automaticamente o jogo se ele não tiver sido modificado manualmente
-        if (!manualOverride.j1) document.getElementById('stake_j1').value = (BASE_J1 * montante).toFixed(2);
-        if (!manualOverride.j2) document.getElementById('stake_j2').value = (BASE_J2 * montante).toFixed(2);
-        if (!manualOverride.j3) document.getElementById('stake_j3').value = (BASE_J3 * montante).toFixed(2);
-        
-        calcularEcossistema();
+    let count = 0;
+    function adicionarCard() {
+        count++;
+        const grade = document.getElementById('mGrade');
+        const div = document.createElement('div');
+        div.id = `card_${count}`;
+        div.className = 'card animate-in fade-in';
+        div.innerHTML = `
+            <div class="flex justify-between items-center mb-2"><span class="font-bold text-slate-400">RECUPERAÇÃO #${count}</span><button onclick="this.parentElement.parentElement.remove(); processar()" class="text-red-500 text-xs">EXCLUIR</button></div>
+            <div class="grid grid-cols-2 gap-2 mb-2">
+                <input type="number" id="oA_${count}" placeholder="Odd A" oninput="processar()" class="input-box">
+                <input type="number" id="oB_${count}" placeholder="Odd B" oninput="processar()" class="input-box">
+                <input type="number" id="sA_${count}" placeholder="Stk A" oninput="processar()" class="input-box">
+                <input type="number" id="sB_${count}" placeholder="Stk B" oninput="processar()" class="input-box">
+            </div>
+            <div class="text-[10px] font-bold text-emerald-400" id="res_${count}">Líq A: 0.00 | Líq B: 0.00</div>`;
+        grade.appendChild(div);
     }
 
-    // Executado quando o usuário DIGITA diretamente dentro da caixa verde
-    function detectarDigitacaoManual(jogo) {
-        manualOverride[jogo] = true;
-        calcularEcossistema();
+    function processar() {
+        // Dados
+        const mstk = parseFloat(document.getElementById('mstk').value) || 0;
+        const modd = parseFloat(document.getElementById('modd').value) || 0;
+        const mSure = parseFloat(document.getElementById('montanteSure').value) || 0;
+        const oD = parseFloat(document.getElementById('oDupla').value) || 0;
+        const oA = parseFloat(document.getElementById('oProtA').value) || 0;
+        const oB = parseFloat(document.getElementById('oProtB').value) || 0;
+
+        // Cálculo Automático de Equilíbrio (Inverso das odds)
+        let sD = 0, sA = 0, sB = 0;
+        if (oD > 0 && oA > 0 && oB > 0) {
+            const invTotal = (1/oD) + (1/oA) + (1/oB);
+            sD = (mSure / invTotal) / oD;
+            sA = (mSure / invTotal) / oA;
+            sB = (mSure / invTotal) / oB;
+            
+            document.getElementById('auditoriaSurebet').innerHTML = 
+                `<div>D: ${sD.toFixed(2)}</div><div>A: ${sA.toFixed(2)}</div><div>B: ${sB.toFixed(2)}</div>`;
+        }
+
+        let custoAcumulado = mstk + mSure;
+
+        // Recuperações
+        document.querySelectorAll('#mGrade > div').forEach(c => {
+            const id = c.id.split('_')[1];
+            const oA_c = parseFloat(document.getElementById(`oA_${id}`).value) || 0;
+            const oB_c = parseFloat(document.getElementById(`oB_${id}`).value) || 0;
+            const sA_c = parseFloat(document.getElementById(`sA_${id}`).value) || 0;
+            const sB_c = parseFloat(document.getElementById(`sB_${id}`).value) || 0;
+            custoAcumulado += (sA_c + sB_c);
+            document.getElementById(`res_${id}`).innerText = `Líq A: ${(sA_c * oA_c - custoAcumulado).toFixed(2)} | Líq B: ${(sB_c * oB_c - custoAcumulado).toFixed(2)}`;
+        });
+
+        document.getElementById('mCustoTotal').innerText = `R$ ${custoAcumulado.toFixed(2)}`;
+        document.getElementById('mRetornoTotal').innerText = `R$ ${(mstk * modd).toFixed(2)}`;
+        document.getElementById('mLiquidoFinal').innerText = `R$ ${( (mstk * modd) - custoAcumulado ).toFixed(2)}`;
     }
-
-    // Função dos botões (+/-)
-    function ajustar(jogo, valor) {
-        manualOverride[jogo] = true; 
-        const input = document.getElementById(`stake_${jogo}`);
-        let valorAtual = parseFloat(input.value) || 0;
-        input.value = Math.max(0, parseFloat((valorAtual + valor).toFixed(2)));
-        calcularEcossistema();
-    }
-
-    // Botão azul (🔄) resgata o cálculo proporcional original
-    function sincronizarProporcional(jogo) {
-        const montante = parseFloat(document.getElementById('montante_principal').value) || 0;
-        manualOverride[jogo] = false;
-        
-        if (jogo === 'j1') document.getElementById('stake_j1').value = (BASE_J1 * montante).toFixed(2);
-        if (jogo === 'j2') document.getElementById('stake_j2').value = (BASE_J2 * montante).toFixed(2);
-        if (jogo === 'j3') document.getElementById('stake_j3').value = (BASE_J3 * montante).toFixed(2);
-        
-        calcularEcossistema();
-    }
-
-    function calcularEcossistema() {
-        const montantePrincipal = parseFloat(document.getElementById('montante_principal').value) || 0;
-        const oddPrincipal = parseFloat(document.getElementById('odd_principal').value) || 0;
-        const oddJ1 = parseFloat(document.getElementById('odd_j1').value) || 0;
-        const oddJ2 = parseFloat(document.getElementById('odd_j2').value) || 0;
-        const oddJ3 = parseFloat(document.getElementById('odd_j3').value) || 0;
-
-        // Captura os valores diretamente das caixas de texto (sejam digitados ou automáticos)
-        const stakeJ1 = parseFloat(document.getElementById('stake_j1').value) || 0;
-        const stakeJ2 = parseFloat(document.getElementById('stake_j2').value) || 0;
-        const stakeJ3 = parseFloat(document.getElementById('stake_j3').value) || 0;
-
-        // Auditoria de Retorno Bruto no Topo
-        const retornoBrutoPrincipal = montantePrincipal * oddPrincipal;
-        document.getElementById('txt_retorno_bruto_topo').innerText = `R$ ${retornoBrutoPrincipal.toFixed(2)}`;
-
-        // Custos do Sistema
-        const custoTotalAcumulado = montantePrincipal + stakeJ3 + stakeJ1 + stakeJ2;
-
-        // Jogo 1
-        const custoTempoJ1 = montantePrincipal + stakeJ3 + stakeJ1;
-        const retornoJ1 = stakeJ1 * oddJ1;
-        const lucroJ1 = retornoJ1 - custoTempoJ1;
-
-        // Jogo 2
-        const retornoJ2 = stakeJ2 * oddJ2;
-        const lucroJ2 = retornoJ2 - custoTotalAcumulado;
-
-        // Jogo 3
-        const retornoJ3 = stakeJ3 * oddJ3;
-        const lucroJ3 = retornoJ3 - custoTotalAcumulado;
-
-        // Consolidação Geral
-        const lucroFinalPrincipal = retornoBrutoPrincipal - custoTotalAcumulado;
-        const contaRiscoExposicao = (custoTotalAcumulado / montantePrincipal) * 100;
-
-        // Renderização nos cards
-        document.getElementById('custo_tempo_j1').innerText = `R$ ${custoTempoJ1.toFixed(2)}`;
-        document.getElementById('retorno_x2_j1').innerText = `R$ ${retornoJ1.toFixed(2)}`;
-        document.getElementById('lucro_liquido_j1').innerText = `R$ ${lucroJ1.toFixed(2)}`;
-
-        document.getElementById('custo_tempo_j2').innerText = `R$ ${custoTotalAcumulado.toFixed(2)}`;
-        document.getElementById('retorno_x2_j2').innerText = `R$ ${retornoJ2.toFixed(2)}`;
-        document.getElementById('lucro_liquido_j2').innerText = `R$ ${lucroJ2.toFixed(2)}`;
-
-        document.getElementById('custo_tempo_j3').innerText = `R$ ${custoTotalAcumulado.toFixed(2)}`;
-        document.getElementById('retorno_bruto_j3').innerText = `R$ ${retornoJ3.toFixed(2)}`;
-        document.getElementById('lucro_liquido_j3').innerText = `R$ ${lucroJ3.toFixed(2)}`;
-
-        // Renderização da tabela azul
-        document.getElementById('aud_montante').innerText = `R$ ${montantePrincipal.toFixed(2)}`;
-        document.getElementById('aud_gasto_real').innerText = `R$ ${custoTotalAcumulado.toFixed(2)}`;
-        document.getElementById('aud_lucro_liquido').innerText = `R$ ${lucroFinalPrincipal.toFixed(2)}`;
-        document.getElementById('aud_conta_risco').innerText = `${contaRiscoExposicao.toFixed(2)}%`;
-    }
-
-    // Eventos para escutar digitação nas caixas verdes em tempo real
-    document.getElementById('stake_j1').addEventListener('input', () => detectarDigitacaoManual('j1'));
-    document.getElementById('stake_j2').addEventListener('input', () => detectarDigitacaoManual('j2'));
-    document.getElementById('stake_j3').addEventListener('input', () => detectarDigitacaoManual('j3'));
-
-    // Eventos de digitação nos outros campos
-    document.getElementById('montante_principal').addEventListener('input', recalcularProporcoesAutomaticas);
-    document.getElementById('odd_principal').addEventListener('input', calcularEcossistema);
-    document.getElementById('odd_j1').addEventListener('input', calcularEcossistema);
-    document.getElementById('odd_j2').addEventListener('input', calcularEcossistema);
-    document.getElementById('odd_j3').addEventListener('input', calcularEcossistema);
-
-    window.onload = calcularEcossistema;
 </script>
-
 </body>
 </html>
