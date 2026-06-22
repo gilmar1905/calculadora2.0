@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Painel Executivo: Surebet Automática</title>
+    <title>Painel Executivo: Auditoria Total</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .card { background: #0f172a; border: 1px solid #1e293b; padding: 16px; border-radius: 12px; }
@@ -11,7 +11,7 @@
 </head>
 <body class="bg-slate-950 text-slate-200 p-6">
     <div class="max-w-6xl mx-auto space-y-6">
-        <h1 class="text-2xl font-black text-white text-center uppercase tracking-widest">⚡ PAINEL EXECUTIVO: SUREBET AUTOMÁTICA</h1>
+        <h1 class="text-2xl font-black text-white text-center uppercase tracking-widest">⚡ PAINEL EXECUTIVO: AUDITORIA TOTAL</h1>
 
         <!-- AUDITORIA GLOBAL -->
         <div class="grid grid-cols-3 gap-4 bg-indigo-950 p-4 rounded-xl border border-indigo-800">
@@ -20,31 +20,27 @@
             <div><p class="text-[10px] text-indigo-300 uppercase font-bold">Líquido Final</p><div id="mLiquidoFinal" class="text-lg font-black text-white">R$ 0,00</div></div>
         </div>
 
+        <!-- MÚLTIPLA E SUREBET -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <!-- Múltipla -->
             <div class="card border-l-4 border-l-indigo-500">
                 <h2 class="font-bold text-indigo-400 mb-2">MÚLTIPLA PRINCIPAL</h2>
                 <input type="number" id="mstk" placeholder="Stake" oninput="processar()" class="input-box mb-2">
                 <input type="number" id="modd" placeholder="Odd" oninput="processar()" class="input-box">
             </div>
             
-            <!-- Surebet Automática -->
             <div class="card border-l-4 border-l-emerald-500">
-                <h2 class="font-bold text-emerald-400 mb-2">SUREBET AUTOMÁTICA</h2>
+                <h2 class="font-bold text-emerald-400 mb-2">SUREBET (Automática)</h2>
                 <input type="number" id="montanteSure" placeholder="Montante Total" oninput="processar()" class="input-box mb-2">
                 <div class="grid grid-cols-3 gap-2">
-                    <input type="number" id="oDupla" placeholder="Odd Dupla" oninput="processar()" class="input-box">
+                    <input type="number" id="oDupla" placeholder="Odd D" oninput="processar()" class="input-box">
                     <input type="number" id="oProtA" placeholder="Odd A" oninput="processar()" class="input-box">
                     <input type="number" id="oProtB" placeholder="Odd B" oninput="processar()" class="input-box">
-                </div>
-                <div class="mt-3 text-[10px] font-bold text-emerald-500 grid grid-cols-3 gap-1 text-center" id="auditoriaSurebet">
-                    <div>D: 0.00</div><div>A: 0.00</div><div>B: 0.00</div>
                 </div>
             </div>
         </div>
 
         <div id="mGrade" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
-        <button onclick="adicionarCard()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 rounded-lg font-bold uppercase text-sm">+ Adicionar Card</button>
+        <button onclick="adicionarCard()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 rounded-lg font-bold uppercase text-sm">+ Adicionar Card de Recuperação</button>
     </div>
 
 <script>
@@ -63,42 +59,38 @@
                 <input type="number" id="sA_${count}" placeholder="Stk A" oninput="processar()" class="input-box">
                 <input type="number" id="sB_${count}" placeholder="Stk B" oninput="processar()" class="input-box">
             </div>
+            <div class="mt-2 pt-2 border-t border-slate-700 text-[10px] font-bold text-slate-400" id="aud_${count}">Custo Acumulado: R$ 0.00</div>
+            <div class="text-[10px] font-bold text-sky-400" id="bruto_${count}">Bruto A: 0.00 | Bruto B: 0.00</div>
             <div class="text-[10px] font-bold text-emerald-400" id="res_${count}">Líq A: 0.00 | Líq B: 0.00</div>`;
         grade.appendChild(div);
     }
 
     function processar() {
-        // Dados
         const mstk = parseFloat(document.getElementById('mstk').value) || 0;
         const modd = parseFloat(document.getElementById('modd').value) || 0;
         const mSure = parseFloat(document.getElementById('montanteSure').value) || 0;
-        const oD = parseFloat(document.getElementById('oDupla').value) || 0;
-        const oA = parseFloat(document.getElementById('oProtA').value) || 0;
-        const oB = parseFloat(document.getElementById('oProtB').value) || 0;
 
-        // Cálculo Automático de Equilíbrio (Inverso das odds)
-        let sD = 0, sA = 0, sB = 0;
-        if (oD > 0 && oA > 0 && oB > 0) {
-            const invTotal = (1/oD) + (1/oA) + (1/oB);
-            sD = (mSure / invTotal) / oD;
-            sA = (mSure / invTotal) / oA;
-            sB = (mSure / invTotal) / oB;
-            
-            document.getElementById('auditoriaSurebet').innerHTML = 
-                `<div>D: ${sD.toFixed(2)}</div><div>A: ${sA.toFixed(2)}</div><div>B: ${sB.toFixed(2)}</div>`;
-        }
-
+        // Inicia o custo acumulado
         let custoAcumulado = mstk + mSure;
 
-        // Recuperações
         document.querySelectorAll('#mGrade > div').forEach(c => {
             const id = c.id.split('_')[1];
-            const oA_c = parseFloat(document.getElementById(`oA_${id}`).value) || 0;
-            const oB_c = parseFloat(document.getElementById(`oB_${id}`).value) || 0;
-            const sA_c = parseFloat(document.getElementById(`sA_${id}`).value) || 0;
-            const sB_c = parseFloat(document.getElementById(`sB_${id}`).value) || 0;
-            custoAcumulado += (sA_c + sB_c);
-            document.getElementById(`res_${id}`).innerText = `Líq A: ${(sA_c * oA_c - custoAcumulado).toFixed(2)} | Líq B: ${(sB_c * oB_c - custoAcumulado).toFixed(2)}`;
+            const oA = parseFloat(document.getElementById(`oA_${id}`).value) || 0;
+            const oB = parseFloat(document.getElementById(`oB_${id}`).value) || 0;
+            const sA = parseFloat(document.getElementById(`sA_${id}`).value) || 0;
+            const sB = parseFloat(document.getElementById(`sB_${id}`).value) || 0;
+
+            // Soma o custo deste card
+            custoAcumulado += (sA + sB);
+            
+            // Exibe o Custo Acumulado até o momento no card
+            document.getElementById(`aud_${id}`).innerText = `Custo Acumulado: R$ ${custoAcumulado.toFixed(2)}`;
+            
+            // Exibe o Valor Bruto A e B (Stake * Odd)
+            document.getElementById(`bruto_${id}`).innerText = `Bruto A: ${(sA * oA).toFixed(2)} | Bruto B: ${(sB * oB).toFixed(2)}`;
+            
+            // Exibe o Líquido
+            document.getElementById(`res_${id}`).innerText = `Líq A: ${(sA * oA - custoAcumulado).toFixed(2)} | Líq B: ${(sB * oB - custoAcumulado).toFixed(2)}`;
         });
 
         document.getElementById('mCustoTotal').innerText = `R$ ${custoAcumulado.toFixed(2)}`;
